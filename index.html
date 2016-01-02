@@ -11,6 +11,22 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    
+    
+<script>
+function naming(){
+  name = prompt("What's your name ?")
+
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; " + expires;
+} 
+setCookie(username,name,24)
+}
+</script>
   </head>
   <body>
     <div class="wrapper">
@@ -21,7 +37,7 @@
         
       </header>
       <section>
-
+  <button type="button" onclick="naming()">Set your Name</button>
       </section>
 
     </div>
