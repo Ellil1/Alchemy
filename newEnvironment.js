@@ -12,7 +12,7 @@ function environmentSpawner(){
 abilityName = prompt("What is the Name of this Environment ?")
 variableName = abilityName.replace(/\s/g, '');
 
-name = variableName + " = new Environment([\"" + abilityName + "\"]"    
+name = variableName + " = new Environment([\"" + abilityName + "\"],["    
 
 function nameFunction(){
 name1true = prompt("Next Effect? \n1. Natural Forces \n2. Elements \n3.Physical Attributes \n4. Others \n5. Positive Emotions \n6. Negative Emotions \n7. Mystical")
@@ -27,7 +27,7 @@ power1 = prompt("What is this Effect's potency ?")
 name+=",[\"" + name1true + name1 + "\"," + power1 + "]"
 next = prompt("Do you want to add an Effect ? \n1. Yes \n2. No")
 if(next==="1"){nameFunction()}
-else{alert(name + "),")
+else{alert(name + "]),")
 }
 }
 nameFunction()
