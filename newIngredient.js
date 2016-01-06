@@ -1,3 +1,10 @@
+var Ingredient = function(first,second,third) {
+  this.first = first;
+  this.second = second;
+  this.third = third; 
+};
+
+
 function magicEffect(){
 //____________________________________________________________________________________________________
 
@@ -7,7 +14,7 @@ function magicEffect(){
 
 //____________________________________________________________________________________________________
 abilityName = prompt("What is the Name of your Ingredient ?")
-variableName = prompt("What is the Variable Name of your Ingredient ?")
+variableName = abilityName.replace(/\s/g, '');
 
 name1true = prompt("What is the First Name? \n1. Natural Forces \n2. Elements \n3.Physical Attributes \n4. Positive Emotions \n5. Negative Emotions \n6. Others \n7. Mystical")
 if(name1true == "1"){name1 = prompt("\n1. Healing \n2. Fertility \n3. Rebirth \n4. Protection \n5. Transformation \n6. Death")}
@@ -50,4 +57,3 @@ name = variableName + " = new Ingredient([[\"" + abilityName + "\"],[\"" + name1
 
 alert(name + "),")
 }
-
