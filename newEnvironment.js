@@ -9,7 +9,7 @@ function environmentSpawner(){
 
 
 //____________________________________________________________________________________________________
-abilityName = prompt("What is the Name of this Ingredient ?")
+abilityName = prompt("What is the Name of this Environment ?")
 variableName = abilityName.replace(/\s/g, '');
 
 name = variableName + " = new Environment([\"" + abilityName + "\"]"    
