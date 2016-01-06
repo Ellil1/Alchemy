@@ -11,7 +11,7 @@ function environmentSpawner(){
 //____________________________________________________________________________________________________
 abilityName = prompt("What is the Name of this Environment ?")
 variableName = abilityName.replace(/\s/g, '');
-
+properties = 0
 name = variableName + " = new Environment([\"" + abilityName + "\"],["    
 
 function nameFunction(){
@@ -24,11 +24,14 @@ if(name1true == "5"){name1 = prompt("\n1. Happiness \n2. Confidence \n3. Peace \
 if(name1true == "6"){name1 = prompt("\n1. Confusion \n2. Fear \n3. Madness \n4. Anger \n5. Sadness")}
 if(name1true == "7"){name1 = prompt("\n1. Fate \n2. Perception/Dispel \n3. Truth \n4. Dreams \n5. Mystery \n6. Soul \n7. Messages \n8. Travel \n9. Illusion")}
 power1 = prompt("What is this Effect's potency ?")
-name+=",[\"" + name1true + name1 + "\"," + power1 + "]"
+if(properties===0){name+="[\"" + name1true + name1 + "\"," + power1 + "]"}
+else{name+=",[\"" + name1true + name1 + "\"," + power1 + "]"}
 next = prompt("Do you want to add an Effect ? \n1. Yes \n2. No")
+properties+=1
 if(next==="1"){nameFunction()}
 else{alert(name + "]),")
 }
 }
 nameFunction()
 }
+environmentSpawner()
