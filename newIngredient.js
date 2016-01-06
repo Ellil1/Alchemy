@@ -48,7 +48,7 @@ power3 = prompt("What is the Third Effect's potency ?")
 difficulty = prompt("How rare is this Ingredient ?")
   
 
-name = variableName + " = new Ingredient([[\"" + abilityName + "\"],[\"" + name1true + name1 + "\"," + power1 + "],[\"" + name2true + name2 + "\"," + power3 + "],[\"" + name3true + name3 + "\"," + power3 + "],[" + difficulty + "]]"      
+name = variableName + " = new Ingredient([[\"" + abilityName + "\"],[\"" + name1true + name1 + "\"," + power1 + "],[\"" + name2true + name2 + "\"," + power3 + "],[\"" + name3true + name3 + "\"," + power3 + "]," + difficulty + "]"      
 
 
 alert(name + "),")
