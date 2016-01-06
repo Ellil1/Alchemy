@@ -1,8 +1,4 @@
-var Ingredient = function(first,second,third) {
-  this.first = first;
-  this.second = second;
-  this.third = third; 
-};
+
 
 
 function magicEffect(){
@@ -16,7 +12,7 @@ function magicEffect(){
 abilityName = prompt("What is the Name of your Ingredient ?")
 variableName = abilityName.replace(/\s/g, '');
 
-name1true = prompt("What is the First Name? \n1. Natural Forces \n2. Elements \n3.Physical Attributes \n4. Positive Emotions \n5. Negative Emotions \n6. Others \n7. Mystical")
+name1true = prompt("What is the First Name? \n1. Natural Forces \n2. Elements \n3.Physical Attributes \n4. Others \n5. Positive Emotions \n6. Negative Emotions \n7. Mystical")
 if(name1true == "1"){name1 = prompt("\n1. Healing \n2. Fertility \n3. Rebirth \n4. Protection \n5. Transformation \n6. Death")}
 if(name1true == "2"){name1 = prompt("\n1. Water \n2. Fire \n3. Earth \n4. Wind \n5. Light \n6. Darkness")}
 if(name1true == "3"){name1 = prompt("\n1. Strength \n2. Toughness \n3. Speed \n4. Intellect \n5. Longevity \n6. Weakness \n7. Memory")}
@@ -27,7 +23,7 @@ if(name1true == "7"){name1 = prompt("\n1. Fate \n2. Perception/Dispel \n3. Truth
 
 power1 = prompt("What is the First Name's potency ?")
 
-name2true = prompt("What is the Second Name? \n1. Natural Forces \n2. Elements \n3.Physical Attributes \n4. Positive Emotions \n5. Negative Emotions \n6. Others \n7. Mystical")
+name2true = prompt("What is the Second Name? \n1. Natural Forces \n2. Elements \n3.Physical Attributes \n4. Others \n5. Positive Emotions \n6. Negative Emotions \n7. Mystical")
 if(name2true == "1"){name2 = prompt("\n1. Healing \n2. Fertility \n3. Rebirth \n4. Protection \n5. Transformation \n6. Death")}
 if(name2true == "2"){name2 = prompt("\n1. Water \n2. Fire \n3. Earth \n4. Wind \n5. Light \n6. Darkness")}
 if(name2true == "3"){name2 = prompt("\n1. Strength \n2. Toughness \n3. Speed \n4. Intellect \n5. Longevity \n6. Weakness \n7. Memory")}
@@ -38,7 +34,7 @@ if(name2true == "7"){name2 = prompt("\n1. Fate \n2. Perception/Dispel \n3. Truth
 
 power2 = prompt("What is the Second Name's potency ?")
 
-name3true = prompt("What is the Third Name? \n1. Natural Forces \n2. Elements \n3.Physical Attributes \n4. Positive Emotions \n5. Negative Emotions \n6. Others \n7. Mystical")
+name3true = prompt("What is the Third Name? \n1. Natural Forces \n2. Elements \n3.Physical Attributes \n4. Others \n5. Positive Emotions \n6. Negative Emotions \n7. Mystical")
 if(name3true == "1"){name3 = prompt("\n1. Healing \n2. Fertility \n3. Rebirth \n4. Protection \n5. Transformation \n6. Death")}
 if(name3true == "2"){name3 = prompt("\n1. Water \n2. Fire \n3. Earth \n4. Wind \n5. Light \n6. Darkness")}
 if(name3true == "3"){name3 = prompt("\n1. Strength \n2. Toughness \n3. Speed \n4. Intellect \n5. Longevity \n6. Weakness \n7. Memory")}
