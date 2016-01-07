@@ -34,4 +34,3 @@ else{alert(name + "]),")
 }
 nameFunction()
 }
-environmentSpawner()
