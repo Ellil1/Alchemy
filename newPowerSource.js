@@ -45,7 +45,7 @@ if(name3true == "7"){name3 = prompt("\n1. Fate \n2. Perception/Dispel \n3. Truth
 
 power3 = prompt("What is the Third Effect's potency ?")  
 
-name = variableName + " = new Ingredient([\"" + abilityName + "\"],[\"" + name1true + name1 + "\"," + power1 + "],[\"" + name2true + name2 + "\"," + power3 + "],[\"" + name3true + name3 + "\"," + power3 + "]"     
+name = variableName + " = new PowerSource([\"" + abilityName + "\"],[\"" + name1true + name1 + "\"," + power1 + "],[\"" + name2true + name2 + "\"," + power3 + "],[\"" + name3true + name3 + "\"," + power3 + "]"     
 
 
 alert(name + "),")
