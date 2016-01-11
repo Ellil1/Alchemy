@@ -47,7 +47,7 @@ power3 = prompt("What is the Third Effect's potency ?")
 
 power = prompt("What is the Power Source's Legend Level ?")
 
-name = variableName + " = new PowerSource([\"" + abilityName + "\"],[\"" + name1true + name1 + "\"," + power1 + "],[\"" + name2true + name2 + "\"," + power3 + "],[\"" + name3true + name3 + "\"," + power3 + "]," + power     
+name = variableName + " = new PowerSource([\"" + abilityName + "\"],[\"" + name1true + name1 + "\"," + power1 + "],[\"" + name2true + name2 + "\"," + power2 + "],[\"" + name3true + name3 + "\"," + power3 + "]," + power     
 
 
 alert(name + "),")
