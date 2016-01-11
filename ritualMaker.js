@@ -34,7 +34,9 @@ power = prompt("What is the Ritual's Effect ?")
 
 power2 = prompt("What is the Ritual's Power Level")
 
-name = variableName + " = new PowerSource(\"" + abilityName + "\",\"" + name1true + name1 + "\",\"" + name2true + name2 + "\",\"" + power + "\"," + power2   
+power3 = prompt("What can your Ritual be used for ? \n1. Potions and Spells \n2. Echantements \n3. All")
+
+name = variableName + " = new PowerSource(\"" + abilityName + "\",\"" + name1true + name1 + "\",\"" + name2true + name2 + "\",\"" + power + "\"," + power2  + "," + power3   
 
 
 alert(name + "),")
