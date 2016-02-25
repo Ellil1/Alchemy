@@ -376,17 +376,17 @@ Mirror = new MagicItem(["Mirror"],["75",2],["15",2],["63",2]),
     
  var ritualList = [
 
-Healing = new Ritual("Healing","11","11","you gain a bonus to your First Aid of +",5,3),
-Luck = new Ritual("Luck","41","41","you get a bonus to your next Action of +",3,3),
-Power = new Ritual("Power","17","17","you get a bonus to Spells of +",6,3),
-Protection = new Ritual("Protection","14","14","creates a Shield which to destroy takes a check of +",3,1),
-ProtectionAura = new Ritual("Protection Aura","14","14","all attacks against you and your allies have -",15,3),
-ProtectiveDome = new Ritual("Protective Dome","14","14","create a protective dome. Those inside gain a bonus to attacks from outside of +",9,1),
-Defense = new Ritual("Defense","14","14","all attacks against you have -",9,3),
+Healing = new Ritual("Healing","11","53","you gain a bonus to your First Aid of +",5,3),
+Luck = new Ritual("Luck","41","17","you get a bonus to your next Action of +",3,3),
+Power = new Ritual("Power","17","15","you get a bonus to Spells of +",6,3),
+Protection = new Ritual("Protection","14","52","creates a Shield which to destroy takes a check of +",3,1),
+ProtectionAura = new Ritual("Protection Aura","14","53","all attacks against you and your allies have -",15,3),
+ProtectiveDome = new Ritual("Protective Dome","14","32","create a protective dome. Those inside gain a bonus to attacks from outside of +",9,1),
+Defense = new Ritual("Defense","14","17","all attacks against you have -",9,3),
 Regeneration = new Ritual("Regeneration","12","13","gain a bonus to First Aid to heal Consequences of +",3,3),
 RegrowthShield = new Ritual("Regrowth Shield","14","11","reduce the damage of the next attack you take by ",4,3),
 Ressurection = new Ritual("Ressurection","11","13","you can use Lore to ressurect a human being, with a bonus of +",3,3),
-Strength = new Ritual("Strength","31","31","you get a bonus to Physique and Fight checks related to Strength of +",5,3),
+Strength = new Ritual("Strength","31","17","you get a bonus to Physique and Fight checks related to Strength of +",5,3),
 
 ]
 
@@ -446,15 +446,51 @@ for(i=0;i<ritualList.length;i++){
   potency = 0
 } 
 
-effectFinal = finalRitual.effect   
+effectFinal = finalRitual.effect  
 
+// This function 
+ okIngredients = ingredients.filter(function (a) {return a.first[0] == finalRitual.first || a.second[0] == finalRitual.first || a.third[0] == finalRitual.first;})
+ namelistArray = (okIngredients.map(function(b) {return b.name[0]})).sort()
+ 
+ okIngredients2 = ingredients.filter(function (a) {return a.second[0] == finalRitual.second || a.second[0] == finalRitual.second || a.third[0] == finalRitual.second;})
+ namelistArray2 = (okIngredients2.map(function(b) {return b.name[0]})).sort()
+var combinedListArrays =  namelistArray.concat(namelistArray2)
+
+
+var sortedarr = combinedListArrays.sort(); 
+var results = [];
+for (var i = 0; i < combinedListArrays.length - 1; i++) {
+    if (sortedarr[i + 1] != sortedarr[i]) {
+        results.push(sortedarr[i]);
+    }
+}
+ 
 // Choosing the Ingredients
 
 // Here You can set the ingredients. For testing purposes some are provided.
- var ingredientsTotal = [] 
-var firstIngredient = prompt("What's your first ingredient ?")
-var secondIngredient = prompt("What's your second ingredient ?")
-var thirdIngredient = prompt("What's your third ingredient ?")
+var ingredientsTotal = [] 
+var firstIngredient = ""
+function setFirstIngredient(){ firstIngredient = prompt("What's your first ingredient ? \n" + results.join("\n"))}
+  while(results.indexOf(firstIngredient)== -1){setFirstIngredient()}
+
+results.splice(results.indexOf(firstIngredient), 1);
+if(namelistArray.indexOf(firstIngredient)!=-1){namelistArray.splice(results.indexOf(firstIngredient), 1)};
+if(namelistArray2.indexOf(firstIngredient)!=-1){namelistArray2.splice(results.indexOf(firstIngredient), 1)};
+
+var secondIngredient = prompt("What's your second ingredient ? \n" + results.join("\n"))
+
+results.splice(results.indexOf(secondIngredient), 1);
+if(namelistArray.indexOf(secondIngredient)!=-1){namelistArray.splice(results.indexOf(secondIngredient), 1)};
+if(namelistArray2.indexOf(secondIngredient)!=-1){namelistArray2.splice(results.indexOf(secondIngredient), 1)};
+
+if(namelistArray.indexOf(firstIngredient)!= -1 && namelistArray.indexOf(secondIngredient)!= -1){
+var thirdIngredient = prompt("What's your third ingredient ? \n" + namelistArray2.join("\n"))}
+
+else if(namelistArray2.indexOf(firstIngredient)!= -1 && namelistArray2.indexOf(secondIngredient)!= -1){
+var thirdIngredient = prompt("What's your third ingredient ? \n" + namelistArray.join("\n"))}
+
+else{var thirdIngredient = prompt("What's your third ingredient ? \n" + results.join("\n"))}
+    
 
 // var firstIngredient = "Panda"
 // var secondIngredient = "Lodestone"
@@ -487,7 +523,7 @@ function ingredientChecker(number){
 ingredientChecker(0)
 ingredientChecker(1)
 ingredientChecker(2)
-    
+
 // Adding Optional Components
 
 //______________________________________________________________________
@@ -505,7 +541,7 @@ function environmentChoiceMaker(){
   if(environmentsChoiceOne === "1"){
  var environmentListUsed = [] 
  environmentsTotal = [] 
-
+                      
  for(i=0;i<environments.length;i++){environmentListUsed+= "\n" + environments[i].name}
  var environmentsChoice = prompt("Which environment do you want to add ?" + environmentListUsed)
 // Choose what environment you want to use. 
@@ -516,7 +552,9 @@ for(i=0;i<environments.length;i++){
    environmentChoiceMaker();
 }
 }
+
 environmentChoiceMaker()  
+
 // Sets "environmentsTotal" as an array of the relevant Environments.
 
 function environmentsChecker(number){
@@ -566,15 +604,13 @@ function powerSourcesChecker(number){
 
   }
 
-    }
-// Checks whether the environments are associated with the Ritual values.
+}
+// Checks whether the environments/power sources are associated with the Ritual values.
 if(powerSourcesTotal.length !== 0){
 for(i=0;i<powerSourcesTotal.length;i++){powerSourcesChecker(i)}}  
   
 // The Spell
-    total = result + "of "+ ritualUsed + " - Effect: " + effectType + effectFinal + (Math.round(potency/finalRitual.power/modifier))
-if(potency <=0){alert("The " + result + "fails !")}    
+  Math.floor(potency/finalRitual.power/modifier)!= 0 ? total = result + "of "+ ritualUsed + " - Effect: " + effectType + effectFinal + Math.floor(potency/finalRitual.power/modifier): total = "The " + result + " lacks potency ! It fails !"
+if(potency <=0){alert("The " + result + "fails !")}
 else(alert(total)) 
-  }
- 
-computeMaker()
+     }
