@@ -380,13 +380,16 @@ Healing = new Ritual("Healing","11","53","you gain a bonus to your First Aid of 
 Luck = new Ritual("Luck","41","17","you get a bonus to your next Action of +",3,3),
 Power = new Ritual("Power","17","15","you get a bonus to Spells of +",6,3),
 Protection = new Ritual("Protection","14","52","creates a Shield which to destroy takes a check of +",3,1),
-ProtectionAura = new Ritual("Protection Aura","14","53","all attacks against you and your allies have -",15,3),
-ProtectiveDome = new Ritual("Protective Dome","14","32","create a protective dome. Those inside gain a bonus to attacks from outside of +",9,1),
-Defense = new Ritual("Defense","14","17","all attacks against you have -",9,3),
-Regeneration = new Ritual("Regeneration","12","13","gain a bonus to First Aid to heal Consequences of +",3,3),
-RegrowthShield = new Ritual("Regrowth Shield","14","11","reduce the damage of the next attack you take by ",4,3),
-Ressurection = new Ritual("Ressurection","11","13","you can use Lore to ressurect a human being, with a bonus of +",3,3),
-Strength = new Ritual("Strength","31","17","you get a bonus to Physique and Fight checks related to Strength of +",5,3),
+ProtectionAura = new Ritual("Protection Aura","14","53","all attacks against you and your allies have -",3,3),
+ProtectiveDome = new Ritual("Protective Dome","14","32","create a protective dome. Those inside gain a bonus to attacks from outside of +",3,1),
+Defense = new Ritual("Defense","14","17","all attacks against you have -",3,3),
+Regeneration = new Ritual("Regeneration","12","13","gain a bonus to First Aid to heal Consequences of +",1,3),
+RegrowthShield = new Ritual("Regrowth Shield","14","11","reduce the damage of the attacks you take by ",2,3),
+Ressurection = new Ritual("Ressurection","11","13","you can use Lore to ressurect a human being, with a bonus of +",1,3),
+Strength = new Ritual("Strength","31","17","you get a bonus to Physique and Fight checks related to Strength of +",2,3),
+Enfeeble = new PowerSource("Enfeeble","36","61","the target has their Physique and Fight Skills reduced by " + Math.floor(potency/finalRitual.power/modifier),2,1),
+Enfeeble2 = new PowerSource("Enfeeble","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by " + Math.floor(potency/finalRitual.power/modifier),2,2),
+Psychopomp = new PowerSource("Psychopomp","76","78","gain a +"+ Math.floor(potency/finalRitual.power/modifier)+" bonus to Rapport when dealing with Souls",1,3),
 
 ]
 
@@ -610,7 +613,7 @@ if(powerSourcesTotal.length !== 0){
 for(i=0;i<powerSourcesTotal.length;i++){powerSourcesChecker(i)}}  
   
 // The Spell
-  Math.floor(potency/finalRitual.power/modifier)!= 0 ? total = result + "of "+ ritualUsed + " - Effect: " + effectType + effectFinal + Math.floor(potency/finalRitual.power/modifier): total = "The " + result + " lacks potency ! It fails !"
+  Math.floor(potency/finalRitual.power/modifier)!= 0 ? total = result + "of "+ ritualUsed + " - Effect: " + effectType + effectFinal : total = "The " + result + " lacks potency ! It fails !"
 if(potency <=0){alert("The " + result + "fails !")}
 else(alert(total)) 
      }
