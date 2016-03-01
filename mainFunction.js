@@ -387,9 +387,9 @@ Regeneration = new Ritual("Regeneration","12","13","gain a bonus to First Aid to
 RegrowthShield = new Ritual("Regrowth Shield","14","11","reduce the damage of the attacks you take by ",2,7),
 Ressurection = new Ritual("Ressurection","11","13","you can use Lore to ressurect a human being, with a bonus of +",1,7),
 Strength = new Ritual("Strength","31","17","you get a bonus to Physique and Fight checks related to Strength of +",2,7),
-Enfeeble = new PowerSource("Enfeeblement","36","61","the target has their Physique and Fight Skills reduced by ",2.5,4),
-Enfeeble2 = new PowerSource("Enfeeblement","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by ",2,7),
-Psychopomp = new PowerSource("Psychopomp","76","78","gain a bonus to Rapport when dealing with Souls of +",1,7),
+Enfeeble = new Ritual("Enfeeblement","36","61","the target has their Physique and Fight Skills reduced by ",2.5,4),
+Enfeeble2 = new Ritual("Enfeeblement","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by ",2,7),
+Psychopomp = new Ritual("Psychopomp","76","78","gain a bonus to Rapport when dealing with Souls of +",1,7),
 
 ]
 
