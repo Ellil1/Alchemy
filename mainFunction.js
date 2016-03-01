@@ -616,5 +616,6 @@ for(i=0;i<powerSourcesTotal.length;i++){powerSourcesChecker(i)}}
 // The Spell
   Math.floor(potency/finalRitual.power/modifier)!= 0 ? total = result + "of "+ ritualUsed + " - Effect: " + effectType + effectFinal + Math.floor(potency/finalRitual.power/modifier) : total = "The " + result + " lacks potency ! It fails !"
 if(potency <=0){alert("The " + result + "fails !")}
-else(alert(total)) 
+else if(spellType == "2" || spellType == "1"){alert(total  + "for the next Action.")} 
+else{alert(total)
      }
