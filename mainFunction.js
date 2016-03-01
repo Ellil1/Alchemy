@@ -613,8 +613,8 @@ function powerSourcesChecker(number){
 if(powerSourcesTotal.length !== 0){
 for(i=0;i<powerSourcesTotal.length;i++){powerSourcesChecker(i)}}  
 
-duration = " for one Round."
-if(Math.floor(potency/finalRitual.power/modifier)>3){potency/=3; duration = " for one Scene."}
+//duration = " for one Round."
+//if(Math.floor(potency/finalRitual.power/modifier)>3){potency/=3; duration = " for one Scene."}
   
 // The Spell
   Math.floor(potency/finalRitual.power/modifier)!= 0 ? total = result + "of "+ ritualUsed + " - Effect: " + effectType + effectFinal + Math.floor(potency/finalRitual.power/modifier) : total = "The " + result + " lacks potency ! It fails !"
