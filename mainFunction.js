@@ -376,20 +376,20 @@ Mirror = new MagicItem(["Mirror"],["75",2],["15",2],["63",2]),
     
  var ritualList = [
 
-Healing = new Ritual("Healing","11","53","you gain a bonus to your First Aid of +",5,3),
-Luck = new Ritual("Luck","41","17","you get a bonus to your next Action of +",3,3),
+Healing = new Ritual("Healing","11","53","you gain a bonus to your First Aid of +",5,7),
+Luck = new Ritual("Luck","41","17","you get a bonus to your Actions of +",3,7),
 Power = new Ritual("Power","17","15","you get a bonus to Spells of +",6,3),
-Protection = new Ritual("Protection","14","52","creates a Shield which to destroy takes a check of +",3,1),
-ProtectionAura = new Ritual("Protection Aura","14","53","all attacks against you and your allies have -",3,3),
-ProtectiveDome = new Ritual("Protective Dome","14","32","create a protective dome. Those inside gain a bonus to attacks from outside of +",3,1),
-Defense = new Ritual("Defense","14","17","all attacks against you have -",3,3),
-Regeneration = new Ritual("Regeneration","12","13","gain a bonus to First Aid to heal Consequences of +",1,3),
-RegrowthShield = new Ritual("Regrowth Shield","14","11","reduce the damage of the attacks you take by ",2,3),
-Ressurection = new Ritual("Ressurection","11","13","you can use Lore to ressurect a human being, with a bonus of +",1,3),
-Strength = new Ritual("Strength","31","17","you get a bonus to Physique and Fight checks related to Strength of +",2,3),
-Enfeeble = new PowerSource("Enfeeble","36","61","the target has their Physique and Fight Skills reduced by ",2,1),
-Enfeeble2 = new PowerSource("Enfeeble","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by ",2,2),
-Psychopomp = new PowerSource("Psychopomp","76","78","gain a bonus to Rapport when dealing with Souls of +",1,3),
+Protection = new Ritual("Protection","14","52","creates a Shield which to destroy takes a check of +",3,4),
+ProtectionAura = new Ritual("Protection Aura","14","53","all attacks against you and your allies have -",5,7),
+ProtectiveDome = new Ritual("Protective Dome","14","32","create a protective dome. Those inside gain a bonus to attacks from outside of +",3,4),
+Defense = new Ritual("Defense","14","17","all attacks against you have -",3,5),
+Regeneration = new Ritual("Regeneration","12","13","gain a bonus to First Aid to heal Consequences of +",1,7),
+RegrowthShield = new Ritual("Regrowth Shield","14","11","reduce the damage of the attacks you take by ",2,7),
+Ressurection = new Ritual("Ressurection","11","13","you can use Lore to ressurect a human being, with a bonus of +",1,7),
+Strength = new Ritual("Strength","31","17","you get a bonus to Physique and Fight checks related to Strength of +",2,7),
+Enfeeble = new PowerSource("Enfeeblement","36","61","the target has their Physique and Fight Skills reduced by ",2.5,4),
+Enfeeble2 = new PowerSource("Enfeeblement","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by ",2,7),
+Psychopomp = new PowerSource("Psychopomp","76","78","gain a bonus to Rapport when dealing with Souls of +",1,7),
 
 ]
 
@@ -433,11 +433,12 @@ if(spellType === "3"){result+="Enchantment "; modifier+=2; effectType += "While 
 // Ritual Chooser  
  var ritualListUsed = []
  for(i=0;i<ritualList.length;i++){
-   if(spellType === "1" || spellType === "2"){
-     if(ritualList[i].type === 1 || ritualList[i].type === 3){ritualListUsed+= "\n" + ritualList[i].name}}
+   if(spellType === "1"){
+     if(ritualList[i].type === 1 || ritualList[i].type === 4 || ritualList[i].type === 5 || ritualList[i].type === 7){ritualListUsed+= "\n" + ritualList[i].name}}
+   if(spellType === "2"){
+     if(ritualList[i].type === 2 || ritualList[i].type === 5 || ritualList[i].type === 6 || ritualList[i].type === 7){ritualListUsed+= "\n" + ritualList[i].name}}
    if(spellType === "3"){
-     if(ritualList[i].type === 2 || ritualList[i].type === 3){ritualListUsed+= "\n" + ritualList[i].name}
-   }
+     if(ritualList[i].type === 3 || ritualList[i].type === 4 || ritualList[i].type === 6 || ritualList[i].type === 7){ritualListUsed+= "\n" + ritualList[i].name}}
    }
 
 var ritualUsed = prompt("What Ritual are you using ?" + ritualListUsed)
