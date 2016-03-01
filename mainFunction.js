@@ -391,7 +391,7 @@ Enfeeble = new Ritual("Enfeeblement","36","61","the target has their Physique an
 Enfeeble2 = new Ritual("Frailty","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by ",2,7),
 Psychopomp = new Ritual("Psychopomp","76","78","gain a bonus to Rapport when dealing with Souls of +",1,7),
 Rage = new Ritual("Rage","64","63","the target gains the \"Rage\" Aspect unless they pass a Will check of ",2,4),
-CorpseAnimation = new Ritual("Corpse Animation","16","76","you reanimate a corpse and gain the "Zombie" Aspect. It creates Free Invocations with a Fight of +",3,1),
+CorpseAnimation = new Ritual("Corpse Animation","16","76","you reanimate a corpse and gain the \"Zombie\" Aspect. It creates Free Invocations with a Fight of +",3,1),
 
 ]
 
