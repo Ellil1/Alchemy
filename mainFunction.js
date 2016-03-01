@@ -387,9 +387,9 @@ Regeneration = new Ritual("Regeneration","12","13","gain a bonus to First Aid to
 RegrowthShield = new Ritual("Regrowth Shield","14","11","reduce the damage of the attacks you take by ",2,3),
 Ressurection = new Ritual("Ressurection","11","13","you can use Lore to ressurect a human being, with a bonus of +",1,3),
 Strength = new Ritual("Strength","31","17","you get a bonus to Physique and Fight checks related to Strength of +",2,3),
-Enfeeble = new PowerSource("Enfeeble","36","61","the target has their Physique and Fight Skills reduced by " + Math.floor(potency/finalRitual.power/modifier),2,1),
-Enfeeble2 = new PowerSource("Enfeeble","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by " + Math.floor(potency/finalRitual.power/modifier),2,2),
-Psychopomp = new PowerSource("Psychopomp","76","78","gain a +"+ Math.floor(potency/finalRitual.power/modifier)+" bonus to Rapport when dealing with Souls",1,3),
+Enfeeble = new PowerSource("Enfeeble","36","61","the target has their Physique and Fight Skills reduced by ",2,1),
+Enfeeble2 = new PowerSource("Enfeeble","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by ",2,2),
+Psychopomp = new PowerSource("Psychopomp","76","78","gain a bonus to Rapport when dealing with Souls of +",1,3),
 
 ]
 
@@ -613,7 +613,7 @@ if(powerSourcesTotal.length !== 0){
 for(i=0;i<powerSourcesTotal.length;i++){powerSourcesChecker(i)}}  
   
 // The Spell
-  Math.floor(potency/finalRitual.power/modifier)!= 0 ? total = result + "of "+ ritualUsed + " - Effect: " + effectType + effectFinal : total = "The " + result + " lacks potency ! It fails !"
+  Math.floor(potency/finalRitual.power/modifier)!= 0 ? total = result + "of "+ ritualUsed + " - Effect: " + effectType + effectFinal + Math.floor(potency/finalRitual.power/modifier) : total = "The " + result + " lacks potency ! It fails !"
 if(potency <=0){alert("The " + result + "fails !")}
 else(alert(total)) 
      }
