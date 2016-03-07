@@ -375,24 +375,29 @@ Mirror = new MagicItem(["Mirror"],["75",2],["15",2],["63",2]),
 
     
  var ritualList = [
-
+AcidSplash = new Ritual("Acid Splash","16","23","you may perform an Attack action with the \"Acid\" Aspect with a bonus of +",2,7),
+CorpseAnimation = new Ritual("Corpse Animation","16","76","you reanimate a corpse and gain the \"Zombie\" Aspect. It creates Free Invocations with a Fight of +",3,1),
+Defense = new Ritual("Defense","14","17","all attacks against you have -",3,5),
+DestroyUndead = new Ritual("Destroy Undead","25","72","you can perform an Attack action against Undead with a bonus of +",1,7),
+DetectLegend = new Ritual("Detect Legend","72","75","you can use Notice to discover sources of Legend with a bonus of +",4,7),
+ElectricJolt = new Ritual("Electric Jolt","24","22","you can perform an Attack action with the \"Lightning\" Aspect with a bonus of +",2,7),
+Enfeeble = new Ritual("Enfeeblement","36","61","the target has their Physique and Fight Skills reduced by ",2.5,4),
+Enfeeble2 = new Ritual("Frailty","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by ",2,7),
+Glow = new Ritual("Glow","25","79","you gain the Aspect \"Glow\". Dispel Roll: ",1,7),
 Healing = new Ritual("Healing","11","53","you gain a bonus to your First Aid of +",5,7),
 Luck = new Ritual("Luck","41","17","you get a bonus to your Actions of +",3,7),
 Power = new Ritual("Power","17","15","you get a bonus to Spells of +",6,3),
 Protection = new Ritual("Protection","14","52","creates a Shield which to destroy takes a check of +",3,4),
 ProtectionAura = new Ritual("Protection Aura","14","53","all attacks against you and your allies have -",5,7),
 ProtectiveDome = new Ritual("Protective Dome","14","32","create a protective dome. Those inside gain a bonus to attacks from outside of +",3,4),
-Defense = new Ritual("Defense","14","17","all attacks against you have -",3,5),
+Psychopomp = new Ritual("Psychopomp","76","78","gain a bonus to Rapport when dealing with Souls of +",1,7),
+Rage = new Ritual("Rage","64","63","you may Create a \"Rage\" Aspect with a bonus of +",2,4),
+RayofFrost = new Ritual("Ray of Frost","21","75","you can perform an Attack action with the \"Frost\" Aspect with a bonus of +",2,4),
 Regeneration = new Ritual("Regeneration","12","13","gain a bonus to First Aid to heal Consequences of +",1,7),
 RegrowthShield = new Ritual("Regrowth Shield","14","11","reduce the damage of the attacks you take by ",2,7),
 Ressurection = new Ritual("Ressurection","11","13","you can use Lore to ressurect a human being, with a bonus of +",1,7),
 Strength = new Ritual("Strength","31","17","you get a bonus to Physique and Fight checks related to Strength of +",2,7),
-Enfeeble = new Ritual("Enfeeblement","36","61","the target has their Physique and Fight Skills reduced by ",2.5,4),
-Enfeeble2 = new Ritual("Frailty","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by ",2,7),
-Psychopomp = new Ritual("Psychopomp","76","78","gain a bonus to Rapport when dealing with Souls of +",1,7),
-Rage = new Ritual("Rage","64","63","the target gains the \"Rage\" Aspect unless they pass a Will check of ",2,4),
-CorpseAnimation = new Ritual("Corpse Animation","16","76","you reanimate a corpse and gain the \"Zombie\" Aspect. It creates Free Invocations with a Fight of +",3,1),
-
+Whisper = new Ritual("Whisper","77","79","you may send a message silently to someone in line of sight. Detecting it takes a Notice check with a penalty of -",1,7),
 ]
 
 
