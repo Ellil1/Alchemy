@@ -383,8 +383,10 @@ DetectLegend = new Ritual("Detect Legend","72","75","you can use Notice to disco
 ElectricJolt = new Ritual("Electric Jolt","24","22","you can perform an Attack action with the \"Lightning\" Aspect with a bonus of +",2,7),
 Enfeeble = new Ritual("Enfeeblement","36","61","the target has their Physique and Fight Skills reduced by ",2.5,4),
 Enfeeble2 = new Ritual("Frailty","36","61","whenever you deal melee damage, the target has their Physique and Fight Skills reduced by ",2,7),
+Glamour = new Ritual("Glamour","45","79","attempts to Discover Aspects about you have a penalty of -",1,7),
 Glow = new Ritual("Glow","25","79","you gain the Aspect \"Glow\". Dispel Roll: ",1,7),
 Healing = new Ritual("Healing","11","53","you gain a bonus to your First Aid of +",5,7),
+LightShield = new Ritual("Light Shield","14","25","you gain the \"Water Shield\" Aspect with a bonus to your Defense rolls of +",2,7),
 Luck = new Ritual("Luck","41","17","you get a bonus to your Actions of +",3,7),
 Power = new Ritual("Power","17","15","you get a bonus to Spells of +",6,3),
 Protection = new Ritual("Protection","14","52","creates a Shield which to destroy takes a check of +",3,4),
@@ -396,8 +398,12 @@ RayofFrost = new Ritual("Ray of Frost","21","75","you can perform an Attack acti
 Regeneration = new Ritual("Regeneration","12","13","gain a bonus to First Aid to heal Consequences of +",1,7),
 RegrowthShield = new Ritual("Regrowth Shield","14","11","reduce the damage of the attacks you take by ",2,7),
 Ressurection = new Ritual("Ressurection","11","13","you can use Lore to ressurect a human being, with a bonus of +",1,7),
+RuneofAlarm = new Ritual("Rune of Alarm","14","77","the target gains the Aspect \"Alarm\". Duration in days: ",1,1),
 Strength = new Ritual("Strength","31","17","you get a bonus to Physique and Fight checks related to Strength of +",2,7),
+WaterShield = new Ritual("Water Shield","14","21","you gain the \"Water Shield\" Aspect with a bonus to your Defense rolls of +",2,7),
 Whisper = new Ritual("Whisper","77","79","you may send a message silently to someone in line of sight. Detecting it takes a Notice check with a penalty of -",1,7),
+
+
 ]
 
 
