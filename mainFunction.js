@@ -437,12 +437,7 @@ output += effects[k].name + " : " + totaller.match(re).length + "\n";
 function spellTypeBoxCalculator(){
    var spellType = document.getElementById(spellTypeBox).value
 // First Part    
-result = ""
-effectType = ""
-modifier = 1
-if(spellType === "1"){result+="Spell "; effectType += "When cast, "}
-if(spellType === "2"){result+="Potion "; effectType += "When drunk, "}
-if(spellType === "3"){result+="Enchantment "; modifier+=2; effectType += "While wielded, "}
+
 // Ritual Chooser  
  var ritualListUsed = []
  for(i=0;i<ritualList.length;i++){
@@ -453,7 +448,6 @@ if(spellType === "3"){result+="Enchantment "; modifier+=2; effectType += "While 
    if(spellType === "3"){
      if(ritualList[i].type === 3 || ritualList[i].type === 4 || ritualList[i].type === 6 || ritualList[i].type === 7){ritualListUsed.push(ritualList[i])}}
    }
-alert(ritualListUsed.length)
 var select = document.getElementById("ritualBox");
 var length = select.options.length;
 for (i = 0; i < length; i++) {
@@ -657,6 +651,15 @@ function powerSourcesChecker(number){
 // Checks whether the environments/power sources are associated with the Ritual values.
 if(powerSourcesTotal.length !== 0){
 for(i=0;i<powerSourcesTotal.length;i++){powerSourcesChecker(i)}}  
+
+
+result = ""
+effectType = ""
+modifier = 1
+if(spellType === "1"){result+="Spell "; effectType += "When cast, "}
+if(spellType === "2"){result+="Potion "; effectType += "When drunk, "}
+if(spellType === "3"){result+="Enchantment "; modifier+=2; effectType += "While wielded, "}
+
 
 duration = " for one Round."
 if(Math.floor(potency/finalRitual.power/modifier)>3){potency/=2; duration = " for one Scene."}
