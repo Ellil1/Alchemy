@@ -434,8 +434,8 @@ output += effects[k].name + " : " + totaller.match(re).length + "\n";
 
 
 // This function is the output (WIP)
-function computeMaker(){
-   var spellType = prompt("What are you attempting to make ? \n1. A Spell\n2. A Potion\n3. An Enchantment")
+function spellTypeBoxCalculator(){
+   var spellType = document.getElementById(spellTypeBox).value
 // First Part    
 result = ""
 effectType = ""
@@ -447,16 +447,31 @@ if(spellType === "3"){result+="Enchantment "; modifier+=2; effectType += "While 
  var ritualListUsed = []
  for(i=0;i<ritualList.length;i++){
    if(spellType === "1"){
-     if(ritualList[i].type === 1 || ritualList[i].type === 4 || ritualList[i].type === 5 || ritualList[i].type === 7){ritualListUsed+= "\n" + ritualList[i].name}}
+     if(ritualList[i].type === 1 || ritualList[i].type === 4 || ritualList[i].type === 5 || ritualList[i].type === 7){ritualListUsed.push(ritualList[i])}}
    if(spellType === "2"){
-     if(ritualList[i].type === 2 || ritualList[i].type === 5 || ritualList[i].type === 6 || ritualList[i].type === 7){ritualListUsed+= "\n" + ritualList[i].name}}
+     if(ritualList[i].type === 2 || ritualList[i].type === 5 || ritualList[i].type === 6 || ritualList[i].type === 7){ritualListUsed.push(ritualList[i])}}
    if(spellType === "3"){
-     if(ritualList[i].type === 3 || ritualList[i].type === 4 || ritualList[i].type === 6 || ritualList[i].type === 7){ritualListUsed+= "\n" + ritualList[i].name}}
+     if(ritualList[i].type === 3 || ritualList[i].type === 4 || ritualList[i].type === 6 || ritualList[i].type === 7){ritualListUsed.push(ritualList[i])}}
    }
 
-var ritualUsed = prompt("What Ritual are you using ?" + ritualListUsed)
-// var ritualUsed = "Luck"
+var select = document.getElementById("ritualBox");
+var length = select.options.length;
+for (i = 0; i < length; i++) {
+  select.options[i] = null;
+}  
+for(var i = 0, l = ritualListUsed.length; i < l; i++){
+  var option = ritualListUsed[i];
+  ritualBox.options.add( new Option(option.name) );
+}
+}
+   
+  
+function computeMaker(){
 
+
+
+ritualUsed = document.getElementById(ritualBox).value
+// var ritualUsed = "Luck"
 
 for(i=0;i<ritualList.length;i++){
   if(ritualUsed === ritualList[i].name){finalRitual = ritualList[i]}
@@ -487,12 +502,24 @@ for (var i = 0; i < combinedListArrays.length - 1; i++) {
 // Here You can set the ingredients. For testing purposes some are provided.
 var ingredientsTotal = [] 
 var firstIngredient = ""
-function setFirstIngredient(){ firstIngredient = prompt("What's your first ingredient ? \n" + results.join("\n"))}
-  while(results.indexOf(firstIngredient)== -1){setFirstIngredient()}
+
+  
+for(var i = 0, l = results.length; i < l; i++){
+  var option = results[i];
+  firstIngredientsBox.options.add( new Option(option.name) );
+}
+
+
+firstIngredient = document.getElementById(firstIngredientsBox).value
 
 results.splice(results.indexOf(firstIngredient), 1);
 if(namelistArray.indexOf(firstIngredient)!=-1){namelistArray.splice(results.indexOf(firstIngredient), 1)};
 if(namelistArray2.indexOf(firstIngredient)!=-1){namelistArray2.splice(results.indexOf(firstIngredient), 1)};
+
+for(var i = 0, l = results.length; i < l; i++){
+  var option = results[i];
+  secondIngredientsBox.options.add( new Option(option.name) );
+}
 
 var secondIngredient = prompt("What's your second ingredient ? \n" + results.join("\n"))
 
@@ -634,3 +661,5 @@ if(Math.floor(potency/finalRitual.power/modifier)>3){potency/=2; duration = " fo
 if(potency <=0){alert("The " + result + "fails !")}
 else if(spellType === "2" || spellType === "1"){alert(total  + duration)} 
 else{alert(total)}}
+
+ 
