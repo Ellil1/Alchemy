@@ -453,7 +453,7 @@ if(spellType === "3"){result+="Enchantment "; modifier+=2; effectType += "While 
    if(spellType === "3"){
      if(ritualList[i].type === 3 || ritualList[i].type === 4 || ritualList[i].type === 6 || ritualList[i].type === 7){ritualListUsed.push(ritualList[i])}}
    }
-
+alert(ritualListUsed.length)
 var select = document.getElementById("ritualBox");
 var length = select.options.length;
 for (i = 0; i < length; i++) {
@@ -465,7 +465,12 @@ for(var i = 0, l = ritualListUsed.length; i < l; i++){
 }
 }
    
-  
+   
+   
+function computerMaker(){
+  alert(result+select)
+}
+ /* 
 function computeMaker(){
 
 
@@ -661,5 +666,5 @@ if(Math.floor(potency/finalRitual.power/modifier)>3){potency/=2; duration = " fo
 if(potency <=0){alert("The " + result + "fails !")}
 else if(spellType === "2" || spellType === "1"){alert(total  + duration)} 
 else{alert(total)}}
-
+*/
  
