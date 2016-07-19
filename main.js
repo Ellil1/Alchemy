@@ -3,7 +3,9 @@ var helpers = 0;
 var prestige = 0;
 var savegame = 0;
 var discoveredProperties = 0;
-
+var discoveredFirstProperties = 0;
+var discoveredSecondProperties = 0;
+var discoveredThirdProperties = 0;
 // Ingredients List
 
 var Ingredient = function(name,first,second,third,rarity,quantity) {
@@ -614,32 +616,61 @@ calculator()
 tableUpdate()
 }
 
-function discoverProperty(){
-    var discoverPropertyCost = Math.floor(40 * Math.pow(1.0333,discoveredProperties));     //works out the cost of this cursor
-    if(researchPoints >= discoverPropertyCost && discoveredProperties<=(discoveredIngredients.length-1)*3-1){                                   //checks that the player can afford the cursor
-    	researchPoints = researchPoints - discoverPropertyCost;    
-		discoveredProperties = discoveredProperties+1
-        document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
 
-		var nextCost = Math.floor(40 * Math.pow(1.0333,discoveredProperties));       //works out the cost of the next cursor
-    document.getElementById('discoverPropertyCost').innerHTML = nextCost;  //updates the cursor cost for the user
+
+function discoverPropertyFirst(){
+    var discoverPropertyCost = Math.floor(40 * Math.pow(1.0333,discoveredFirstProperties));     //works out the cost of this cursor
+    if(researchPoints >= discoverPropertyCost && discoveredProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
+    	researchPoints = researchPoints - discoverPropertyCost;    
+		discoveredFirstProperties = discoveredFirstProperties+1
+        document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
+		var nextCostFirst = Math.floor(40 * Math.pow(1.0333,discoveredFirstProperties));       //works out the cost of the next cursor
+    document.getElementById('discoverPropertyCostFirst').innerHTML = nextCostFirst;  //updates the cursor cost for the user
   	calculatorProperty() 
  };
-  
-
-	function calculatorProperty(){
+  function calculatorProperty(){
 	 var rand = Math.ceil(Math.random()*(discoveredIngredients.length-1))
-	 var rand2 = Math.floor(Math.random()*3)
-if(rand2===0 && discoveredIngredients[rand].first[2] === 1){calculatorProperty()} 
-if(rand2===0 && discoveredIngredients[rand].first[2] != 1){discoveredIngredients[rand].first[2] = 1} 
-if(rand2===1 && discoveredIngredients[rand].second[2] === 1){calculatorProperty()}
-if(rand2===1 && discoveredIngredients[rand].second[2] != 1){discoveredIngredients[rand].second[2] = 1}
-if(rand2===2 && discoveredIngredients[rand].third[2] === 1){calculatorProperty()}
-if(rand2===2 && discoveredIngredients[rand].third[2] != 1){discoveredIngredients[rand].third[2] = 1}
+if(discoveredIngredients[rand].first[2] === 1){calculatorProperty()} 
+if(discoveredIngredients[rand].first[2] != 1){discoveredIngredients[rand].first[2] = 1} 
 	}
 tableUpdate()
 }
 
+function discoverPropertySecond(){
+    var discoverPropertyCost = Math.floor(160 * Math.pow(1.0333,discoveredSecondProperties));     //works out the cost of this cursor
+    if(researchPoints >= discoverPropertyCost && discoveredProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
+    	researchPoints = researchPoints - discoverPropertyCost;    
+		discoveredSecondProperties = discoveredSecondProperties+1
+        document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
+		var nextCostFirst = Math.floor(160 * Math.pow(1.0333,discoveredSecondProperties));       //works out the cost of the next cursor
+    document.getElementById('discoverPropertyCostSecond').innerHTML = nextCostFirst;  //updates the cursor cost for the user
+  	calculatorProperty() 
+ };
+  function calculatorProperty(){
+	 var rand = Math.ceil(Math.random()*(discoveredIngredients.length-1))
+if(discoveredIngredients[rand].second[2] === 1){calculatorProperty()} 
+if(discoveredIngredients[rand].second[2] != 1){discoveredIngredients[rand].second[2] = 1} 
+	}
+tableUpdate()
+}
+
+function discoverPropertyThird(){
+    var discoverPropertyCost = Math.floor(720 * Math.pow(1.0333,discoveredThirdProperties));     //works out the cost of this cursor
+    if(researchPoints >= discoverPropertyCost && discoveredProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
+    	researchPoints = researchPoints - discoverPropertyCost;    
+		discoveredThirdProperties = discoveredThirdProperties+1
+        document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
+		var nextCostFirst = Math.floor(720 * Math.pow(1.0333,discoveredThirdProperties));       //works out the cost of the next cursor
+    document.getElementById('discoverPropertyCostThird').innerHTML = nextCostFirst;  //updates the cursor cost for the user
+  	calculatorProperty() 
+ };
+  function calculatorProperty(){
+	 var rand = Math.ceil(Math.random()*(discoveredIngredients.length-1))
+if(discoveredIngredients[rand].third[2] === 1){calculatorProperty()} 
+if(discoveredIngredients[rand].third[2] != 1){discoveredIngredients[rand].third[2] = 1} 
+	}
+tableUpdate()
+}
 function tableUpdate(){
 var table = document.getElementById("myTable");
 	table.innerHTML = "";
