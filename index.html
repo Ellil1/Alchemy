@@ -2,9 +2,47 @@
 <head>
 <link rel="stylesheet" type="text/css" href="interface.css" />
 </head>
-<body>
-<script type="text/javascript" src="main.js" src="ressources.js"></script>
+<body onload="tableUpdate()">
 
+<script type="text/javascript" src="main.js" ></script>
+ <table align="right">
+  <tr>
+    <th>Combat Stats</th>
+    <th>Power</th>
+  </tr>
+  <tr>
+    <td>Physical Power</td>
+    <td><span id="PPower">0</span></td>
+  </tr>
+  <tr>
+    <td>Magical Power</td>
+    <td><span id="MPower">0</span></td>
+  </tr>
+  <tr>
+    <td>Physical Health</td>
+    <td><span id="PHealth">0</span></td>
+  </tr>
+    <tr>
+    <td>Mental Health</td>
+    <td><span id="MHealth">0</span></td>
+  </tr>
+    <tr>
+    <td>Morale</td>
+    <td><span id="Morale">0</span></td>
+  </tr>
+    <tr>
+    <td>Armor</td>
+    <td><span id="Armor">0</span></td>
+  </tr>
+    <tr>
+    <td>Magic Resistance</td>
+    <td><span id="MResistance">0</span></td>
+  </tr>
+    <tr>
+    <td>Dodge/Parry Chance</td>
+    <td><span id="Dodge">0</span><span>/</span><span id="Parry">0</span></td>
+  </tr>
+  </table> 
 <button onClick="clicker(1)">Do Research</button>
 <span id="researchPoints"> 0 </span>
 <br>
@@ -12,22 +50,49 @@
 <span id="helpers">0</span>
 <span id="helpersCost">10</span>
 <br>
-<button onClick="discoverIngredient()">Discover an Ingredient</button>
-<span id="discoverCost">20</span><br>
-<button onClick="discoverPropertyFirst()">Discover a First Property</button>
-<span id="discoverPropertyCostFirst">40</span>
 <br>
-<button onClick="discoverPropertySecond()">Discover a Second Property</button>
-<span id="discoverPropertyCostSecond">160</span>
+	<label for="mySelect" id = mySelectLabel style="float:left">First Ingredient</label>	
+  <select id="mySelect"  >
+    <option value=""  disabled selected>Ingredient</option>
+  </select>  <br>
+	<label for="mySelect2" id = mySelect2Label style="float:left">Second Ingredient</label>	
+
+  <select id="mySelect2" >
+    <option value=""  disabled selected>Ingredient</option>
+	</select>  <br>
+	<label for="mySelect3" id = mySelect3Label style="float:left">Third Ingredient</label>	
+  <select id="mySelect3" >
+    <option value=""  disabled selected>Ingredient</option>
+  </select>
+  <br>
+
 <br>
-<button onClick="discoverPropertyThird()">Discover a Third Property</button>
-<span id="discoverPropertyCostThird">720</span>
-<br>
+<table>
+    <tr><td><button onClick="craft()">Craft</button>
+</td><td> <select id="SelectType"  >
+    <option value = "Potion">Potion</option>
+    <option value = "Spell">Spell</option>
+    <option value = "Enchantement">Enchantement</option>
+    <option value = "Summoning">Summoning</option>
+	</select> <br></td></tr>
+    <tr><td><button onClick="discoverIngredient()">Discover an Ingredient</button>
+</td><td><span id="discoverCost">20</span><br></td></tr>
+    <tr><td><button onClick="discoverPropertyFirst()">Discover a First Property</button>
+</td><td><span id="discoverPropertyCostFirst">40</span></td></tr>
+    <tr><td><button onClick="discoverPropertySecond()">Discover a Second Property</button>
+</td><td><span id="discoverPropertyCostSecond">160</span></td></tr>
+    <tr><td><button onClick="discoverPropertyThird()">Discover a Third Property</button>
+</td><td><span id="discoverPropertyCostThird">720</span></td></tr>
+</table><br><br><br>
 <table id="myTable"></table>
-<br>
+
+
 <p id="discoveredList"></p>
 <br>
+
 <button onClick="saveButton()">Save !</button>
 <button onClick="loadButton()">Load !</button>
+<br>
+<button onClick="Cheat()">TestingCheat</button>
 
 </body>
