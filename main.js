@@ -7,7 +7,6 @@ var discoveredFirstProperties = 0;
 var discoveredSecondProperties = 0;
 var discoveredThirdProperties = 0;
 // Ingredients List
-
 var Ingredient = function(name,first,second,third,rarity,quantity) {
   this.name = name;
   this.first = first;
@@ -16,9 +15,7 @@ var Ingredient = function(name,first,second,third,rarity,quantity) {
   this.rarity = rarity;
   this.quantity = quantity;
 };
-
-var discoveredIngredients = [Default = new Ingredient("  Name",["Property 1",3],["Property 2",2],["Property 3",2,0],2,"Quantity")]
-
+var discoveredIngredients = [Default = new Ingredient("  Ingredient",["Property 1",3],["Property 2",2],["Property 3",2,0],2,"Quantity")]
 
 var Environment = function(name,first,second,third,power) {
   this.name = name;
@@ -27,7 +24,6 @@ var Environment = function(name,first,second,third,power) {
   this.third = third; 
   this.power = power;
 };
-
 var PowerSource = function(name,first,second,third,power) {
   this.name = name;
   this.first = first;
@@ -35,19 +31,19 @@ var PowerSource = function(name,first,second,third,power) {
   this.third = third; 
   this.power = power;
 };
-
 var MagicItem = function(name,first,second,third,power) {
   this.name = name;
   this.first = first;
   this.second = second;
   this.third = third; 
 };
-
-var BasicEffect = function(name,value) {
+var BasicEffect = function(name,value,affectedStats,potency) {
   this.name = name;
   this.value = value;
-}
+  this.affectedStats = affectedStats
+  this.potency = potency
 
+}
 var Ritual = function(name,first,second,effect,power,type) {
   this.name = name;
   this.first = first;
@@ -57,53 +53,104 @@ var Ritual = function(name,first,second,effect,power,type) {
   this.type = type; 
 
 };
+var Stats = function(name,value){
+  this.name = name;
+  this.value = value;
+}
 
+var stats = [
+PhysicalPower= new Stats("Physical Power",0),
+MagicalPower= new Stats("Magical Power",0),
+PhysicalHealth= new Stats("Physical Health",0),
+MentalHealth= new Stats("Mental Health",0),
+MoraleHealth= new Stats("Morale Health",0),
+MagicResistance= new Stats("Magic Resistance",0),
+TravelSpeed= new Stats("Travel Speed",0),
+ResearchSpeed= new Stats("Research Speed",0),
+ResearchSkill= new Stats("Research Skill",0),
+ProphecySkill= new Stats("Prophecy Skill",0),
+PotionMakingSkill= new Stats("Potion-Making Skill",0),
+SpellCastingSkill= new Stats("Spell-Casting Skill",0),
+EnchantingSkill= new Stats("Enchanting Skill",0),
+HelpersSkill= new Stats("Helpers Skill",0),
+EnemyDetection= new Stats("Enemy Detection",0),
+ResourceDetection= new Stats("Resource Detection",0),
+EnemyWealth= new Stats("Enemy Wealth",0),
+EnemyReputation= new Stats("Enemy Reputation",0),
+AgricultureSkill= new Stats("Agriculture Skill",0),
+AgricultureProsperity= new Stats("Agriculture Prosperity",0),
+MiningSkill= new Stats("Mining Skill",0),
+MiningProsperity= new Stats("Mining Prosperity",0),
+Mana= new Stats("Mana",0),
+Dodge= new Stats("Dodge",0),
+Parry= new Stats("Parry",0),
+Armor= new Stats("Armor",0),
+Charisma= new Stats("Charisma",0),
+Seduction= new Stats("Seduction",0),
+Manipulation= new Stats("Manipulation",0),
+Presence= new Stats("Presence",0),
+Healing= new Stats("Healing",0),
+Influence= new Stats("Influence",0),
+Haggling= new Stats("Haggling",0),
+Money= new Stats("Money",0),
+Reputation= new Stats("Reputation",0),
+EnemyPhysicalPower= new Stats("Enemy Physical Power",0),
+EnemyMagicalPower= new Stats("Enemy Magical Power",0),
+EnemyPhysicalHealth= new Stats("Enemy Physical Health",0),
+EnemyMentalHealth= new Stats("Enemy Mental Health",0),
+EnemyMoraleHealth= new Stats("Enemy Morale Health",0),
+EnemyMagicResistance= new Stats("Enemy Magic Resistance",0),
+EnemyMana= new Stats("Enemy Mana",0),
+EnemyDodge= new Stats("Enemy Dodge",0),
+EnemyParry= new Stats("Enemy Parry",0),
+EnemyArmor= new Stats("Enemy Armor",0)
+]
 var effects = [
-Healing = new BasicEffect("Healing","11",0),
-Fertility  = new BasicEffect("Fertility ","12",0),
-Rebirth  = new BasicEffect("Rebirth","13",0),
-Protection  = new BasicEffect("Protection","14",0),
-Transformation  = new BasicEffect("Transformation","15",0),
-Death  = new BasicEffect("Death","16",0),
-Power  = new BasicEffect("Power","17",0),
-Cleansing = new BasicEffect("Cleansing","18",0),
-Water  = new BasicEffect("Water","21",0),
-Fire  = new BasicEffect("Fire","22",0),
-Earth  = new BasicEffect("Earth","23",0),
-Wind  = new BasicEffect("Wind","24",0),
-Light  = new BasicEffect("Light ","25",0),
-Darkness = new BasicEffect("Darkness","26",0),
-Strength  = new BasicEffect("Strength","31",0),
-Toughness  = new BasicEffect("Toughness","32",0),
-Speed  = new BasicEffect("Speed","33",0),
-Intellect  = new BasicEffect("Intellect ","34",0),
-Longevity  = new BasicEffect("Longevity","35",0),
-Weakness  = new BasicEffect("Weakness","36",0),
-Luck   = new BasicEffect("Luck","41",0),
-Sociality   = new BasicEffect("Sociality","42",0),
-Sex   = new BasicEffect("Sex","43",0),
-Riches   = new BasicEffect("Riches","44",0),
-Beauty  = new BasicEffect("Beauty","45",0),
-Worship  = new BasicEffect("Worship","46",0),
-Happiness   = new BasicEffect("Happiness","51",0),
-Confidence   = new BasicEffect("Confidence","52",0),
-Peace   = new BasicEffect("Peace","53",0),
-Courage   = new BasicEffect("Courage","54",0),
-Love  = new BasicEffect("Love","55",0),
-Confusion   = new BasicEffect("Confusion","61",0),
-Fear  = new BasicEffect("Fear","62",0),
-Madness   = new BasicEffect("Madness","62",0),
-Anger  = new BasicEffect("Anger","63",0),
-Sadness  = new BasicEffect("Sadness","64",0),
-Fate  = new BasicEffect("Fate","71",0),
-Perception  = new BasicEffect("Perception","72",0),
-Truth   = new BasicEffect("Truth","73",0),
-Dreams  = new BasicEffect("Dreams","74",0),
-Mystery  = new BasicEffect("Mystery","75",0),
-Soul  = new BasicEffect("Soul","76",0),
-Messages  = new BasicEffect("Messages","77",0),
-Travel  = new BasicEffect("Travel","78",0),
-Illusion  = new BasicEffect("Illusion","79",0),
+Healing = new BasicEffect("Healing","11",["Healing","Physical Health","Agriculture Prosperity"],0),
+Fertility  = new BasicEffect("Fertility","12",["Agriculture Prosperity","Agriculture Skill","Physical Health"],0),
+Rebirth  = new BasicEffect("Rebirth","13",["Agriculture Skill","Healing","Magical Power"],0),
+Protection  = new BasicEffect("Protection","14",["Armor","Dodge","Parry"],0),
+Transformation  = new BasicEffect("Transformation","15",["Enchanting Skill","Enemy Armor","Potion-Making Skill"],0),
+Death  = new BasicEffect("Death","16",["Enemy Wealth","Enemy Physical Health","Enemy Parry"],0),
+Power  = new BasicEffect("Power","17",["Magical Power","Enchanting Skill","Spell-Casting Skill"],0),
+Cleansing = new BasicEffect("Cleansing","18",["Magic Resistance","Enemy Magical Power","Enemy Mana"],0),
+Water  = new BasicEffect("Water","21",["Enemy Mana","Mana","Prophecy Skill"],0),
+Fire  = new BasicEffect("Fire","22",["Enemy Physical Health","Research Speed","Physical Power"],0),
+Earth  = new BasicEffect("Earth","23",["Mining Prosperity","Money","Magic Resistance"],0),
+Wind  = new BasicEffect("Wind","24",["Dodge","Travel Speed","Enemy Morale Health"],0),
+Light  = new BasicEffect("Light","25",["Enemy Parry","Enemy Detection","Morale Health"],0),
+Darkness = new BasicEffect("Darkness","26",["Enemy Reputation","Enemy Physical Power","Enemy Dodge"],0),
+Strength  = new BasicEffect("Strength","31",["Physical Power","Parry","Healing"],0),
+Toughness  = new BasicEffect("Toughness","32",["Physical Health","Physical Power","Armor"],0),
+Speed  = new BasicEffect("Speed","33",["Parry","Mining Skill","Travel Speed"],0),
+Intellect  = new BasicEffect("Intellect","34",["Research Skill","Enemy Magic Resistance","Agriculture Skill"],0),
+Longevity  = new BasicEffect("Longevity","35",["Mining Skill","Armor","Mental Health"],0),
+Weakness  = new BasicEffect("Weakness","36",["Enemy Physical Power","Enemy Parry","Enemy Physical Health"],0),
+Luck   = new BasicEffect("Luck","41",["Potion-Making Skill","Mining Prosperity","Helpers Skill"],0),
+Sociality   = new BasicEffect("Sociality","42",["Influence","Presence","Money"],0),
+Sex   = new BasicEffect("Sex","43",["Seduction","Reputation","Charisma"],0),
+Riches   = new BasicEffect("Riches","44",["Money","Haggling","Enemy Wealth"],0),
+Beauty  = new BasicEffect("Beauty","45",["Charisma","Seduction","Manipulation"],0),
+Worship  = new BasicEffect("Worship","46",["Helpers Skill","Influence","Enemy Reputation"],0),
+Happiness   = new BasicEffect("Happiness","51",["Morale Health","Charisma","Influence"],0),
+Confidence   = new BasicEffect("Confidence","52",["Presence","Morale Health","Haggling"],0),
+Peace   = new BasicEffect("Peace","53",["Enemy Magical Power","Mental Health","Reputation"],0),
+Courage   = new BasicEffect("Courage","54",["Mental Health","Spell-Casting Skill","Presence"],0),
+Love  = new BasicEffect("Love","55",["Reputation","Potion-Making Skill","Mining Skill"],0),
+Confusion   = new BasicEffect("Confusion","61",["Manipulation","Enemy Mental Health","Enemy Magical Power"],0),
+Fear  = new BasicEffect("Fear","62",["Enemy Morale Health","Enemy Dodge","Enemy Physical Power"],0),
+Madness   = new BasicEffect("Madness","62",["Enemy Mental Health","Enemy Morale Health","Enemy Magic Resistance"],0),
+Anger  = new BasicEffect("Anger","63",["Enemy Armor","Enemy Reputation","Enemy Armor"],0),
+Sadness  = new BasicEffect("Sadness","64",["Enemy Magic Resistance","Enemy Mana","Enemy Mental Health"],0),
+Fate  = new BasicEffect("Fate","71",["Mana","Helpers Skill","Enchanting Skill"],0),
+Perception  = new BasicEffect("Perception","72",["Enemy Detection","Research Skill","Mining Prosperity"],0),
+Truth   = new BasicEffect("Truth","73",["Research Speed","Agriculture Prosperity","Resource Detection"],0),
+Dreams  = new BasicEffect("Dreams","74",["Resource Detection","Magic Resistance","Seduction"],0),
+Mystery  = new BasicEffect("Mystery","75",["Prophecy Skill","Enemy Wealth","Mana"],0),
+Soul  = new BasicEffect("Soul","76",["Spell-Casting Skill","Magical Power","Enemy Detection"],0),
+Messages  = new BasicEffect("Messages","77",["Haggling","Prophecy Skill","Research Speed"],0),
+Travel  = new BasicEffect("Travel","78",["Travel Speed","Resource Detection","Research Skill"],0),
+Illusion  = new BasicEffect("Illusion","79",["Enemy Dodge","Manipulation","Dodge"],0),
     
     
 ]
@@ -228,7 +275,7 @@ Lily = new Ingredient(["Lily"],["42",1,0],["53",2,0],["12",1,0],1,0),
 MilkThistle = new Ingredient(["Milk Thistle"],["12",2,0],["25",1,0],["51",1,0],1,0),
 Mistletoe = new Ingredient(["Mistletoe"],["53",3,0],["55",1,0],["13",1,0],1,0),
 Mugwort = new Ingredient(["Mugwort"],["76",2,0],["75",1,0],["16",1,0],1,0),
-Wormwood = new Ingredient(["Wormwood"],["76",3,0],["16",1,0],["65",1,0],1,0),
+Wormwood = new Ingredient(["Wormwood"],["76",3,0],["16",1,0],["64",1,0],1,0),
 
   
   // Trees
@@ -253,7 +300,7 @@ PearTree = new Ingredient(["Pear Tree"],["55",2,0],["61",1,0],["12",1,0],1,0),
 PoplarTree = new Ingredient(["Poplar Tree"],["14",2,0],["24",1,0],["77",1,0],1,0),
 RowanTree = new Ingredient(["Rowan Tree"],["14",2,0],["72",2,0],["76",2,0],1,0),
 WillowTree = new Ingredient(["Willow Tree"],["75",2,0],["14",1,0],["12",1,0],1,0),
-YewTree = new Ingredient(["Yew Tree"],["15",2,0],["74",2,0],["65",2,0],1,0),
+YewTree = new Ingredient(["Yew Tree"],["15",2,0],["74",2,0],["64",2,0],1,0),
     
   // Metal
 Brass = new Ingredient(["Brass"],["14",2,0],["55",1,0],["52",1,0],1,0),
@@ -326,7 +373,7 @@ RedCandle = new Ingredient(["Red Candle"],["43",1,0],["55",1,0],["12",1,0],1,0),
   ]
 var environments = [
 
-Graveyard = new Environment(["Graveyard"],[["14",1],["16",2],["26",1],["37",1],["46",1],["53",1],["55",1],["62",2],["65",2],["76",2]]),
+Graveyard = new Environment(["Graveyard"],[["14",1],["16",2],["26",1],["37",1],["46",1],["53",1],["55",1],["62",2],["64",2],["76",2]]),
 Forest = new Environment(["Forest"],[["12",2],["13",2],["17",1],["23",1],["34",1],["46",1],["35",1],["37",1],["53",1],["62",1],["75",1]]),
 FullMoon = new Environment(["Full Moon"],[["15",1],["17",2],["25",2],["37",2],["41",2],["45",2],["46",2],["53",1],["63",3],["61",2],["71",2],["74",3],["75",2],["79",3]]),
 ]
@@ -564,7 +611,8 @@ function saveButton(){
 var save = {
 	researchPoints: researchPoints,
 	helpers: helpers,
-	prestige: prestige
+	prestige: prestige,
+	discoveredIngredients : discoveredIngredients 
 }
 	
 	localStorage.setItem("save",JSON.stringify(save));
@@ -574,13 +622,22 @@ function loadButton(){
 	 if (typeof savegame.researchPoints !== "undefined") researchPoints = savegame.researchPoints; 
 	 if (typeof savegame.helpers !== "undefined") helpers = savegame.helpers; 
 	 if (typeof savegame.prestige !== "undefined") prestige = savegame.prestige;
+	 if (typeof savegame.discoveredIngredients !== "undefined") discoveredIngredients = savegame.discoveredIngredients;
 	 
 	 document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints); 
 	 document.getElementById('helpers').innerHTML = helpers	;
      var nextCost = Math.floor(10 * Math.pow(1.1,helpers));
-	document.getElementById('helpersCost').innerHTML = nextCost;	 
+	document.getElementById('helpersCost').innerHTML = nextCost;	
+tableUpdate()
+addOption(document.getElementById("mySelect"))
+addOption(document.getElementById("mySelect2"))
+addOption(document.getElementById("mySelect3"))
 	}
-
+function Cheat(){
+clicker(1000000)
+for(i=1;i<discoveredIngredients.length;i++){discoveredIngredients[i].quantity+=1000}
+tableUpdate()
+}
 window.setInterval(function(){
 clicker(helpers*0.5); 
 
@@ -597,6 +654,9 @@ function discoverIngredient(){
   	calculator()
 	discoveredIngredients.push(ingredients[rand]);
 discoveredIngredients.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} ); 
+addOption(document.getElementById("mySelect"))
+addOption(document.getElementById("mySelect2"))
+addOption(document.getElementById("mySelect3"))
 updateList()
   };
   
@@ -616,15 +676,28 @@ calculator()
 tableUpdate()
 }
 
-
+function addOption(selectChoice) {
+	var select = selectChoice;
+var length = discoveredIngredients.length;
+for (j = 0; j < length; j++) {
+  select.options[0] = null;
+}	
+for (i = 0; i < discoveredIngredients.length; i++) {
+    var x = selectChoice;
+    var option = document.createElement("option");
+    option.text = discoveredIngredients[i].name;
+    option.value = discoveredIngredients[i].name;
+   x.add(option);
+}
+}
 
 function discoverPropertyFirst(){
-    var discoverPropertyCost = Math.floor(40 * Math.pow(1.0333,discoveredFirstProperties));     //works out the cost of this cursor
-    if(researchPoints >= discoverPropertyCost && discoveredProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
+    var discoverPropertyCost = Math.floor(40 * Math.pow(1.2,discoveredFirstProperties));     //works out the cost of this cursor
+    if(researchPoints >= discoverPropertyCost && discoveredFirstProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
     	researchPoints = researchPoints - discoverPropertyCost;    
 		discoveredFirstProperties = discoveredFirstProperties+1
         document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
-		var nextCostFirst = Math.floor(40 * Math.pow(1.0333,discoveredFirstProperties));       //works out the cost of the next cursor
+		var nextCostFirst = Math.floor(40 * Math.pow(1.2,discoveredFirstProperties));       //works out the cost of the next cursor
     document.getElementById('discoverPropertyCostFirst').innerHTML = nextCostFirst;  //updates the cursor cost for the user
   	calculatorProperty() 
  };
@@ -635,14 +708,13 @@ if(discoveredIngredients[rand].first[2] != 1){discoveredIngredients[rand].first[
 	}
 tableUpdate()
 }
-
 function discoverPropertySecond(){
-    var discoverPropertyCost = Math.floor(160 * Math.pow(1.0333,discoveredSecondProperties));     //works out the cost of this cursor
-    if(researchPoints >= discoverPropertyCost && discoveredProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
-    	researchPoints = researchPoints - discoverPropertyCost;    
+    var discoverPropertyCost = Math.floor(160 * Math.pow(1.2,discoveredSecondProperties));     //works out the cost of this cursor
+    if(researchPoints >= discoverPropertyCost && discoveredSecondProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
+		researchPoints = researchPoints - discoverPropertyCost;    
 		discoveredSecondProperties = discoveredSecondProperties+1
         document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
-		var nextCostFirst = Math.floor(160 * Math.pow(1.0333,discoveredSecondProperties));       //works out the cost of the next cursor
+		var nextCostFirst = Math.floor(160 * Math.pow(1.2,discoveredSecondProperties));       //works out the cost of the next cursor
     document.getElementById('discoverPropertyCostSecond').innerHTML = nextCostFirst;  //updates the cursor cost for the user
   	calculatorProperty() 
  };
@@ -653,14 +725,13 @@ if(discoveredIngredients[rand].second[2] != 1){discoveredIngredients[rand].secon
 	}
 tableUpdate()
 }
-
 function discoverPropertyThird(){
-    var discoverPropertyCost = Math.floor(720 * Math.pow(1.0333,discoveredThirdProperties));     //works out the cost of this cursor
-    if(researchPoints >= discoverPropertyCost && discoveredProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
+    var discoverPropertyCost = Math.floor(720 * Math.pow(1.2,discoveredThirdProperties));     //works out the cost of this cursor
+    if(researchPoints >= discoverPropertyCost && discoveredThirdProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
     	researchPoints = researchPoints - discoverPropertyCost;    
 		discoveredThirdProperties = discoveredThirdProperties+1
         document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
-		var nextCostFirst = Math.floor(720 * Math.pow(1.0333,discoveredThirdProperties));       //works out the cost of the next cursor
+		var nextCostFirst = Math.floor(720 * Math.pow(1.2,discoveredThirdProperties));       //works out the cost of the next cursor
     document.getElementById('discoverPropertyCostThird').innerHTML = nextCostFirst;  //updates the cursor cost for the user
   	calculatorProperty() 
  };
@@ -671,9 +742,165 @@ if(discoveredIngredients[rand].third[2] != 1){discoveredIngredients[rand].third[
 	}
 tableUpdate()
 }
+
+function craft(){
+var stats = [
+PhysicalPower= new Stats("Physical Power",0),
+MagicalPower= new Stats("Magical Power",0),
+PhysicalHealth= new Stats("Physical Health",0),
+MentalHealth= new Stats("Mental Health",0),
+MoraleHealth= new Stats("Morale Health",0),
+MagicResistance= new Stats("Magic Resistance",0),
+TravelSpeed= new Stats("Travel Speed",0),
+ResearchSpeed= new Stats("Research Speed",0),
+ResearchSkill= new Stats("Research Skill",0),
+ProphecySkill= new Stats("Prophecy Skill",0),
+PotionMakingSkill= new Stats("Potion-Making Skill",0),
+SpellCastingSkill= new Stats("Spell-Casting Skill",0),
+EnchantingSkill= new Stats("Enchanting Skill",0),
+HelpersSkill= new Stats("Helpers Skill",0),
+EnemyDetection= new Stats("Enemy Detection",0),
+ResourceDetection= new Stats("Resource Detection",0),
+EnemyWealth= new Stats("Enemy Wealth",0),
+EnemyReputation= new Stats("Enemy Reputation",0),
+AgricultureSkill= new Stats("Agriculture Skill",0),
+AgricultureProsperity= new Stats("Agriculture Prosperity",0),
+MiningSkill= new Stats("Mining Skill",0),
+MiningProsperity= new Stats("Mining Prosperity",0),
+Mana= new Stats("Mana",0),
+Dodge= new Stats("Dodge",0),
+Parry= new Stats("Parry",0),
+Armor= new Stats("Armor",0),
+Charisma= new Stats("Charisma",0),
+Seduction= new Stats("Seduction",0),
+Manipulation= new Stats("Manipulation",0),
+Presence= new Stats("Presence",0),
+Healing= new Stats("Healing",0),
+Influence= new Stats("Influence",0),
+Haggling= new Stats("Haggling",0),
+Money= new Stats("Money",0),
+Reputation= new Stats("Reputation",0),
+EnemyPhysicalPower= new Stats("Enemy Physical Power",0),
+EnemyMagicalPower= new Stats("Enemy Magical Power",0),
+EnemyPhysicalHealth= new Stats("Enemy Physical Health",0),
+EnemyMentalHealth= new Stats("Enemy Mental Health",0),
+EnemyMoraleHealth= new Stats("Enemy Morale Health",0),
+EnemyMagicResistance= new Stats("Enemy Magic Resistance",0),
+EnemyMana= new Stats("Enemy Mana",0),
+EnemyDodge= new Stats("Enemy Dodge",0),
+EnemyParry= new Stats("Enemy Parry",0),
+EnemyArmor= new Stats("Enemy Armor",0)
+]
+var firstIngredient = discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById("mySelect").value});
+var secondIngredient = discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById("mySelect2").value});
+var thirdIngredient = discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById("mySelect3").value});
+var effectPotency = [ //Indexes the overall Effects array, to modify it for the potion.
+HealingPotency = new BasicEffect("Healing","11",["Healing","Physical Health","Agriculture Prosperity"],0),
+FertilityPotency  = new BasicEffect("Fertility","12",["Agriculture Prosperity","Agriculture Skill","Physical Health"],0),
+RebirthPotency  = new BasicEffect("Rebirth","13",["Agriculture Skill","Healing","Magical Power"],0),
+ProtectionPotency  = new BasicEffect("Protection","14",["Armor","Dodge","Parry"],0),
+TransformationPotency  = new BasicEffect("Transformation","15",["Enchanting Skill","Enemy Armor","Potion-Making Skill"],0),
+DeathPotency  = new BasicEffect("Death","16",["Enemy Wealth","Enemy Physical Health","Enemy Parry"],0),
+PowerPotency  = new BasicEffect("Power","17",["Magical Power","Enchanting Skill","Spell-Casting Skill"],0),
+CleansingPotency = new BasicEffect("Cleansing","18",["Magic Resistance","Enemy Magical Power","Enemy Mana"],0),
+WaterPotency  = new BasicEffect("Water","21",["Enemy Mana","Mana","Prophecy Skill"],0),
+FirePotency  = new BasicEffect("Fire","22",["Enemy Physical Health","Research Speed","Physical Power"],0),
+EarthPotency  = new BasicEffect("Earth","23",["Mining Prosperity","Money","Magic Resistance"],0),
+WindPotency  = new BasicEffect("Wind","24",["Dodge","Travel Speed","Enemy Morale Health"],0),
+LightPotency  = new BasicEffect("Light","25",["Enemy Parry","Enemy Detection","Morale Health"],0),
+DarknessPotency = new BasicEffect("Darkness","26",["Enemy Reputation","Enemy Physical Power","Enemy Dodge"],0),
+StrengthPotency  = new BasicEffect("Strength","31",["Physical Power","Parry","Healing"],0),
+ToughnessPotency  = new BasicEffect("Toughness","32",["Physical Health","Physical Power","Armor"],0),
+SpeedPotency  = new BasicEffect("Speed","33",["Parry","Mining Skill","Travel Speed"],0),
+IntellectPotency  = new BasicEffect("Intellect","34",["Research Skill","Enemy Magic Resistance","Agriculture Skill"],0),
+LongevityPotency  = new BasicEffect("Longevity","35",["Mining Skill","Armor","Mental Health"],0),
+WeaknessPotency  = new BasicEffect("Weakness","36",["Enemy Physical Power","Enemy Parry","Enemy Physical Health"],0),
+LuckPotency   = new BasicEffect("Luck","41",["Potion-Making Skill","Mining Prosperity","Helpers Skill"],0),
+SocialityPotency   = new BasicEffect("Sociality","42",["Influence","Presence","Money"],0),
+SexPotency   = new BasicEffect("Sex","43",["Seduction","Reputation","Charisma"],0),
+RichesPotency   = new BasicEffect("Riches","44",["Money","Haggling","Enemy Wealth"],0),
+BeautyPotency  = new BasicEffect("Beauty","45",["Charisma","Seduction","Manipulation"],0),
+WorshipPotency  = new BasicEffect("Worship","46",["Helpers Skill","Influence","Enemy Reputation"],0),
+HappinessPotency   = new BasicEffect("Happiness","51",["Morale Health","Charisma","Influence"],0),
+ConfidencePotency   = new BasicEffect("Confidence","52",["Presence","Morale Health","Haggling"],0),
+PeacePotency   = new BasicEffect("Peace","53",["Enemy Magical Power","Mental Health","Reputation"],0),
+CouragePotency   = new BasicEffect("Courage","54",["Mental Health","Spell-Casting Skill","Presence"],0),
+LovePotency  = new BasicEffect("Love","55",["Reputation","Potion-Making Skill","Mining Skill"],0),
+ConfusionPotency   = new BasicEffect("Confusion","61",["Manipulation","Enemy Mental Health","Enemy Magical Power"],0),
+FearPotency  = new BasicEffect("Fear","62",["Enemy Morale Health","Enemy Dodge","Enemy Physical Power"],0),
+MadnessPotency   = new BasicEffect("Madness","62",["Enemy Mental Health","Enemy Morale Health","Enemy Magic Resistance"],0),
+AngerPotency  = new BasicEffect("Anger","63",["Enemy Armor","Enemy Reputation","Enemy Armor"],0),
+SadnessPotency  = new BasicEffect("Sadness","64",["Enemy Magic Resistance","Enemy Mana","Enemy Mental Health"],0),
+FatePotency  = new BasicEffect("Fate","71",["Mana","Helpers Skill","Enchanting Skill"],0),
+PerceptionPotency  = new BasicEffect("Perception","72",["Enemy Detection","Research Skill","Mining Prosperity"],0),
+TruthPotency   = new BasicEffect("Truth","73",["Research Speed","Agriculture Prosperity","Resource Detection"],0),
+DreamsPotency  = new BasicEffect("Dreams","74",["Resource Detection","Magic Resistance","Seduction"],0),
+MysteryPotency  = new BasicEffect("Mystery","75",["Prophecy Skill","Enemy Wealth","Mana"],0),
+SoulPotency  = new BasicEffect("Soul","76",["Spell-Casting Skill","Magical Power","Enemy Detection"],0),
+MessagesPotency  = new BasicEffect("Messages","77",["Haggling","Prophecy Skill","Research Speed"],0),
+TravelPotency  = new BasicEffect("Travel","78",["Travel Speed","Resource Detection","Research Skill"],0),
+IllusionPotency  = new BasicEffect("Illusion","79",["Enemy Dodge","Manipulation","Dodge"],0),
+    
+    
+]
+
+function arrayCreate(ingredient){ //For each Effect in the new array, adds potency based on the ingredients chosen.
+for(i=0;i<effectPotency.length;i++){
+if(ingredient[0].first[0] === effectPotency[i].value){effectPotency[i].potency+=ingredient[0].first[1]}
+if(ingredient[0].second[0] === effectPotency[i].value){effectPotency[i].potency+=ingredient[0].second[1]}
+if(ingredient[0].third[0] === effectPotency[i].value){effectPotency[i].potency+=ingredient[0].third[1]}
+}
+}
+arrayCreate(firstIngredient)
+arrayCreate(secondIngredient)
+arrayCreate(thirdIngredient)
+
+
+var effectPotencySorted =  effectPotency.sort(function(b, a){
+    return a["potency"]-b["potency"];
+});
+
+statsArray = []
+//alert(effectPotencySorted[0].name)
+	for(j=0;j<effectPotencySorted.length;j++){
+	for(i=0;i<effectPotencySorted[j].potency;i++){
+	
+statsArray.push(effectPotencySorted[j].affectedStats[0])
+statsArray.push(effectPotencySorted[j].affectedStats[1])
+statsArray.push(effectPotencySorted[j].affectedStats[2])
+	}}
+	
+for(k=0;k<statsArray.length;k++){
+for(l=0;l<stats.length;l++){
+if(statsArray[k] === stats[l].name){stats[l].value+=1}
+}
+}
+var typeText = ""
+function adjuster(){
+	var type = 1
+	 
+ 	if(document.getElementById('SelectType').value ==="Potion"){type = 1; typeText = "Drinking this Potion has the following effect: \n"}
+	if(document.getElementById('SelectType').value ==="Spell"){type = 0.8; typeText = "Casting this Spell has the following effect: \n"}
+	if(document.getElementById('SelectType').value ==="Enchantement"){type = 0.1; typeText = "This Enchantement has the following passive effect: \n"}
+	if(document.getElementById('SelectType').value ==="Summoning"){type = 0.1; typeText = "This Summon grants the following passive bonus: \n"}
+
+	for(v=0;v<stats.length;v++){stats[v].value = Math.floor(stats[v].value*type)}
+}
+
+adjuster()
+
+var statsSorted =  stats.sort(function(b, a){
+    return a["value"]-b["value"];
+});
+
+alert(typeText + statsSorted[0].name + ": +" + statsSorted[0].value + "\n" +statsSorted[1].name + ": +" + statsSorted[1].value + "\n" +statsSorted[2].name + ": +" + statsSorted[2].value) 
+	}
+
+
 function tableUpdate(){
 var table = document.getElementById("myTable");
 	table.innerHTML = "";
+
 for(i=0;i<discoveredIngredients.length;i++){
 // Create an empty <tr> element and add it to the 1st position of the table:
 var row = table.insertRow(-1);
@@ -684,7 +911,8 @@ var cell2 = row.insertCell(1);
 var cell3 = row.insertCell(2);
 var cell4 = row.insertCell(3);
 var cell5 = row.insertCell(4);
-// Add some text to the new cells:
+
+// Add some text to the new cells, row by row.
 
 
 var result1 = "";
@@ -708,11 +936,14 @@ else{result2 = discoveredIngredients[i].second[0]}}
 	  if(discoveredIngredients[i].third[2] != 1){result3 = "???";break;}
   else{result3 = effects[l].name;break;}}
 else{result3 = discoveredIngredients[i].third[0]}}
-
+//This updates the cells with the different results.
 cell1.innerHTML = discoveredIngredients[i].name;
 cell2.innerHTML = result1;
 cell3.innerHTML = result2;
 cell4.innerHTML = result3;
 cell5.innerHTML = discoveredIngredients[i].quantity;
 
+
 }}
+
+
