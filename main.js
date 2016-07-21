@@ -53,18 +53,19 @@ var Ritual = function(name,first,second,effect,power,type) {
   this.type = type; 
 
 };
-var Stats = function(name,value){
+var Stats = function(name,value,statBox){
   this.name = name;
   this.value = value;
+  this.statBox = statBox
 }
 
 var stats = [
-PhysicalPower= new Stats("Physical Power",0),
-MagicalPower= new Stats("Magical Power",0),
-PhysicalHealth= new Stats("Physical Health",0),
-MentalHealth= new Stats("Mental Health",0),
-MoraleHealth= new Stats("Morale Health",0),
-MagicResistance= new Stats("Magic Resistance",0),
+PhysicalPower= new Stats("Physical Power",0,"PPower"),
+MagicalPower= new Stats("Magical Power",0,"MPower"),
+PhysicalHealth= new Stats("Physical Health",0,"PHealth"),
+MentalHealth= new Stats("Mental Health",0,"MHealth"),
+MoraleHealth= new Stats("Morale Health",0,"Morale"),
+MagicResistance= new Stats("Magic Resistance",0,"MResistance"),
 TravelSpeed= new Stats("Travel Speed",0),
 ResearchSpeed= new Stats("Research Speed",0),
 ResearchSkill= new Stats("Research Skill",0),
@@ -82,9 +83,9 @@ AgricultureProsperity= new Stats("Agriculture Prosperity",0),
 MiningSkill= new Stats("Mining Skill",0),
 MiningProsperity= new Stats("Mining Prosperity",0),
 Mana= new Stats("Mana",0),
-Dodge= new Stats("Dodge",0),
-Parry= new Stats("Parry",0),
-Armor= new Stats("Armor",0),
+Dodge= new Stats("Dodge",0,"Dodge"),
+Parry= new Stats("Parry",0,"Parry"),
+Armor= new Stats("Armor",0,"Armor"),
 Charisma= new Stats("Charisma",0),
 Seduction= new Stats("Seduction",0),
 Manipulation= new Stats("Manipulation",0),
@@ -638,9 +639,9 @@ clicker(1000000)
 for(i=1;i<discoveredIngredients.length;i++){discoveredIngredients[i].quantity+=1000}
 tableUpdate()
 }
+
 window.setInterval(function(){
 clicker(helpers*0.5); 
-
 }, 1000);
 
 function discoverIngredient(){
@@ -745,12 +746,12 @@ tableUpdate()
 
 function craft(){
 var stats = [
-PhysicalPower= new Stats("Physical Power",0),
-MagicalPower= new Stats("Magical Power",0),
-PhysicalHealth= new Stats("Physical Health",0),
-MentalHealth= new Stats("Mental Health",0),
-MoraleHealth= new Stats("Morale Health",0),
-MagicResistance= new Stats("Magic Resistance",0),
+PhysicalPower= new Stats("Physical Power",0,"PPower"),
+MagicalPower= new Stats("Magical Power",0,"MPower"),
+PhysicalHealth= new Stats("Physical Health",0,"PHealth"),
+MentalHealth= new Stats("Mental Health",0,"MHealth"),
+MoraleHealth= new Stats("Morale Health",0,"Morale"),
+MagicResistance= new Stats("Magic Resistance",0,"MResistance"),
 TravelSpeed= new Stats("Travel Speed",0),
 ResearchSpeed= new Stats("Research Speed",0),
 ResearchSkill= new Stats("Research Skill",0),
@@ -768,9 +769,9 @@ AgricultureProsperity= new Stats("Agriculture Prosperity",0),
 MiningSkill= new Stats("Mining Skill",0),
 MiningProsperity= new Stats("Mining Prosperity",0),
 Mana= new Stats("Mana",0),
-Dodge= new Stats("Dodge",0),
-Parry= new Stats("Parry",0),
-Armor= new Stats("Armor",0),
+Dodge= new Stats("Dodge",0,"Dodge"),
+Parry= new Stats("Parry",0,"Parry"),
+Armor= new Stats("Armor",0,"Armor"),
 Charisma= new Stats("Charisma",0),
 Seduction= new Stats("Seduction",0),
 Manipulation= new Stats("Manipulation",0),
@@ -866,6 +867,9 @@ statsArray = []
 	for(i=0;i<effectPotencySorted[j].potency;i++){
 	
 statsArray.push(effectPotencySorted[j].affectedStats[0])
+statsArray.push(effectPotencySorted[j].affectedStats[0])
+statsArray.push(effectPotencySorted[j].affectedStats[0])
+statsArray.push(effectPotencySorted[j].affectedStats[1])
 statsArray.push(effectPotencySorted[j].affectedStats[1])
 statsArray.push(effectPotencySorted[j].affectedStats[2])
 	}}
@@ -876,24 +880,97 @@ if(statsArray[k] === stats[l].name){stats[l].value+=1}
 }
 }
 var typeText = ""
+var potency = 0
+
 function adjuster(){
 	var type = 1
 	 
- 	if(document.getElementById('SelectType').value ==="Potion"){type = 1; typeText = "Drinking this Potion has the following effect: \n"}
-	if(document.getElementById('SelectType').value ==="Spell"){type = 0.8; typeText = "Casting this Spell has the following effect: \n"}
+ 	if(document.getElementById('SelectType').value ==="Potion"){type = 0.75; typeText = "This Potion has the following effect: \n"}
+	if(document.getElementById('SelectType').value ==="Spell"){type = 1; typeText = "Casting this Spell has the following effect: \n"}
 	if(document.getElementById('SelectType').value ==="Enchantement"){type = 0.1; typeText = "This Enchantement has the following passive effect: \n"}
 	if(document.getElementById('SelectType').value ==="Summoning"){type = 0.1; typeText = "This Summon grants the following passive bonus: \n"}
 
-	for(v=0;v<stats.length;v++){stats[v].value = Math.floor(stats[v].value*type)}
-}
+for(i=0;i<stats.length;i++){stats[i].value = Math.floor(stats[i].value*type)}
+	}
 
 adjuster()
 
-var statsSorted =  stats.sort(function(b, a){
+var statsSorted =  stats/*.sort(function(b, a){
     return a["value"]-b["value"];
-});
+});*/
 
-alert(typeText + statsSorted[0].name + ": +" + statsSorted[0].value + "\n" +statsSorted[1].name + ": +" + statsSorted[1].value + "\n" +statsSorted[2].name + ": +" + statsSorted[2].value) 
+//This code finds the two highest values in the Stats array
+var max = Math.max.apply(Math,statsSorted.map(function(o){return o.value;}))
+var index = statsSorted.findIndex(function(element, index, array) {
+  if (element.value === max) {
+    return true;
+  }
+});
+stats[index].value-=10000
+var secondMax = Math.max.apply(Math,statsSorted.map(function(o){return o.value;}))
+var index2 = statsSorted.findIndex(function(element, index, array) {
+  if (element.value === secondMax) {
+    return true;
+  }
+});
+stats[index].value+=10000
+
+var table = document.getElementById("potionTable");
+//	table.innerHTML = "";
+
+// Create an empty <tr> element and add it to the 1st position of the table:
+var row = table.insertRow(-1);
+
+// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+if(stats[index].value/stats[index2].value > 1.1 || stats[index].value/stats[index2].value < 0.9){
+	var name1 = stats[index].name;
+	var value1 = stats[index].value;
+var cell1 = row.insertCell(0);
+var cell2 = row.insertCell(1);
+var cell3 = row.insertCell(2);
+var cell4 = row.insertCell(3);
+var cell5 = row.insertCell(4);
+	}
+else{
+	var name1 = stats[index].name;
+	var value1 = Math.ceil(stats[index].value/2);
+	var name2 = stats[index2].name;
+	var value2 = Math.ceil(stats[index].value/2);
+
+var cell1 = row.insertCell(0);
+var cell2 = row.insertCell(1);
+var cell3 = row.insertCell(2);
+var cell4 = row.insertCell(3);
+var cell5 = row.insertCell(4);
+var cell6 = row.insertCell(5);
+var cell7 = row.insertCell(6);
+}
+
+
+
+// Add some text to the new cells, row by row.
+
+row.onclick = function() { for(i=0;i<document.getElementById("potionTable").rows.length;i++){
+//alert(this.innerHTML + "\n" + document.getElementById("potionTable").rows[i].innerHTML)
+
+if(this.innerHTML === document.getElementById("potionTable").rows[i].innerHTML){document.getElementById("potionTable").deleteRow(i) }
+}};
+var result1 = document.getElementById("mySelect").value;
+var result2 = document.getElementById("mySelect2").value;
+var result3 = document.getElementById("mySelect3").value;
+var result4 = name1
+var result5 = value1
+var result6 = name2
+var result7 = value2
+
+//This updates the cells with the different results.
+cell1.innerHTML = result1;
+cell2.innerHTML = result2;
+cell3.innerHTML = result3;
+cell4.innerHTML = result4;
+cell5.innerHTML = result5;
+cell6.innerHTML = result6;
+cell7.innerHTML = result7;
 	}
 
 
@@ -945,5 +1022,3 @@ cell5.innerHTML = discoveredIngredients[i].quantity;
 
 
 }}
-
-
