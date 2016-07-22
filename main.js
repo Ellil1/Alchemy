@@ -15,7 +15,16 @@ var Ingredient = function(name,first,second,third,rarity,quantity) {
   this.rarity = rarity;
   this.quantity = quantity;
 };
+var CreatedRitual = function(first,second,third,effect,value) {
+  this.first = first;
+  this.second = second;
+  this.third = third; 
+  this.effect = effect;
+  this.value = value;
+};
+
 var discoveredIngredients = [Default = new Ingredient("  Ingredient",["Property 1",3],["Property 2",2],["Property 3",2,0],2,"Quantity")]
+var craftedRituals = [Default2 = new CreatedRitual("First","Second","Third",["Effect1","Effect2"],[0,0])]
 
 var Environment = function(name,first,second,third,power) {
   this.name = name;
@@ -915,27 +924,39 @@ var index2 = statsSorted.findIndex(function(element, index, array) {
 });
 stats[index].value+=10000
 
+// This adds to the list of Created Rituals
+var newRitual = new CreatedRitual(document.getElementById("mySelect").value,document.getElementById("mySelect2").value,document.getElementById("mySelect3").value,[stats[index].name,stats[index2].name],[stats[index].value,stats[index2].value]) 
+craftedRituals.push(newRitual)
+potionTableUpdate()
+}
+// Clears the table so it can be repopulated
+function potionTableUpdate(){
 var table = document.getElementById("potionTable");
-//	table.innerHTML = "";
+	table.innerHTML = "";
 
+for(i=0;i<craftedRituals.length;i++){
 // Create an empty <tr> element and add it to the 1st position of the table:
 var row = table.insertRow(-1);
 
 // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
-if(stats[index].value/stats[index2].value > 1.1 || stats[index].value/stats[index2].value < 0.9){
-	var name1 = stats[index].name;
-	var value1 = stats[index].value;
+if(craftedRituals[i].value[0]/craftedRituals[i].value[1] > 1.1 || craftedRituals[i].value[0]/craftedRituals[i].value[1] < 0.9){
+	var name1 = craftedRituals[i].effect[0];
+	var value1 = craftedRituals[i].value[0];
+	var name2 = ""
+	var value2 = ""
+
 var cell1 = row.insertCell(0);
 var cell2 = row.insertCell(1);
 var cell3 = row.insertCell(2);
 var cell4 = row.insertCell(3);
 var cell5 = row.insertCell(4);
-	}
+var cell6 = row.insertCell(5);
+var cell7 = row.insertCell(6);	}
 else{
-	var name1 = stats[index].name;
-	var value1 = Math.ceil(stats[index].value/2);
-	var name2 = stats[index2].name;
-	var value2 = Math.ceil(stats[index].value/2);
+	var name1 = craftedRituals[i].effect[0];
+	var value1 = Math.ceil(craftedRituals[i].value[0]/2);
+	var name2 = craftedRituals[i].effect[1];
+	var value2 = Math.ceil(craftedRituals[i].value[0]/2);
 
 var cell1 = row.insertCell(0);
 var cell2 = row.insertCell(1);
@@ -950,14 +971,14 @@ var cell7 = row.insertCell(6);
 
 // Add some text to the new cells, row by row.
 
-row.onclick = function() { for(i=0;i<document.getElementById("potionTable").rows.length;i++){
-//alert(this.innerHTML + "\n" + document.getElementById("potionTable").rows[i].innerHTML)
+// Deletes an object from the created ones by clicking on its row on the table.
+row.onclick = function() { for(i=1;i<document.getElementById("potionTable").rows.length;i++){
 
-if(this.innerHTML === document.getElementById("potionTable").rows[i].innerHTML){document.getElementById("potionTable").deleteRow(i) }
+if(this.innerHTML === document.getElementById("potionTable").rows[i].innerHTML){   craftedRituals.splice(i,1); potionTableUpdate()}
 }};
-var result1 = document.getElementById("mySelect").value;
-var result2 = document.getElementById("mySelect2").value;
-var result3 = document.getElementById("mySelect3").value;
+var result1 = craftedRituals[i].first;
+var result2 = craftedRituals[i].second;
+var result3 = craftedRituals[i].third;
 var result4 = name1
 var result5 = value1
 var result6 = name2
@@ -971,6 +992,9 @@ cell4.innerHTML = result4;
 cell5.innerHTML = result5;
 cell6.innerHTML = result6;
 cell7.innerHTML = result7;
+	}
+	potionTable.rows[0].cells[4].innerHTML = '';
+	potionTable.rows[0].cells[6].innerHTML = '';
 	}
 
 
