@@ -15,7 +15,8 @@ var Ingredient = function(name,first,second,third,rarity,quantity) {
   this.rarity = rarity;
   this.quantity = quantity;
 };
-var CreatedRitual = function(first,second,third,effect,value) {
+var CreatedRitual = function(name,first,second,third,effect,value) {
+  this.name = name;
   this.first = first;
   this.second = second;
   this.third = third; 
@@ -24,8 +25,7 @@ var CreatedRitual = function(first,second,third,effect,value) {
 };
 
 var discoveredIngredients = [Default = new Ingredient("  Ingredient",["Property 1",3],["Property 2",2],["Property 3",2,0],2,"Quantity")]
-var craftedRituals = [Default2 = new CreatedRitual("First","Second","Third",["Effect1","Effect2"],[0,0])]
-
+var craftedRituals = [Default2 = new CreatedRitual(["Devault","Default","Default"],"First","Second","Third",["Effect1","Effect2"],[0,0])]
 var Environment = function(name,first,second,third,power) {
   this.name = name;
   this.first = first;
@@ -62,58 +62,60 @@ var Ritual = function(name,first,second,effect,power,type) {
   this.type = type; 
 
 };
-var Stats = function(name,value,statBox){
+var Stats = function(name,value,statBox,ritualNames){
   this.name = name;
   this.value = value;
-  this.statBox = statBox
+  this.statBox = statBox;
+  this.ritualNames = ritualNames;
+ 
 }
 
 var stats = [
-PhysicalPower= new Stats("Physical Power",0,"PPower"),
-MagicalPower= new Stats("Magical Power",0,"MPower"),
-PhysicalHealth= new Stats("Physical Health",0,"PHealth"),
-MentalHealth= new Stats("Mental Health",0,"MHealth"),
-MoraleHealth= new Stats("Morale Health",0,"Morale"),
-MagicResistance= new Stats("Magic Resistance",0,"MResistance"),
-TravelSpeed= new Stats("Travel Speed",0),
-ResearchSpeed= new Stats("Research Speed",0),
-ResearchSkill= new Stats("Research Skill",0),
-ProphecySkill= new Stats("Prophecy Skill",0),
-PotionMakingSkill= new Stats("Potion-Making Skill",0),
-SpellCastingSkill= new Stats("Spell-Casting Skill",0),
-EnchantingSkill= new Stats("Enchanting Skill",0),
-HelpersSkill= new Stats("Helpers Skill",0),
-EnemyDetection= new Stats("Enemy Detection",0),
-ResourceDetection= new Stats("Resource Detection",0),
-EnemyWealth= new Stats("Enemy Wealth",0),
-EnemyReputation= new Stats("Enemy Reputation",0),
-AgricultureSkill= new Stats("Agriculture Skill",0),
-AgricultureProsperity= new Stats("Agriculture Prosperity",0),
-MiningSkill= new Stats("Mining Skill",0),
-MiningProsperity= new Stats("Mining Prosperity",0),
-Mana= new Stats("Mana",0),
-Dodge= new Stats("Dodge",0,"Dodge"),
-Parry= new Stats("Parry",0,"Parry"),
-Armor= new Stats("Armor",0,"Armor"),
-Charisma= new Stats("Charisma",0),
-Seduction= new Stats("Seduction",0),
-Manipulation= new Stats("Manipulation",0),
-Presence= new Stats("Presence",0),
-Healing= new Stats("Healing",0),
-Influence= new Stats("Influence",0),
-Haggling= new Stats("Haggling",0),
-Money= new Stats("Money",0),
-Reputation= new Stats("Reputation",0),
-EnemyPhysicalPower= new Stats("Enemy Physical Power",0),
-EnemyMagicalPower= new Stats("Enemy Magical Power",0),
-EnemyPhysicalHealth= new Stats("Enemy Physical Health",0),
-EnemyMentalHealth= new Stats("Enemy Mental Health",0),
-EnemyMoraleHealth= new Stats("Enemy Morale Health",0),
-EnemyMagicResistance= new Stats("Enemy Magic Resistance",0),
-EnemyMana= new Stats("Enemy Mana",0),
-EnemyDodge= new Stats("Enemy Dodge",0),
-EnemyParry= new Stats("Enemy Parry",0),
-EnemyArmor= new Stats("Enemy Armor",0)
+PhysicalPower= new Stats("Physical Power",0,"PPower",["Mighty","Warrior"]),
+MagicalPower= new Stats("Magical Power",0,"MPower",["Potent","Mage"]),
+PhysicalHealth= new Stats("Physical Health",0,"PHealth",["Healthy","Survivor"]),
+MentalHealth= new Stats("Mental Health",0,"MHealth",["Sane","Monk"]),
+MoraleHealth= new Stats("Morale Health",0,"Morale",["Brave","General"]),
+MagicResistance= new Stats("Magic Resistance",0,"Placeholder","MResistance",["Denying","Golem"]),
+TravelSpeed= new Stats("Travel Speed",0,"Placeholder",["Swift","Traveller"]),
+ResearchSpeed= new Stats("Research Speed",0,"Placeholder",["Studious","Apprentice"]),
+ResearchSkill= new Stats("Research Skill",0,"Placeholder",["Clever","Scholar"]),
+ProphecySkill= new Stats("Prophecy Skill",0,"Placeholder",["Prophetic","Oracle"]),
+PotionMakingSkill= new Stats("Potion-Making Skill",0,"Placeholder",["Patient","Alchemist"]),
+SpellCastingSkill= new Stats("Spell-Casting Skill",0,"Placeholder",["Spellslinging","Wizard"]),
+EnchantingSkill= new Stats("Enchanting Skill",0,"Placeholder",["Enchanting","Enchanter"]),
+HelpersSkill= new Stats("Helpers Skill",0,"Placeholder",["Inspiring","Leader"]),
+EnemyDetection= new Stats("Enemy Detection",0,"Placeholder",["Perceptive","Scout"]),
+ResourceDetection= new Stats("Resource Detection",0,"Placeholder",["Divining","Explorer"]),
+EnemyWealth= new Stats("Enemy Wealth",0,"Placeholder",["Spiteful","Ruiner"]),
+EnemyReputation= new Stats("Enemy Reputation",0,"Placeholder",["Snaketongued","Liar"]),
+AgricultureSkill= new Stats("Agriculture Skill",0,"Placeholder",["Green-thumbed","Peasant"]),
+AgricultureProsperity= new Stats("Agriculture Prosperity",0,"Placeholder",["Prosperous","Farmer"]),
+MiningSkill= new Stats("Mining Skill",0,"Placeholder",["Dedicated","Miner"]),
+MiningProsperity= new Stats("Mining Prosperity",0,"Placeholder",["Rich","Dwarf"]),
+Mana= new Stats("Mana",0,"Placeholder",["Spiritual","Spiritualist"]),
+Dodge= new Stats("Dodge",0,"Dodge",["Fleeting","Boxer"]),
+Parry= new Stats("Parry",0,"Parry",["Skillful","Blademaster"]),
+Armor= new Stats("Armor",0,"Armor",["Protective","Protector"]),
+Charisma= new Stats("Charisma",0,"Placeholder",["Charismatic","Gentleman"]),
+Seduction= new Stats("Seduction",0,"Placeholder",["Seductive","Succubus"]),
+Manipulation= new Stats("Manipulation",0,"Placeholder",["Manipulative","Manipulator"]),
+Presence= new Stats("Presence",0,"Placeholder",["Impressive","General"]),
+Healing= new Stats("Healing",0,"Placeholder",["Helpful","Healer"]),
+Influence= new Stats("Influence",0,"Placeholder",["Influential","Socialite"]),
+Haggling= new Stats("Haggling",0,"Placeholder",["Haggling","Haggler"]),
+Money= new Stats("Money",0,"Placeholder",["Wealthy","Merchant"]),
+Reputation= new Stats("Reputation",0,"Placeholder",["Famous","Paragon"]),
+EnemyPhysicalPower= new Stats("Enemy Physical Power",0,"Placeholder",["Weakening","Vainquisher"]),
+EnemyMagicalPower= new Stats("Enemy Magical Power",0,"Placeholder",["Overpowering","Warlock"]),
+EnemyPhysicalHealth= new Stats("Enemy Physical Health",0,"Placeholder",["Destructive","Destroyer"]),
+EnemyMentalHealth= new Stats("Enemy Mental Health",0,"Placeholder",["Mad","Horror"]),
+EnemyMoraleHealth= new Stats("Enemy Morale Health",0,"Placeholder",["Demoralizing","Demoralizer"]),
+EnemyMagicResistance= new Stats("Enemy Magic Resistance",0,"Placeholder",["Hexing","Hexer"]),
+EnemyMana= new Stats("Enemy Mana",0,"Placeholder",["Draining","Drainer"]),
+EnemyDodge= new Stats("Enemy Dodge",0,"Placeholder",["Tiring","Swamper"]),
+EnemyParry= new Stats("Enemy Parry",0,"Placeholder",["Distracting","Distractor"]),
+EnemyArmor= new Stats("Enemy Armor",0,"Placeholder",["Rusting","Rustmaker"])
 ]
 var effects = [
 Healing = new BasicEffect("Healing","11",["Healing","Physical Health","Agriculture Prosperity"],0),
@@ -622,7 +624,11 @@ var save = {
 	researchPoints: researchPoints,
 	helpers: helpers,
 	prestige: prestige,
-	discoveredIngredients : discoveredIngredients 
+	discoveredIngredients : discoveredIngredients,
+	discoveredFirstProperties : discoveredFirstProperties,
+	discoveredSecondProperties : discoveredSecondProperties,
+	discoveredThirdProperties : discoveredThirdProperties,
+	craftedRituals : craftedRituals,
 }
 	
 	localStorage.setItem("save",JSON.stringify(save));
@@ -633,15 +639,22 @@ function loadButton(){
 	 if (typeof savegame.helpers !== "undefined") helpers = savegame.helpers; 
 	 if (typeof savegame.prestige !== "undefined") prestige = savegame.prestige;
 	 if (typeof savegame.discoveredIngredients !== "undefined") discoveredIngredients = savegame.discoveredIngredients;
+	 if (typeof savegame.discoveredFirstProperties !== "undefined") discoveredFirstProperties = savegame.discoveredFirstProperties;
+	 if (typeof savegame.discoveredSecondProperties !== "undefined") discoveredSecondProperties = savegame.discoveredSecondProperties;
+	 if (typeof savegame.discoveredThirdProperties !== "undefined") discoveredThirdProperties = savegame.discoveredThirdProperties;
+	 if (typeof savegame.craftedRituals !== "undefined") craftedRituals = savegame.craftedRituals;
 	 
 	 document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints); 
 	 document.getElementById('helpers').innerHTML = helpers	;
      var nextCost = Math.floor(10 * Math.pow(1.1,helpers));
 	document.getElementById('helpersCost').innerHTML = nextCost;	
-tableUpdate()
+tableUpdate();
+discoverTableUpdate()
+potionTableUpdate();
 addOption(document.getElementById("mySelect"))
 addOption(document.getElementById("mySelect2"))
 addOption(document.getElementById("mySelect3"))
+
 	}
 function Cheat(){
 clicker(1000000)
@@ -658,9 +671,6 @@ function discoverIngredient(){
     if(researchPoints >= discoverCost){                                   //checks that the player can afford the cursor
     	researchPoints = researchPoints - discoverCost;                          //removes the researchPoints spent
         document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
-  
-    var nextCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length));       //works out the cost of the next cursor
-    document.getElementById('discoverCost').innerHTML = nextCost;  //updates the cursor cost for the user
   	calculator()
 	discoveredIngredients.push(ingredients[rand]);
 discoveredIngredients.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} ); 
@@ -684,6 +694,8 @@ calculator()
 }
 	}}
 tableUpdate()
+discoverTableUpdate()  
+
 }
 
 function addOption(selectChoice) {
@@ -707,9 +719,8 @@ function discoverPropertyFirst(){
     	researchPoints = researchPoints - discoverPropertyCost;    
 		discoveredFirstProperties = discoveredFirstProperties+1
         document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
-		var nextCostFirst = Math.floor(40 * Math.pow(1.2,discoveredFirstProperties));       //works out the cost of the next cursor
-    document.getElementById('discoverPropertyCostFirst').innerHTML = nextCostFirst;  //updates the cursor cost for the user
-  	calculatorProperty() 
+discoverTableUpdate()
+		calculatorProperty() 
  };
   function calculatorProperty(){
 	 var rand = Math.ceil(Math.random()*(discoveredIngredients.length-1))
@@ -724,9 +735,8 @@ function discoverPropertySecond(){
 		researchPoints = researchPoints - discoverPropertyCost;    
 		discoveredSecondProperties = discoveredSecondProperties+1
         document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
-		var nextCostFirst = Math.floor(160 * Math.pow(1.2,discoveredSecondProperties));       //works out the cost of the next cursor
-    document.getElementById('discoverPropertyCostSecond').innerHTML = nextCostFirst;  //updates the cursor cost for the user
-  	calculatorProperty() 
+discoverTableUpdate()
+ 	calculatorProperty() 
  };
   function calculatorProperty(){
 	 var rand = Math.ceil(Math.random()*(discoveredIngredients.length-1))
@@ -741,8 +751,7 @@ function discoverPropertyThird(){
     	researchPoints = researchPoints - discoverPropertyCost;    
 		discoveredThirdProperties = discoveredThirdProperties+1
         document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
-		var nextCostFirst = Math.floor(720 * Math.pow(1.2,discoveredThirdProperties));       //works out the cost of the next cursor
-    document.getElementById('discoverPropertyCostThird').innerHTML = nextCostFirst;  //updates the cursor cost for the user
+discoverTableUpdate()
   	calculatorProperty() 
  };
   function calculatorProperty(){
@@ -754,53 +763,9 @@ tableUpdate()
 }
 
 function craft(){
-var stats = [
-PhysicalPower= new Stats("Physical Power",0,"PPower"),
-MagicalPower= new Stats("Magical Power",0,"MPower"),
-PhysicalHealth= new Stats("Physical Health",0,"PHealth"),
-MentalHealth= new Stats("Mental Health",0,"MHealth"),
-MoraleHealth= new Stats("Morale Health",0,"Morale"),
-MagicResistance= new Stats("Magic Resistance",0,"MResistance"),
-TravelSpeed= new Stats("Travel Speed",0),
-ResearchSpeed= new Stats("Research Speed",0),
-ResearchSkill= new Stats("Research Skill",0),
-ProphecySkill= new Stats("Prophecy Skill",0),
-PotionMakingSkill= new Stats("Potion-Making Skill",0),
-SpellCastingSkill= new Stats("Spell-Casting Skill",0),
-EnchantingSkill= new Stats("Enchanting Skill",0),
-HelpersSkill= new Stats("Helpers Skill",0),
-EnemyDetection= new Stats("Enemy Detection",0),
-ResourceDetection= new Stats("Resource Detection",0),
-EnemyWealth= new Stats("Enemy Wealth",0),
-EnemyReputation= new Stats("Enemy Reputation",0),
-AgricultureSkill= new Stats("Agriculture Skill",0),
-AgricultureProsperity= new Stats("Agriculture Prosperity",0),
-MiningSkill= new Stats("Mining Skill",0),
-MiningProsperity= new Stats("Mining Prosperity",0),
-Mana= new Stats("Mana",0),
-Dodge= new Stats("Dodge",0,"Dodge"),
-Parry= new Stats("Parry",0,"Parry"),
-Armor= new Stats("Armor",0,"Armor"),
-Charisma= new Stats("Charisma",0),
-Seduction= new Stats("Seduction",0),
-Manipulation= new Stats("Manipulation",0),
-Presence= new Stats("Presence",0),
-Healing= new Stats("Healing",0),
-Influence= new Stats("Influence",0),
-Haggling= new Stats("Haggling",0),
-Money= new Stats("Money",0),
-Reputation= new Stats("Reputation",0),
-EnemyPhysicalPower= new Stats("Enemy Physical Power",0),
-EnemyMagicalPower= new Stats("Enemy Magical Power",0),
-EnemyPhysicalHealth= new Stats("Enemy Physical Health",0),
-EnemyMentalHealth= new Stats("Enemy Mental Health",0),
-EnemyMoraleHealth= new Stats("Enemy Morale Health",0),
-EnemyMagicResistance= new Stats("Enemy Magic Resistance",0),
-EnemyMana= new Stats("Enemy Mana",0),
-EnemyDodge= new Stats("Enemy Dodge",0),
-EnemyParry= new Stats("Enemy Parry",0),
-EnemyArmor= new Stats("Enemy Armor",0)
-]
+
+for(i=0;i<stats.length;i++){stats[i].value = 0}
+
 var firstIngredient = discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById("mySelect").value});
 var secondIngredient = discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById("mySelect2").value});
 var thirdIngredient = discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById("mySelect3").value});
@@ -894,10 +859,9 @@ var potency = 0
 function adjuster(){
 	var type = 1
 	 
- 	if(document.getElementById('SelectType').value ==="Potion"){type = 0.75; typeText = "This Potion has the following effect: \n"}
-	if(document.getElementById('SelectType').value ==="Spell"){type = 1; typeText = "Casting this Spell has the following effect: \n"}
-	if(document.getElementById('SelectType').value ==="Enchantement"){type = 0.1; typeText = "This Enchantement has the following passive effect: \n"}
-	if(document.getElementById('SelectType').value ==="Summoning"){type = 0.1; typeText = "This Summon grants the following passive bonus: \n"}
+ 	if(document.getElementById('SelectType').value ==="Potion"){type = 0.75; typeText = "Potion of the "}
+	if(document.getElementById('SelectType').value ==="Spell"){type = 1; typeText = "Spell of the "}
+	if(document.getElementById('SelectType').value ==="Enchantement"){type = 0.1; typeText = "Enchantement of the "}
 
 for(i=0;i<stats.length;i++){stats[i].value = Math.floor(stats[i].value*type)}
 	}
@@ -925,79 +889,61 @@ var index2 = statsSorted.findIndex(function(element, index, array) {
 stats[index].value+=10000
 
 // This adds to the list of Created Rituals
-var newRitual = new CreatedRitual(document.getElementById("mySelect").value,document.getElementById("mySelect2").value,document.getElementById("mySelect3").value,[stats[index].name,stats[index2].name],[stats[index].value,stats[index2].value]) 
+var newRitual = new CreatedRitual([typeText,stats[index].ritualNames[1],stats[index2].ritualNames[0]],document.getElementById("mySelect").value,document.getElementById("mySelect2").value,document.getElementById("mySelect3").value,[stats[index].name,stats[index2].name],[stats[index].value,stats[index2].value]) 
+
 craftedRituals.push(newRitual)
+
 potionTableUpdate()
 }
 // Clears the table so it can be repopulated
 function potionTableUpdate(){
-var table = document.getElementById("potionTable");
-	table.innerHTML = "";
+var table = document.getElementById("potionTable");	table.innerHTML = "";
 
 for(i=0;i<craftedRituals.length;i++){
 // Create an empty <tr> element and add it to the 1st position of the table:
 var row = table.insertRow(-1);
 
+var cell1 = row.insertCell(0);var cell2 = row.insertCell(1);var cell3 = row.insertCell(2);
+var cell4 = row.insertCell(3);var cell5 = row.insertCell(4);var cell6 = row.insertCell(5);
+var cell7 = row.insertCell(6);var cell8 = row.insertCell(7);
+// Add some text to the new cells, row by row.
+cell2.innerHTML = craftedRituals[i].first;
+cell3.innerHTML = craftedRituals[i].second;
+cell4.innerHTML = craftedRituals[i].third;
+cell5.innerHTML = craftedRituals[i].effect[0];
 // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
 if(craftedRituals[i].value[0]/craftedRituals[i].value[1] > 1.1 || craftedRituals[i].value[0]/craftedRituals[i].value[1] < 0.9){
-	var name1 = craftedRituals[i].effect[0];
-	var value1 = craftedRituals[i].value[0];
-	var name2 = ""
-	var value2 = ""
-
-var cell1 = row.insertCell(0);
-var cell2 = row.insertCell(1);
-var cell3 = row.insertCell(2);
-var cell4 = row.insertCell(3);
-var cell5 = row.insertCell(4);
-var cell6 = row.insertCell(5);
-var cell7 = row.insertCell(6);	}
+cell1.innerHTML = craftedRituals[i].name[0] + craftedRituals[i].name[1]
+cell6.innerHTML = craftedRituals[i].value[0];
+	}
 else{
-	var name1 = craftedRituals[i].effect[0];
-	var value1 = Math.ceil(craftedRituals[i].value[0]/2);
-	var name2 = craftedRituals[i].effect[1];
-	var value2 = Math.ceil(craftedRituals[i].value[0]/2);
-
-var cell1 = row.insertCell(0);
-var cell2 = row.insertCell(1);
-var cell3 = row.insertCell(2);
-var cell4 = row.insertCell(3);
-var cell5 = row.insertCell(4);
-var cell6 = row.insertCell(5);
-var cell7 = row.insertCell(6);
+cell1.innerHTML = craftedRituals[i].name[0] + craftedRituals[i].name[2] + " " + craftedRituals[i].name[1];
+cell6.innerHTML = Math.ceil(craftedRituals[i].value[0]/2);
+cell7.innerHTML = craftedRituals[i].effect[1];
+cell8.innerHTML = Math.ceil(craftedRituals[i].value[0]/2);
 }
-
-
-
-// Add some text to the new cells, row by row.
-
 // Deletes an object from the created ones by clicking on its row on the table.
 row.onclick = function() { for(i=1;i<document.getElementById("potionTable").rows.length;i++){
 
 if(this.innerHTML === document.getElementById("potionTable").rows[i].innerHTML){   craftedRituals.splice(i,1); potionTableUpdate()}
-}};
-var result1 = craftedRituals[i].first;
-var result2 = craftedRituals[i].second;
-var result3 = craftedRituals[i].third;
-var result4 = name1
-var result5 = value1
-var result6 = name2
-var result7 = value2
-
+}};	}
 //This updates the cells with the different results.
-cell1.innerHTML = result1;
-cell2.innerHTML = result2;
-cell3.innerHTML = result3;
-cell4.innerHTML = result4;
-cell5.innerHTML = result5;
-cell6.innerHTML = result6;
-cell7.innerHTML = result7;
-	}
-	potionTable.rows[0].cells[4].innerHTML = '';
-	potionTable.rows[0].cells[6].innerHTML = '';
-	}
+	potionTable.rows[0].cells[0].innerHTML = 'Name';
+	potionTable.rows[0].cells[5].innerHTML = '';
+	potionTable.rows[0].cells[7].innerHTML = '';}
+function discoverTableUpdate(){
+    var nextCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length));       //works out the cost of the next cursor
+    document.getElementById('discoverCost').innerHTML = nextCost;  //updates the cursor cost for the user
 
+	var nextCostFirst = Math.floor(40 * Math.pow(1.2,discoveredFirstProperties));       //works out the cost of the next cursor
+    document.getElementById('discoverPropertyCostFirst').innerHTML = nextCostFirst;  //updates the first property cost for the user
 
+	var nextCostFirst = Math.floor(160 * Math.pow(1.2,discoveredSecondProperties));       //works out the cost of the next cursor
+    document.getElementById('discoverPropertyCostSecond').innerHTML = nextCostFirst;  //updates the second property cost for the user
+
+	var nextCostFirst = Math.floor(720 * Math.pow(1.2,discoveredThirdProperties));       //works out the cost of the next cursor
+    document.getElementById('discoverPropertyCostThird').innerHTML = nextCostFirst;  //updates the third property cost for the user
+}
 function tableUpdate(){
 var table = document.getElementById("myTable");
 	table.innerHTML = "";
