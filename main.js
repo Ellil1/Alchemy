@@ -713,15 +713,15 @@ function clicker(value){
 	researchPoints = researchPoints + (value*(1+ResearchSpeed.value/20));
 	 document.getElementById("researchPoints").innerHTML = Math.floor(researchPoints); }
 function clickerMoney(value){
-	money = money + (value/5);
-	 document.getElementById("gold").innerHTML = Math.round(money*10)/10; }
+	money = money + (value);
+	 document.getElementById("gold").innerHTML = Math.round(money); }
 function buyHelper(value){
     var helpersCost = Math.floor(10 * Math.pow(1.1,helpers));     //works out the cost of this cursor
     if(money >= helpersCost){                                   //checks that the player can afford the cursor
         helpers = helpers + 1;                                   //increases number of cursors
     	money = money - helpersCost;                          //removes the researchPoints spent
         document.getElementById('helpers').innerHTML = helpers;  //updates the number of cursors for the user
-        document.getElementById('gold').innerHTML = Math.round(money*10)/10;  //updates the number of researchPoints for the user
+        document.getElementById('gold').innerHTML = Math.round(money);  //updates the number of researchPoints for the user
     };
     var nextCost2 = Math.floor(10 * Math.pow(1.1,helpers));       //works out the cost of the next cursor
     document.getElementById('helpersCost').innerHTML = nextCost2;  //updates the cursor cost for the user
@@ -815,7 +815,7 @@ changeTable()
 
 window.setInterval(function(){
 clicker(helpers*0.5*(1+HelpersSkill.value/5)); 
-money = Math.floor((money +(Money.value))*10)/10
+money = Math.floor(money +(Money.value))
 computeStats()
 document.getElementById("gold").innerHTML = money
 }, 1000);
@@ -1269,7 +1269,7 @@ if(this.id === i.toString()){
 	if(ownedPotions[i].quantity>=1){ownedPotions[i].quantity-=1}
 	if(ownedPotions[i].quantity===0){ownedPotions.splice(i,1)}
 
-document.getElementById("gold").innerHTML = Math.round(money*10)/10; 
+document.getElementById("gold").innerHTML = Math.round(money); 
 }
 }
 		changeTable()
@@ -1337,7 +1337,7 @@ if(this.id === i.toString()){
 	if(ownedEnchantements[i].quantity>=1){ownedEnchantements[i].quantity-=1}
 	if(ownedEnchantements[i].quantity===0){ownedEnchantements.splice(i,1)}
 
-document.getElementById("gold").innerHTML = Math.round(money*10)/10; 
+document.getElementById("gold").innerHTML = Math.round(money); 
 }
 }
 		changeTable()
