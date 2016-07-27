@@ -2,7 +2,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="interface.css" />
 </head>
-<body onload="tableUpdate()">
+<body onload="tableUpdate(); changeStatsTable();">
 
 <script type="text/javascript" src="main.js" ></script>
 
@@ -76,12 +76,20 @@
 <button onClick="clicker(1)">Do Research</button>
 <span id="researchPoints"> 0 </span>
 <br>
-<button onClick="buyHelper(1)">Hire a Helper</button>
-<span id="helpers">0</span>
-<span id="helpersCost">10</span>
+<button onClick="clickerMoney(1)">Work for the Cabal</button>
 <br>
 <a> Gold </a><span id="gold">0</span>
 <br>
+<button onClick="buyHelper(1)">Hire a Helper</button>
+<span id="helpers">0</span>
+<span id="helpersCost">10</span>
+
+<br>
+<div id="myProgress" >
+  <div id="myBar"></div>
+</div>
+<br>
+<button onclick="move()">Click Me</button> 
 <br>
 	<label for="mySelect" id = mySelectLabel style="float:left">First Ingredient</label>	
   <select id="mySelect"  >
