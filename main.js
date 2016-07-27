@@ -7,6 +7,10 @@ var discoveredProperties = 0;
 var discoveredFirstProperties = 0;
 var discoveredSecondProperties = 0;
 var discoveredThirdProperties = 0;
+
+var inProgressVariable = []
+var time = 0
+
 // Ingredients List
 var Ingredient = function(name,first,second,third,rarity,quantity,price,marketStock,type) {
   this.name = name;
@@ -677,19 +681,50 @@ if(potency <=0){alert("The " + result + "fails !")}
 else if(spellType === "2" || spellType === "1"){alert(total  + duration)} 
 else{alert(total)}}
 
+function move() {
+	if(inProgressVariable.length === 3){
+	
+working()
+		
+	function working(){
+  var elem = document.getElementById("myBar");   
+  var width = 0;
+  var countDown = inProgressVariable[1]
+  var id = setInterval(frame, countDown);
+  function frame() {
+    if (width >= 100) {
+      clearInterval(id);
+	  width = 0; 
+      elem.style.width = width + '%'; 
+	  inProgressVariable[2].push(inProgressVariable[0]);
+	  inProgressVariable.shift()
+	  inProgressVariable.shift()
+	  inProgressVariable.shift()
+	  working()
+	  changeTable()
+ } else {
+      width+= 1; 
+      elem.style.width = width + '%'; 
+    }
+  }
+	}}
+changeTable()}
 function clicker(value){
 	researchPoints = researchPoints + (value*(1+ResearchSpeed.value/20));
 	 document.getElementById("researchPoints").innerHTML = Math.floor(researchPoints); }
+function clickerMoney(value){
+	money = money + (value/5);
+	 document.getElementById("gold").innerHTML = Math.round(money*10)/10; }
 function buyHelper(value){
     var helpersCost = Math.floor(10 * Math.pow(1.1,helpers));     //works out the cost of this cursor
-    if(researchPoints >= helpersCost){                                   //checks that the player can afford the cursor
+    if(money >= helpersCost){                                   //checks that the player can afford the cursor
         helpers = helpers + 1;                                   //increases number of cursors
-    	researchPoints = researchPoints - helpersCost;                          //removes the researchPoints spent
+    	money = money - helpersCost;                          //removes the researchPoints spent
         document.getElementById('helpers').innerHTML = helpers;  //updates the number of cursors for the user
-        document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
+        document.getElementById('gold').innerHTML = Math.round(money*10)/10;  //updates the number of researchPoints for the user
     };
-    var nextCost = Math.floor(10 * Math.pow(1.1,helpers));       //works out the cost of the next cursor
-    document.getElementById('helpersCost').innerHTML = nextCost;  //updates the cursor cost for the user
+    var nextCost2 = Math.floor(10 * Math.pow(1.1,helpers));       //works out the cost of the next cursor
+    document.getElementById('helpersCost').innerHTML = nextCost2;  //updates the cursor cost for the user
 }
 function saveButton(){
 var save = {
@@ -780,7 +815,7 @@ changeTable()
 
 window.setInterval(function(){
 clicker(helpers*0.5*(1+HelpersSkill.value/5)); 
-money = money +(Money.value)
+money = Math.floor((money +(Money.value))*10)/10
 computeStats()
 document.getElementById("gold").innerHTML = money
 }, 1000);
@@ -810,15 +845,8 @@ discoveredIngredients.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.nam
 addOption(document.getElementById("mySelect"))
 addOption(document.getElementById("mySelect2"))
 addOption(document.getElementById("mySelect3"))
-updateList()
   };
   
-	function updateList(){
-	listDisplay = ""
-	for(i=0;i<discoveredIngredients.length;i++){
-listDisplay+= discoveredIngredients[i].name+ " " + discoveredIngredients[i].quantity + "<br>"
-	}
-}
 	function calculator(){
 	 rand = Math.floor(Math.random()*ingredients.length)
 	for(i=0;i<discoveredIngredients.length;i++){
@@ -1031,14 +1059,14 @@ if(typeTextName === "Enchantement"){stats[index].value*=0.1*(1+(EnchantingSkill.
 
 // This adds to the list of Created Rituals
 if(stats[index].value,stats[index2].value > 1.1){
-var newRitual = new CreatedRitual([typeText,stats[index].ritualNames[1],stats[index2].ritualNames[0]],document.getElementById("mySelect").value,document.getElementById("mySelect2").value,document.getElementById("mySelect3").value,[stats[index].name,stats[index2].name],[Math.floor(stats[index].value/2),Math.floor(stats[index2].value)/2]) 
+var newRitual = new CreatedRitual([typeText,stats[index].ritualNames[1],stats[index2].ritualNames[0]],document.getElementById("mySelect").value,document.getElementById("mySelect2").value,document.getElementById("mySelect3").value,[stats[index].name,stats[index2].name],[Math.floor(stats[index].value/2),Math.floor(stats[index2].value/2)]) 
 }
  
 else{
 var newRitual = new CreatedRitual([typeText,stats[index].ritualNames[1],""],document.getElementById("mySelect").value,document.getElementById("mySelect2").value,document.getElementById("mySelect3").value,[stats[index].name,""],[Math.floor(stats[index].value),0]) 
 }
-if(stats[index].value === 0){alert("This Ritual lacks potency, and has no effect !")}
-else{craftedRituals.push(newRitual)}
+if(newRitual.value[0] === 0 ||newRitual.value[1] === 0){alert("This Ritual lacks potency, and has no effect !")}
+else{inProgressVariable.push(newRitual);inProgressVariable.push(100);inProgressVariable.push(craftedRituals);move()}
 for(i=0;i<stats.length;i++){stats[i].value = 0}
 changeTable()}
 
@@ -1241,7 +1269,7 @@ if(this.id === i.toString()){
 	if(ownedPotions[i].quantity>=1){ownedPotions[i].quantity-=1}
 	if(ownedPotions[i].quantity===0){ownedPotions.splice(i,1)}
 
-document.getElementById("gold").innerHTML = Math.floor(money); 
+document.getElementById("gold").innerHTML = Math.round(money*10)/10; 
 }
 }
 		changeTable()
@@ -1309,7 +1337,7 @@ if(this.id === i.toString()){
 	if(ownedEnchantements[i].quantity>=1){ownedEnchantements[i].quantity-=1}
 	if(ownedEnchantements[i].quantity===0){ownedEnchantements.splice(i,1)}
 
-document.getElementById("gold").innerHTML = Math.floor(money); 
+document.getElementById("gold").innerHTML = Math.round(money*10)/10; 
 }
 }
 		changeTable()
@@ -1357,4 +1385,4 @@ function checkIfMatch(array){
 	if(
 	newPotion.effect[0] === array[y].effect[0] && newPotion.effect[1] === array[y].effect[1] && newPotion.name[0] === array[y].name[0] && newPotion.name[1] === array[y].name[1] && newPotion.sellPrice[0] === array[y].sellPrice[0]){array[y].quantity+=1; checkTrue = "True"}
 	}
-if(checkTrue === "False"){array.push(newPotion)}}
+if(checkTrue === "False"){inProgressVariable.push(newPotion);inProgressVariable.push(100);inProgressVariable.push(array);move()}}
