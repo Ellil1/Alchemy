@@ -2,53 +2,85 @@
 <head>
 <link rel="stylesheet" type="text/css" href="interface.css" />
 </head>
-<body onload="tableUpdate();">
+<body onload="tableUpdate()">
 
 <script type="text/javascript" src="main.js" ></script>
- <table align="right">
-  <tr>
-    <th>Combat Stats</th>
-    <th>Power</th>
-  </tr>
-  <tr>
-    <td>Physical Power</td>
-    <td><span id="PPower">0</span></td>
-  </tr>
-  <tr>
-    <td>Magical Power</td>
-    <td><span id="MPower">0</span></td>
-  </tr>
-  <tr>
-    <td>Physical Health</td>
-    <td><span id="PHealth">0</span></td>
-  </tr>
-    <tr>
-    <td>Mental Health</td>
-    <td><span id="MHealth">0</span></td>
-  </tr>
-    <tr>
-    <td>Morale</td>
-    <td><span id="Morale">0</span></td>
-  </tr>
-    <tr>
-    <td>Armor</td>
-    <td><span id="Armor">0</span></td>
-  </tr>
-    <tr>
-    <td>Magic Resistance</td>
-    <td><span id="MResistance">0</span></td>
-  </tr>
-    <tr>
-    <td>Dodge/Parry Chance</td>
-    <td><span id="Dodge">0</span><span>/</span><span id="Parry">0</span></td>
-  </tr>
+
+
+ <table id="CombatStatsTable" align="right"   style="display: none">
+  <tr><th>Combat Stats</th><th>Power</th></tr>
+	<tr><td>Physical Power</td><td><span id="PPower">0</span></td></tr>
+	<tr><td>Magical Power</td><td><span id="MPower">0</span></td></tr>
+	<tr><td>Physical Health</td><td><span id="PHealth">0</span></td></tr>
+    <tr><td>Mental Health</td><td><span id="MHealth">0</span></td></tr>
+    <tr><td>Morale</td><td><span id="Morale">0</span></td></tr>
+    <tr><td>Mana</td><td><span id="Mana">0</span></td></tr>
+	<tr><td>Armor</td><td><span id="Armor">0</span></td></tr>
+    <tr><td>Magic Resistance</td><td><span id="MResistance">0</span></td></tr>
+    <tr><td>Healing</td><td><span id="Healing">0</span></td></tr>
+    <tr><td>Dodge/Parry Chance</td><td><span id="Dodge">0</span><span>/</span><span id="Parry">0</span></td></tr>
   </table> 
+  <table id="CraftingStatsTable" align="right"   style="display: none">
+	 <tr><th>Crafting Stats</th><th>Power</th></tr>
+	 <tr><td>Research Skill</td><td><span id="RSkill">0</span></td></tr>
+     <tr><td>Research Speed</td><td><span id="RSpeed">0</span></td></tr>
+     <tr><td>Helpers Skill</td><td><span id="HSkill">0</span></td></tr>
+	 <tr><td>Potion-Making Skill</td><td><span id="PMSkill">0</span></td></tr>
+	 <tr><td>Spellcasting Skill</td><td><span id="SSkill">0</span></td></tr>
+     <tr><td>Enchanting Skill</td><td><span id="ESkill">0</span></td></tr>
+     <tr><td>Agriculture Skill</td><td><span id="ASkill">0</span></td></tr>
+     <tr><td>Agriculture Prosperity</td><td><span id="AProsperity">0</span></td></tr>
+     <tr><td>Mining Skill</td><td><span id="MSkill">0</span></td></tr>
+     <tr><td>Mining Prosperity</td><td><span id="MProsperity">0</span></td></tr>
+  </table> 
+   <table id="SocialStatsTable" align="right"   style="display: none">
+	 <tr><th>Social Skills</th><th>Power</th></tr>
+	 <tr><td>Charisma</td><td><span id="Charisma">0</span></td></tr>
+	 <tr><td>Seduction</td><td><span id="Seduction">0</span></td></tr>
+     <tr><td>Manipulation</td><td><span id="Manipulation">0</span></td></tr>
+     <tr><td>Presence</td><td><span id="Presence">0</span></td></tr>
+     <tr><td>Influence</td><td><span id="Influence">0</span></td></tr>
+     <tr><td>Reputation</td><td><span id="Reputation">0</span></td></tr>
+	 <tr><td>Haggling</td><td><span id="Haggling">0</span></td></tr>
+     <tr><td>Income</td><td><span id="Money">0</span></td></tr>
+     <tr><td>Enemy Wealth</td><td><span id="EWealth">0</span></td></tr>
+     <tr><td>Enemy Reputation</td><td><span id="EReputation">0</span></td></tr>
+  </table>
+     <table id="EnemyStatsTable" align="right"   style="display: none">
+	 <tr><th>Enemy Debuffs</th><th>Power</th></tr>
+	 <tr><td>Physical Power</td><td><span id="EPPower">0</span></td></tr>
+	 <tr><td>Magical Power</td><td><span id="EMPower">0</span></td></tr>
+     <tr><td>Physical Health</td><td><span id="EPHealth">0</span></td></tr>
+     <tr><td>Mental Health</td><td><span id="EMeHealth">0</span></td></tr>
+     <tr><td>Morale Health</td><td><span id="EMoHealth">0</span></td></tr>
+     <tr><td>Armor Reduction</td><td><span id="EArmor">0</span></td></tr>
+     <tr><td>Magic Resistance</td><td><span id="EMResistance">0</span></td></tr>
+	 <tr><td>Mana Reduction</td><td><span id="EMana">0</span></td></tr>
+     <tr><td>Dodge Reduction</td><td><span id="EDodge">0</span></td></tr>
+     <tr><td>Parry Reduction</td><td><span id="EParry">0</span></td></tr>
+  </table>
+   <table id="DiscoveryStatsTable" align="right"   style="display: none">
+  <tr><th>Discovery Skills</th><th>Power</th></tr>
+  <tr><td>Travel Speed</td><td><span id="TSpeed">0</span></td></tr>
+  <tr><td>Enemy Detection</td><td><span id="EDetection">0</span></td></tr>
+  <tr><td>Resource Detection</td><td><span id="RDetection">0</span></td></tr>
+  <tr><td>Prophecy Skill</td><td><span id="PSkill">0</span></td></tr>
+ </table>  
+  <select id="SelectStatTable" style="float:right" size="5" onchange="changeStatsTable()" >
+    <option selected value = "CombatStats">Combat Stats</option>
+    <option value = "CraftingSkills">Crafting Skills</option>
+    <option value = "SocialStats">Social Stats</option>
+    <option value = "EnemyStats">Enemy Stats</option>
+    <option value = "DiscoveryStats">Discovery Stats</option>
+	</select>
 <button onClick="clicker(1)">Do Research</button>
 <span id="researchPoints"> 0 </span>
 <br>
 <button onClick="buyHelper(1)">Hire a Helper</button>
 <span id="helpers">0</span>
 <span id="helpersCost">10</span>
+<br>
+<a> Gold </a><span id="gold">0</span>
 <br>
 <br>
 	<label for="mySelect" id = mySelectLabel style="float:left">First Ingredient</label>	
@@ -68,7 +100,8 @@
 
 <br>
 <table >
-    <tr><td><button onClick="craft()">Research a new Ritual</button>
+
+    <tr><td><button onClick="research()">Research a new Ritual</button>
 </td><td> <select id="SelectType"  >
     <option value = "Potion">Potion</option>
     <option value = "Spell">Spell</option>
@@ -83,23 +116,22 @@
     <tr><td><button onClick="discoverPropertyThird()">Discover a Third Property</button>
 </td><td><span id="discoverPropertyCostThird">720</span></td></tr>
 </table><br><br><br>
-<table id="myTable" ></table>
-
-
-<br><br><br>
-<table id="potionTable"> <tr>
- <td><span>First</span></td>
- <td><span>Second</span></td>
- <td><span>Third</span></td>
- <td><span>Effect1</span></td>
- <td><span></span></td>
- <td><span>Effect2</span></td>
- <td><span></span></td>
- </tr></table>
+ <select id="SelectType2" size="4" onchange="changeTable()" >
+    <option selected value = "DiscoveredIngredients">Discovered Ingredients</option>
+    <option value = "DiscoveredRecipes">Discovered Recipes</option>
+    <option value = "OwnedPotions">Owned Potions</option>
+    <option value = "OwnedEnchantements">Owned Enchantements</option>
+	</select>
+<br>
+<table class="beta" id="potionTable"></table>
 <br><br>
 <button onClick="saveButton()">Save !</button>
 <button onClick="loadButton()">Load !</button>
 <br>
-<button onClick="Cheat()">TestingCheat</button>
+<button onClick="Cheat()">TestingCheat</button><br>
+<button onClick="reloadIngredientsTest()">Empty Ingredients</button>
+<button onClick="reloadIngredients()">Reload Ingredients</button>
+<br>
+<button onClick="updateEnchantements()">Update Enchantements</button>
 
 </body>
