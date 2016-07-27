@@ -18,3 +18,17 @@ background-color:lightblue;
 .beta td:hover{
 background-color: #0066ff;
 }
+
+#myProgress {
+  position: relative;
+  width: 300px;
+  height: 20px;
+  background-color: #ddd;
+}
+
+#myBar {
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  background-color: #0040ff;
+}
