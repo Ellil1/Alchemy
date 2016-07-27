@@ -1,5 +1,6 @@
 table, th, td {
     border: 1px solid black;
+
 }
 select{max-width:150px;
 color: black;}
@@ -10,3 +11,10 @@ label {
 
   display: inline-block;}
   
+  
+.beta tr:hover{
+background-color:lightblue;
+}
+.beta td:hover{
+background-color: #0066ff;
+}
