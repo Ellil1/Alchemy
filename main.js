@@ -9,9 +9,25 @@ var discoveredSecondProperties = 0;
 var discoveredThirdProperties = 0;
 
 var inProgressVariable = []
-var time = 0
+
+var physicalDamage = 0
+var mentalDamage = 0
+var logText = []
 
 // Ingredients List
+var Enemy = function(name,physical,magical,health,mental,armor,magicResist,mana,dodge,parry) {
+  this.name = name;
+  this.physical = physical;
+  this.magical = magical;
+  this.health = health; 
+  this.mental = mental;
+  this.armor = armor;
+  this.magicResist = magicResist;
+  this.mana = mana;
+  this.dodge = dodge;
+  this.parry = parry;
+  };
+
 var Ingredient = function(name,first,second,third,rarity,quantity,price,marketStock,type) {
   this.name = name;
   this.first = first;
@@ -42,9 +58,10 @@ var discoveredIngredients = [Default = new Ingredient("  Ingredient",["Property 
 var craftedRituals = [Default2 = new CreatedRitual(["Devault","Default","Default"],"First","Second","Third",["Effect1","Effect2"],[0,0])]
 
 var ownedPotions = [Default = new InventoryPotion(["Name","",""],0,["Effect1","Effect2"],[0,0])]
-
 var castSpell = [Default = new InventoryPotion("Name","Quantity","Effect","Sell Price")]
 var ownedEnchantements = [Default = new InventoryPotion(["Name","",""],0,["Effect1","Effect2"],[0,0])]
+
+var activeEnemy = []
 
 var Environment = function(name,first,second,third,power) {
   this.name = name;
@@ -96,7 +113,7 @@ PhysicalPowerEnchantementBonus= new Stats("Physical Power",0,"PPower",["Mighty",
 MagicalPowerEnchantementBonus= new Stats("Magical Power",0,"MPower",["Potent","Mage"],[]),
 PhysicalHealthEnchantementBonus= new Stats("Physical Health",0,"PHealth",["Healthy","Survivor"],[]),
 MentalHealthEnchantementBonus= new Stats("Mental Health",0,"MHealth",["Sane","Monk"],[]),
-MoraleHealthEnchantementBonus= new Stats("Morale Health",0,"Morale",["Brave","General"],[]),
+MentalHealingEnchantementBonus= new Stats("Mental Healing",0,"MHealing",["Brave","General"],[]),
 MagicResistanceEnchantementBonus= new Stats("Magic Resistance",0,"MResistance",["Denying","Golem"],[]),
 TravelSpeedEnchantementBonus= new Stats("Travel Speed",0,"Placeholder",["Swift","Traveller"],[]),
 ResearchSpeedEnchantementBonus= new Stats("Research Speed",0,"Placeholder",["Studious","Apprentice"],[]),
@@ -131,19 +148,67 @@ EnemyPhysicalPowerEnchantementBonus= new Stats("Enemy Physical Power Reduction",
 EnemyMagicalPowerEnchantementBonus= new Stats("Enemy Magical Power Reduction",0,"Placeholder",["Overpowering","Warlock"],[]),
 EnemyPhysicalHealthEnchantementBonus= new Stats("Enemy Physical Health Damage",0,"Placeholder",["Destructive","Destroyer"],[]),
 EnemyMentalHealthEnchantementBonus= new Stats("Enemy Mental Health Damage",0,"Placeholder",["Mad","Horror"],[]),
-EnemyMoraleHealthEnchantementBonus= new Stats("Enemy Morale Health Damage",0,"Placeholder",["Demoralizing","Demoralizer"],[]),
+EnemyMentalHealingEnchantementBonus= new Stats("Enemy Mental Healing",0,"Placeholder",["Demoralizing","Demoralizer"],[]),
 EnemyMagicResistanceEnchantementBonus= new Stats("Enemy Magic Resistance Reduction",0,"Placeholder",["Hexing","Hexer"],[]),
 EnemyManaEnchantementBonus= new Stats("Enemy Mana Reduction",0,"Placeholder",["Draining","Drainer"],[]),
 EnemyDodgeEnchantementBonus= new Stats("Enemy Dodge Reduction",0,"Placeholder",["Tiring","Swamper"],[]),
 EnemyParryEnchantementBonus= new Stats("Enemy Parry Reduction",0,"Placeholder",["Distracting","Distractor"],[]),
 EnemyArmorEnchantementBonus= new Stats("Enemy Armor Reduction",0,"Placeholder",["Rusting","Rustmaker"],[])
 ]
+var baseStatValue = [
+
+PhysicalPowerBase= new Stats("Physical Power",5,"PPower",["Mighty","Warrior"],[]),
+MagicalPowerBase= new Stats("Magical Power",5,"MPower",["Potent","Mage"],[]),
+PhysicalHealthBase= new Stats("Physical Health",100,"PHealth",["Healthy","Survivor"],[]),
+MentalHealthBase= new Stats("Mental Health",60,"MHealth",["Sane","Monk"],[]),
+MentalHealingBase= new Stats("Mental Healing",1,"MHealing",["Brave","General"],[]),
+MagicResistanceBase= new Stats("Magic Resistance",0,"MResistance",["Denying","Golem"],[]),
+TravelSpeedBase= new Stats("Travel Speed",0,"Placeholder",["Swift","Traveller"],[]),
+ResearchSpeedBase= new Stats("Research Speed",0,"Placeholder",["Studious","Apprentice"],[]),
+ResearchSkillBase= new Stats("Research Skill",0,"Placeholder",["Clever","Scholar"],[]),
+ProphecySkillBase= new Stats("Prophecy Skill",0,"Placeholder",["Prophetic","Oracle"],[]),
+PotionMakingSkillBase= new Stats("Potion-Making Skill",0,"Placeholder",["Patient","Alchemist"],[]),
+SpellCastingSkillBase= new Stats("Spell-Casting Skill",0,"Placeholder",["Spellslinging","Wizard"],[]),
+EnchantingSkillBase= new Stats("Enchanting Skill",0,"Placeholder",["Enchanting","Enchanter"],[]),
+HelpersSkillBase= new Stats("Helpers Skill",0,"Placeholder",["Inspiring","Leader"],[]),
+EnemyDetectionBase= new Stats("Enemy Detection",0,"Placeholder",["Perceptive","Scout"],[]),
+ResourceDetectionBase= new Stats("Resource Detection",0,"Placeholder",["Divining","Explorer"],[]),
+EnemyWealthBase= new Stats("Enemy Wealth Damage",0,"Placeholder",["Spiteful","Ruiner"],[]),
+EnemyReputationBase= new Stats("Enemy Reputation Damage",0,"Placeholder",["Snaketongued","Liar"],[]),
+AgricultureSkillBase= new Stats("Agriculture Skill",0,"Placeholder",["Green-thumbed","Peasant"],[]),
+AgricultureProsperityBase= new Stats("Agriculture Prosperity",0,"Placeholder",["Prosperous","Farmer"],[]),
+MiningSkillBase= new Stats("Mining Skill",0,"Placeholder",["Dedicated","Miner"],[]),
+MiningProsperityBase= new Stats("Mining Prosperity",0,"Placeholder",["Rich","Dwarf"],[]),
+ManaBase= new Stats("Mana",50,"Placeholder",["Spiritual","Spiritualist"],[]),
+DodgeBase= new Stats("Dodge",0,"Dodge",["Fleeting","Boxer"],[]),
+ParryBase= new Stats("Parry",0,"Parry",["Skillful","Blademaster"],[]),
+ArmorBase= new Stats("Armor",0,"Armor",["Protective","Protector"],[]),
+CharismaBase= new Stats("Charisma",0,"Placeholder",["Charismatic","Gentleman"],[]),
+SeductionBase= new Stats("Seduction",0,"Placeholder",["Seductive","Succubus"],[]),
+ManipulationBase= new Stats("Manipulation",0,"Placeholder",["Manipulative","Manipulator"],[]),
+PresenceBase= new Stats("Presence",0,"Placeholder",["Impressive","General"],[]),
+HealingBase= new Stats("Healing",1,"Placeholder",["Helpful","Healer"],[]),
+InfluenceBase= new Stats("Influence",0,"Placeholder",["Influential","Socialite"],[]),
+HagglingBase= new Stats("Haggling",0,"Placeholder",["Haggling","Haggler"],[]),
+MoneyBase= new Stats("Money",0,"Placeholder",["Wealthy","Merchant"],[]),
+ReputationBase= new Stats("Reputation",0,"Placeholder",["Famous","Paragon"],[]),
+EnemyPhysicalPowerBase= new Stats("Enemy Physical Power Reduction",0,"Placeholder",["Weakening","Vainquisher"],[]),
+EnemyMagicalPowerBase= new Stats("Enemy Magical Power Reduction",0,"Placeholder",["Overpowering","Warlock"],[]),
+EnemyPhysicalHealthBase= new Stats("Enemy Physical Health Damage",0,"Placeholder",["Destructive","Destroyer"],[]),
+EnemyMentalHealthBase= new Stats("Enemy Mental Health Damage",0,"Placeholder",["Mad","Horror"],[]),
+EnemyMentalHealingBase= new Stats("Enemy Mental Healing",0,"Placeholder",["Demoralizing","Demoralizer"],[]),
+EnemyMagicResistanceBase= new Stats("Enemy Magic Resistance Reduction",0,"Placeholder",["Hexing","Hexer"],[]),
+EnemyManaBase= new Stats("Enemy Mana Reduction",0,"Placeholder",["Draining","Drainer"],[]),
+EnemyDodgeBase= new Stats("Enemy Dodge Reduction",0,"Placeholder",["Tiring","Swamper"],[]),
+EnemyParryBase= new Stats("Enemy Parry Reduction",0,"Placeholder",["Distracting","Distractor"],[]),
+EnemyArmorBase= new Stats("Enemy Armor Reduction",0,"Placeholder",["Rusting","Rustmaker"],[])
+]
 var stats = [
 PhysicalPower= new Stats("Physical Power",0,"PPower",["Mighty","Warrior"],[]),
 MagicalPower= new Stats("Magical Power",0,"MPower",["Potent","Mage"],[]),
 PhysicalHealth= new Stats("Physical Health",0,"PHealth",["Healthy","Survivor"],[]),
 MentalHealth= new Stats("Mental Health",0,"MHealth",["Sane","Monk"],[]),
-MoraleHealth= new Stats("Morale Health",0,"Morale",["Brave","General"],[]),
+MentalHealing= new Stats("Mental Healing",0,"MHealing",["Brave","General"],[]),
 MagicResistance= new Stats("Magic Resistance",0,"MResistance",["Denying","Golem"],[]),
 TravelSpeed= new Stats("Travel Speed",0,"TSpeed",["Swift","Traveller"],[]),
 ResearchSpeed= new Stats("Research Speed",0,"RSpeed",["Studious","Apprentice"],[]),
@@ -178,7 +243,7 @@ EnemyPhysicalPower= new Stats("Enemy Physical Power Reduction",0,"EPPower",["Wea
 EnemyMagicalPower= new Stats("Enemy Magical Power Reduction",0,"EMPower",["Overpowering","Warlock"],[]),
 EnemyPhysicalHealth= new Stats("Enemy Physical Health Damage",0,"EPHealth",["Destructive","Destroyer"],[]),
 EnemyMentalHealth= new Stats("Enemy Mental Health Damage",0,"EMeHealth",["Mad","Horror"],[]),
-EnemyMoraleHealth= new Stats("Enemy Morale Health Damage",0,"EMoHealth",["Demoralizing","Demoralizer"],[]),
+EnemyMentalHealing= new Stats("Enemy Mental Healing",0,"EMHealing",["Demoralizing","Demoralizer"],[]),
 EnemyMagicResistance= new Stats("Enemy Magic Resistance Reduction",0,"EMResistance",["Hexing","Hexer"],[]),
 EnemyMana= new Stats("Enemy Mana Reduction",0,"EMana",["Draining","Drainer"],[]),
 EnemyDodge= new Stats("Enemy Dodge Reduction",0,"EDodge",["Tiring","Swamper"],[]),
@@ -197,8 +262,8 @@ Cleansing = new BasicEffect("Cleansing","18",["Magic Resistance","Enemy Magical 
 Water  = new BasicEffect("Water","21",["Enemy Mana Reduction","Mana","Prophecy Skill"],0),
 Fire  = new BasicEffect("Fire","22",["Enemy Physical Health Damage","Research Speed","Physical Power"],0),
 Earth  = new BasicEffect("Earth","23",["Mining Prosperity","Money","Magic Resistance"],0),
-Wind  = new BasicEffect("Wind","24",["Dodge","Travel Speed","Enemy Morale Health Damage"],0),
-Light  = new BasicEffect("Light","25",["Enemy Parry Reduction","Enemy Detection","Morale Health"],0),
+Wind  = new BasicEffect("Wind","24",["Dodge","Travel Speed","Enemy Mental Healing"],0),
+Light  = new BasicEffect("Light","25",["Enemy Parry Reduction","Enemy Detection","Mental Healing"],0),
 Darkness = new BasicEffect("Darkness","26",["Enemy Reputation Damage","Enemy Physical Power Reduction","Enemy Dodge Reduction"],0),
 Strength  = new BasicEffect("Strength","31",["Physical Power","Parry","Healing"],0),
 Toughness  = new BasicEffect("Toughness","32",["Physical Health","Physical Power","Armor"],0),
@@ -212,14 +277,14 @@ Sex   = new BasicEffect("Sex","43",["Seduction","Reputation","Charisma"],0),
 Riches   = new BasicEffect("Riches","44",["Money","Haggling","Enemy Wealth Damage"],0),
 Beauty  = new BasicEffect("Beauty","45",["Charisma","Seduction","Manipulation"],0),
 Worship  = new BasicEffect("Worship","46",["Helpers Skill","Influence","Enemy Reputation Damage"],0),
-Happiness   = new BasicEffect("Happiness","51",["Morale Health","Charisma","Influence"],0),
-Confidence   = new BasicEffect("Confidence","52",["Presence","Morale Health","Haggling"],0),
+Happiness   = new BasicEffect("Happiness","51",["Mental Healing","Charisma","Influence"],0),
+Confidence   = new BasicEffect("Confidence","52",["Presence","Mental Healing","Haggling"],0),
 Peace   = new BasicEffect("Peace","53",["Enemy Magical Power Reduction","Mental Health","Reputation"],0),
 Courage   = new BasicEffect("Courage","54",["Mental Health","Spell-Casting Skill","Presence"],0),
 Love  = new BasicEffect("Love","55",["Reputation","Potion-Making Skill","Mining Skill"],0),
 Confusion   = new BasicEffect("Confusion","61",["Manipulation","Enemy Mental Health Damage","Enemy Magical Power Reduction"],0),
-Fear  = new BasicEffect("Fear","62",["Enemy Morale Health Damage","Enemy Dodge Reduction","Enemy Physical Power Reduction"],0),
-Madness   = new BasicEffect("Madness","62",["Enemy Mental Health Damage","Enemy Morale Health Damage","Enemy Magic Resistance Reduction"],0),
+Fear  = new BasicEffect("Fear","62",["Enemy Mental Healing","Enemy Dodge Reduction","Enemy Physical Power Reduction"],0),
+Madness   = new BasicEffect("Madness","62",["Enemy Mental Health Damage","Enemy Mental Healing","Enemy Magic Resistance Reduction"],0),
 Anger  = new BasicEffect("Anger","63",["Enemy Armor Reduction","Enemy Reputation Damage","Enemy Armor Reduction"],0),
 Sadness  = new BasicEffect("Sadness","64",["Enemy Magic Resistance Reduction","Enemy Mana Reduction","Enemy Mental Health Damage"],0),
 Fate  = new BasicEffect("Fate","71",["Mana","Helpers Skill","Enchanting Skill"],0),
@@ -480,6 +545,7 @@ Mirror = new MagicItem(["Mirror"],["75",2],["15",2],["63",2]),
     ]
 
 
+// Basic Functions
 function computeMaker(){
    var spellType = prompt("What are you attempting to make ? \n1. A Spell\n2. A Potion\n3. An Enchantment")
 // First Part    
@@ -681,6 +747,37 @@ if(potency <=0){alert("The " + result + "fails !")}
 else if(spellType === "2" || spellType === "1"){alert(total  + duration)} 
 else{alert(total)}}
 
+function clicker(value){
+	researchPoints = researchPoints + (value*(1+ResearchSkill.value/20));
+	 document.getElementById("researchPoints").innerHTML = Math.floor(researchPoints); }
+function clickerMoney(value){
+	money = money + (value);
+	 document.getElementById("gold").innerHTML = Math.floor(money); }
+function buyHelper(value){
+    var helpersCost = Math.floor(10 * Math.pow(1.1,helpers));     //works out the cost of this cursor
+    if(money >= helpersCost){                                   //checks that the player can afford the cursor
+        helpers = helpers + 1;                                   //increases number of cursors
+    	money = money - helpersCost;                          //removes the researchPoints spent
+        document.getElementById('helpers').innerHTML = helpers;  //updates the number of cursors for the user
+        document.getElementById('gold').innerHTML = Math.floor(money);  //updates the number of researchPoints for the user
+    };
+    var nextCost2 = Math.floor(10 * Math.pow(1.1,helpers));       //works out the cost of the next cursor
+    document.getElementById('helpersCost').innerHTML = nextCost2;  //updates the cursor cost for the user
+}
+function logger(logelement){
+	document.getElementById("log").value = ""
+	logText.push(logelement + "\n")
+	if(logText.length>5){logText.shift()}
+
+for(i=logText.length-1;i>0;i--){
+document.getElementById("log").value += logText[i]
+}}
+
+// Loading Bar Function
+function checkIfMatch(array){
+	var checkTrue = "False"
+
+if(checkTrue === "False"){inProgressVariable.push(newPotion);inProgressVariable.push(10);inProgressVariable.push(array);move()}}
 function move() {
 	if(inProgressVariable.length === 3){
 	
@@ -689,7 +786,7 @@ working()
 	function working(){
   var elem = document.getElementById("myBar");   
   var width = 0;
-  var countDown = inProgressVariable[1]
+  var countDown = (inProgressVariable[1]/(1+(ResearchSpeed/10)))
   var id = setInterval(frame, countDown);
   function frame() {
     if (width >= 100) {
@@ -700,32 +797,19 @@ working()
 	  inProgressVariable.shift()
 	  inProgressVariable.shift()
 	  inProgressVariable.shift()
-	  working()
+if(inProgressVariable.length>0){	  working()}
 	  changeTable()
  } else {
-      width+= 1; 
+      width+= 0.1; 
       elem.style.width = width + '%'; 
     }
   }
 	}}
+
 changeTable()}
-function clicker(value){
-	researchPoints = researchPoints + (value*(1+ResearchSpeed.value/20));
-	 document.getElementById("researchPoints").innerHTML = Math.floor(researchPoints); }
-function clickerMoney(value){
-	money = money + (value);
-	 document.getElementById("gold").innerHTML = Math.round(money); }
-function buyHelper(value){
-    var helpersCost = Math.floor(10 * Math.pow(1.1,helpers));     //works out the cost of this cursor
-    if(money >= helpersCost){                                   //checks that the player can afford the cursor
-        helpers = helpers + 1;                                   //increases number of cursors
-    	money = money - helpersCost;                          //removes the researchPoints spent
-        document.getElementById('helpers').innerHTML = helpers;  //updates the number of cursors for the user
-        document.getElementById('gold').innerHTML = Math.round(money);  //updates the number of researchPoints for the user
-    };
-    var nextCost2 = Math.floor(10 * Math.pow(1.1,helpers));       //works out the cost of the next cursor
-    document.getElementById('helpersCost').innerHTML = nextCost2;  //updates the cursor cost for the user
-}
+
+
+// Save and Testing Buttons
 function saveButton(){
 var save = {
 	researchPoints: researchPoints,
@@ -771,23 +855,12 @@ addOption(document.getElementById("mySelect2"))
 addOption(document.getElementById("mySelect3"))
 
 	}
-
-	function callEveryFullHour() {
-
-    var now = new Date();
-    var nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0, 0);
-    var difference = nextHour - now;
-
-    window.setTimeout(function(){
-
-	reloadIngredients()
-  
-  callEveryFullHour();
-
-    }, difference);
-
+function Cheat(){
+clicker(1000000)
+money+=100000
+for(i=1;i<discoveredIngredients.length;i++){discoveredIngredients[i].quantity+=1000}
+changeTable()
 }
-
 function reloadIngredientsTest(){
 	for(i=1;i<discoveredIngredients.length;i++){
 		discoveredIngredients[i].marketStock = 0;
@@ -804,22 +877,37 @@ function reloadIngredients(){
 changeTable()
 
 }
-callEveryFullHour() 
 
-function Cheat(){
-clicker(1000000)
-money+=100000
-for(i=1;i<discoveredIngredients.length;i++){discoveredIngredients[i].quantity+=1000}
-changeTable()
-}
-
+// Constant Update Fonction - Important !
 window.setInterval(function(){
 clicker(helpers*0.5*(1+HelpersSkill.value/5)); 
-money = Math.floor(money +(Money.value))
-computeStats()
-document.getElementById("gold").innerHTML = money
-}, 1000);
+money = Math.floor(money +(Money.value/20))
+if(physicalDamage>0){physicalDamage -= (Healing.value-10)/10}
+if(mentalDamage>0){mentalDamage -= (MentalHealing.value/10)}
 
+document.getElementById("gold").innerHTML = money
+computeStats()
+combatRound()
+updateEnchantements();
+}, 1000);
+function callEveryFullHour() {
+
+    var now = new Date();
+    var nextHour = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + 1, 0, 0, 0);
+    var difference = nextHour - now;
+
+    window.setTimeout(function(){
+
+	reloadIngredients()
+  
+  callEveryFullHour();
+
+    }, difference);
+
+}
+callEveryFullHour() 
+
+// Stats Update Functions
 function updateEnchantements(){
 	for(j=0;j<enchantementStatBonus.length;j++){enchantementStatBonus[j].value = 0}
 for(i=1;i<ownedEnchantements.length;i++){
@@ -830,10 +918,14 @@ if(ownedEnchantements[i].effect[1] === enchantementStatBonus[j].name){enchanteme
 function computeStats(){
 
 for(i=0;i<stats.length;i++){
-	stats[i].value = enchantementStatBonus[i].value; document.getElementById(stats[i].statBox).innerHTML = stats[i].value
-}}
+	stats[i].value = enchantementStatBonus[i].value + baseStatValue[i].value; document.getElementById(stats[i].statBox).innerHTML = Math.floor((stats[i].value*10)/10)
+	}
+PhysicalHealth.value = PhysicalHealthBase.value + PhysicalHealthEnchantementBonus.value - physicalDamage; document.getElementById(PhysicalHealth.statBox).innerHTML = Math.floor(PhysicalHealth.value*10)/10
+MentalHealth.value = MentalHealthBase.value + MentalHealthEnchantementBonus.value - mentalDamage; document.getElementById(MentalHealth.statBox).innerHTML = Math.floor(MentalHealth.value*10)/10
+}
 
 
+// Discover Ingredient Functions
 function discoverIngredient(){
     var discoverCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length));     //works out the cost of this cursor
     if(researchPoints >= discoverCost){                                   //checks that the player can afford the cursor
@@ -842,9 +934,8 @@ function discoverIngredient(){
   	calculator()
 	discoveredIngredients.push(ingredients[rand]);
 discoveredIngredients.sort(function(a,b) {return (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0);} ); 
-addOption(document.getElementById("mySelect"))
-addOption(document.getElementById("mySelect2"))
-addOption(document.getElementById("mySelect3"))
+
+updateIngredientSelect()
   };
   
 	function calculator(){
@@ -858,7 +949,10 @@ changeTable()
 discoverTableUpdate()  
 
 }
-
+function updateIngredientSelect(){
+addOption(document.getElementById("mySelect"))
+addOption(document.getElementById("mySelect2"))
+addOption(document.getElementById("mySelect3"))}
 function addOption(selectChoice) {
 	var select = selectChoice;
 var length = discoveredIngredients.length;
@@ -866,14 +960,14 @@ for (j = 0; j < length; j++) {
   select.options[0] = null;
 }	
 for (i = 0; i < discoveredIngredients.length; i++) {
+	if(discoveredIngredients[i].quantity!=0){
     var x = selectChoice;
     var option = document.createElement("option");
     option.text = discoveredIngredients[i].name;
     option.value = discoveredIngredients[i].name;
    x.add(option);
+}}
 }
-}
-
 function discoverPropertyFirst(){
     var discoverPropertyCost = Math.floor(40 * Math.pow(1.2,discoveredFirstProperties));     //works out the cost of this cursor
     if(researchPoints >= discoverPropertyCost && discoveredFirstProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
@@ -944,8 +1038,8 @@ CleansingPotency = new BasicEffect("Cleansing","18",["Magic Resistance","Enemy M
 WaterPotency  = new BasicEffect("Water","21",["Enemy Mana Reduction","Mana","Prophecy Skill"],0),
 FirePotency  = new BasicEffect("Fire","22",["Enemy Physical Health Damage","Research Speed","Physical Power"],0),
 EarthPotency  = new BasicEffect("Earth","23",["Mining Prosperity","Money","Magic Resistance"],0),
-WindPotency  = new BasicEffect("Wind","24",["Dodge","Travel Speed","Enemy Morale Health Damage"],0),
-LightPotency  = new BasicEffect("Light","25",["Enemy Parry Reduction","Enemy Detection","Morale Health"],0),
+WindPotency  = new BasicEffect("Wind","24",["Dodge","Travel Speed","Enemy Mental Healing"],0),
+LightPotency  = new BasicEffect("Light","25",["Enemy Parry Reduction","Enemy Detection","Mental Healing"],0),
 DarknessPotency = new BasicEffect("Darkness","26",["Enemy Reputation Damage","Enemy Physical Power Reduction","Enemy Dodge Reduction"],0),
 StrengthPotency  = new BasicEffect("Strength","31",["Physical Power","Parry","Healing"],0),
 ToughnessPotency  = new BasicEffect("Toughness","32",["Physical Health","Physical Power","Armor"],0),
@@ -959,14 +1053,14 @@ SexPotency   = new BasicEffect("Sex","43",["Seduction","Reputation","Charisma"],
 RichesPotency   = new BasicEffect("Riches","44",["Money","Haggling","Enemy Wealth Damage"],0),
 BeautyPotency  = new BasicEffect("Beauty","45",["Charisma","Seduction","Manipulation"],0),
 WorshipPotency  = new BasicEffect("Worship","46",["Helpers Skill","Influence","Enemy Reputation Damage"],0),
-HappinessPotency   = new BasicEffect("Happiness","51",["Morale Health","Charisma","Influence"],0),
-ConfidencePotency   = new BasicEffect("Confidence","52",["Presence","Morale Health","Haggling"],0),
+HappinessPotency   = new BasicEffect("Happiness","51",["Mental Healing","Charisma","Influence"],0),
+ConfidencePotency   = new BasicEffect("Confidence","52",["Presence","Mental Healing","Haggling"],0),
 PeacePotency   = new BasicEffect("Peace","53",["Enemy Magical Power Reduction","Mental Health","Reputation"],0),
 CouragePotency   = new BasicEffect("Courage","54",["Mental Health","Spell-Casting Skill","Presence"],0),
 LovePotency  = new BasicEffect("Love","55",["Reputation","Potion-Making Skill","Mining Skill"],0),
 ConfusionPotency   = new BasicEffect("Confusion","61",["Manipulation","Enemy Mental Health Damage","Enemy Magical Power Reduction"],0),
-FearPotency  = new BasicEffect("Fear","62",["Enemy Morale Health Damage","Enemy Dodge Reduction","Enemy Physical Power Reduction"],0),
-MadnessPotency   = new BasicEffect("Madness","62",["Enemy Mental Health Damage","Enemy Morale Health Damage","Enemy Magic Resistance Reduction"],0),
+FearPotency  = new BasicEffect("Fear","62",["Enemy Mental Healing","Enemy Dodge Reduction","Enemy Physical Power Reduction"],0),
+MadnessPotency   = new BasicEffect("Madness","62",["Enemy Mental Health Damage","Enemy Mental Healing","Enemy Magic Resistance Reduction"],0),
 AngerPotency  = new BasicEffect("Anger","63",["Enemy Armor Reduction","Enemy Reputation Damage","Enemy Armor Reduction"],0),
 SadnessPotency  = new BasicEffect("Sadness","64",["Enemy Magic Resistance Reduction","Enemy Mana Reduction","Enemy Mental Health Damage"],0),
 FatePotency  = new BasicEffect("Fate","71",["Mana","Helpers Skill","Enchanting Skill"],0),
@@ -1065,11 +1159,12 @@ var newRitual = new CreatedRitual([typeText,stats[index].ritualNames[1],stats[in
 else{
 var newRitual = new CreatedRitual([typeText,stats[index].ritualNames[1],""],document.getElementById("mySelect").value,document.getElementById("mySelect2").value,document.getElementById("mySelect3").value,[stats[index].name,""],[Math.floor(stats[index].value),0]) 
 }
-if(newRitual.value[0] === 0 ||newRitual.value[1] === 0){alert("This Ritual lacks potency, and has no effect !")}
-else{inProgressVariable.push(newRitual);inProgressVariable.push(100);inProgressVariable.push(craftedRituals);move()}
+if(newRitual.value[0] === 0){alert("This Ritual lacks potency, and has no effect !")}
+else{inProgressVariable.push(newRitual);inProgressVariable.push(10);inProgressVariable.push(craftedRituals);move()}
 for(i=0;i<stats.length;i++){stats[i].value = 0}
 changeTable()}
 
+// Update the different Table Displays. Also contains the Sell, Craft, and Use functions
 function changeTable(){
 if(document.getElementById("SelectType2").options[document.getElementById("SelectType2").selectedIndex].value === "OwnedPotions"){ownedPotionsTableUpdate();}
 if(document.getElementById("SelectType2").options[document.getElementById("SelectType2").selectedIndex].value === "DiscoveredIngredients"){tableUpdate();}
@@ -1092,7 +1187,8 @@ if(document.getElementById("SelectStatTable").options[document.getElementById("S
 	
 	
 }
-// This function also contains the Craft function due to the Cell Spawner
+
+// Spawn and Modify the Tables
 function potionTableUpdate(){
 // Clears the table so it can be repopulated
 var table = document.getElementById("potionTable");	table.innerHTML = "";
@@ -1164,6 +1260,8 @@ if(newPotion.name[0].indexOf("Spell") != -1){ checkIfMatch(castSpell)}
 if(newPotion.name[0].indexOf("Enchantement") != -1){ checkIfMatch(ownedEnchantements); 	updateEnchantements()}
 //ownedPotions.push(newPotion)
 	changeTable();
+	updateIngredientSelect()
+
 }}
 }}
 cell10.onclick = function() { for(i=1;i<document.getElementById("potionTable").rows.length;i++){
@@ -1234,12 +1332,17 @@ cell7.innerHTML = discoveredIngredients[i].marketStock;
 row.onclick = function() { for(i=1;i<document.getElementById("potionTable").rows.length;i++){
 
 if(this.innerHTML === document.getElementById("potionTable").rows[i].innerHTML){ if(discoveredIngredients[i].marketStock>0 && discoveredIngredients[i].price < money){  discoveredIngredients[i].quantity+=1;discoveredIngredients[i].marketStock-=1;money -= Math.floor(discoveredIngredients[i].price*(1-(Haggling.value/100)));; changeTable()}}
-}};
+}updateIngredientSelect()};
 }
 	potionTable.rows[0].cells[5].innerHTML = 'Price'
 }
 function ownedPotionsTableUpdate(){
-
+	for(z=0;z<ownedPotions.length;z++){
+	
+	for(y=0;y<ownedPotions.length;y++){
+	if(
+	ownedPotions[z].effect[0] === ownedPotions[y].effect[0] && ownedPotions[z].effect[1] === ownedPotions[y].effect[1] && ownedPotions[z].name[0] === ownedPotions[y].name[0] && ownedPotions[z].name[1] === ownedPotions[y].name[1] && ownedPotions[z].sellPrice[0] === ownedPotions[y].sellPrice[0] && z!=y){ownedPotions[z].quantity+=1;ownedPotions.splice(y,1);}
+	}}
 var table = document.getElementById("potionTable");
 	table.innerHTML = "";
 
@@ -1269,7 +1372,7 @@ if(this.id === i.toString()){
 	if(ownedPotions[i].quantity>=1){ownedPotions[i].quantity-=1}
 	if(ownedPotions[i].quantity===0){ownedPotions.splice(i,1)}
 
-document.getElementById("gold").innerHTML = Math.round(money); 
+document.getElementById("gold").innerHTML = Math.floor(money); 
 }
 }
 		changeTable()
@@ -1310,6 +1413,12 @@ cell9.innerHTML = "Sell".bold()
 	
 }
 function ownedEnchantementsTableUpdate(){
+	for(z=0;z<ownedEnchantements.length;z++){
+	
+	for(y=0;y<ownedEnchantements.length;y++){
+	if(
+	ownedEnchantements[z].effect[0] === ownedEnchantements[y].effect[0] && ownedEnchantements[z].effect[1] === ownedEnchantements[y].effect[1] && ownedEnchantements[z].name[0] === ownedEnchantements[y].name[0] && ownedEnchantements[z].name[1] === ownedEnchantements[y].name[1] && ownedEnchantements[z].sellPrice[0] === ownedEnchantements[y].sellPrice[0] && z!=y){ownedEnchantements[z].quantity+=1;ownedEnchantements.splice(y,1);}
+	}}
 
 var table = document.getElementById("potionTable");
 	table.innerHTML = "";
@@ -1337,7 +1446,7 @@ if(this.id === i.toString()){
 	if(ownedEnchantements[i].quantity>=1){ownedEnchantements[i].quantity-=1}
 	if(ownedEnchantements[i].quantity===0){ownedEnchantements.splice(i,1)}
 
-document.getElementById("gold").innerHTML = Math.round(money); 
+document.getElementById("gold").innerHTML = Math.floor(money); 
 }
 }
 		changeTable()
@@ -1366,6 +1475,8 @@ cell8.innerHTML = "Sell".bold()
 }
 
 function discoverTableUpdate(){
+	
+	
     var nextCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length));       //works out the cost of the next cursor
     document.getElementById('discoverCost').innerHTML = nextCost;  //updates the cursor cost for the user
 
@@ -1379,10 +1490,57 @@ function discoverTableUpdate(){
     document.getElementById('discoverPropertyCostThird').innerHTML = nextCostFirst;  //updates the third property cost for the user
 }
 
-function checkIfMatch(array){
-	var checkTrue = "False"
-	for(y=0;y<array.length;y++){
-	if(
-	newPotion.effect[0] === array[y].effect[0] && newPotion.effect[1] === array[y].effect[1] && newPotion.name[0] === array[y].name[0] && newPotion.name[1] === array[y].name[1] && newPotion.sellPrice[0] === array[y].sellPrice[0]){array[y].quantity+=1; checkTrue = "True"}
-	}
-if(checkTrue === "False"){inProgressVariable.push(newPotion);inProgressVariable.push(100);inProgressVariable.push(array);move()}}
+// Combat Interface
+
+function enemySpawn(){
+if(activeEnemy.length===0){
+
+var enemyOri
+
+	newEnemy = new Enemy("TestEnemy",0,5,50,40,5,5,30,10,10) 
+	activeEnemy.push(newEnemy)
+
+document.getElementById("FEPPower").innerHTML = activeEnemy[0].physical;
+document.getElementById("FEMPower").innerHTML = activeEnemy[0].magical;
+document.getElementById("FEPHealth").innerHTML = activeEnemy[0].health;
+document.getElementById("FEMeHealth").innerHTML = activeEnemy[0].mental;
+document.getElementById("FEArmor").innerHTML = activeEnemy[0].armor;
+document.getElementById("FEMResistance").innerHTML = activeEnemy[0].magicResist;
+document.getElementById("FEMana").innerHTML = activeEnemy[0].mana;
+document.getElementById("FEDodge").innerHTML = activeEnemy[0].dodge;
+document.getElementById("FEParry").innerHTML = activeEnemy[0].parry;
+document.getElementById('CurrentEnemyStatsTable').style.display = 'block'
+
+}}
+
+function combatRound(){
+	if(activeEnemy[0].health<=0 || activeEnemy[0].mental<=0){activeEnemy.splice(0,1);document.getElementById('CurrentEnemyStatsTable').style.display = 'none'; logger("You defeated an enemy !")}
+	if(PhysicalHealth.value<0){PhysicalHealth.value = 0; activeEnemy.splice(0,1);document.getElementById('CurrentEnemyStatsTable').style.display = 'none'; logger("You Lose ! Try again once you've healed !")}
+	if(MentalHealth.value<0){MentalHealth.value = 0;activeEnemy.splice(0,1);document.getElementById('CurrentEnemyStatsTable').style.display = 'none'; logger("You Lose ! Try again once you've healed !")}
+
+if(activeEnemy.length>0){
+	var enemyDodgeRoll = Math.floor(Math.random()*100)
+	var enemyParryRoll = Math.floor(Math.random()*100)
+	var dodgeRoll = Math.floor(Math.random()*100)
+	var parryRoll = Math.floor(Math.random()*100)
+	if(parryRoll < Parry.value || dodgeRoll<Dodge.value ){logger("You avoid an attack !")}
+	else{
+	physicalDamage +=	activeEnemy[0].physical*(1-Armor.value/100)
+	mentalDamage +=	activeEnemy[0].magical*(1-MagicResistance.value/100)}
+	
+	if(enemyDodgeRoll < activeEnemy[0].dodge || enemyParryRoll<activeEnemy[0].parry ){logger("Your enemy avoids an attack !")}	
+	else{activeEnemy[0].health -= (PhysicalPower.value*(1-activeEnemy[0].armor/100))
+	activeEnemy[0].mental -= (MagicalPower.value*(1-activeEnemy[0].magicResist/100))}
+
+
+document.getElementById("FEPPower").innerHTML = Math.floor(activeEnemy[0].physical);
+document.getElementById("FEMPower").innerHTML = Math.floor(activeEnemy[0].magical);
+document.getElementById("FEPHealth").innerHTML = Math.floor(activeEnemy[0].health);
+document.getElementById("FEMeHealth").innerHTML = Math.floor(activeEnemy[0].mental);
+document.getElementById("FEArmor").innerHTML = Math.floor(activeEnemy[0].armor);
+document.getElementById("FEMResistance").innerHTML = Math.floor(activeEnemy[0].magicResist);
+document.getElementById("FEMana").innerHTML = Math.floor(activeEnemy[0].mana);
+document.getElementById("FEDodge").innerHTML = Math.floor(activeEnemy[0].dodge);
+document.getElementById("FEParry").innerHTML = Math.floor(activeEnemy[0].parry);
+
+	}}
