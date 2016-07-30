@@ -6,18 +6,19 @@
 
 <script type="text/javascript" src="main.js" ></script>
 
+<div class="delta" id="ne">
 
  <table id="CombatStatsTable" align="right"   style="display: none">
   <tr><th>Combat Stats</th><th>Power</th></tr>
 	<tr><td>Physical Power</td><td><span id="PPower">0</span></td></tr>
 	<tr><td>Magical Power</td><td><span id="MPower">0</span></td></tr>
 	<tr><td>Physical Health</td><td><span id="PHealth">0</span></td></tr>
-    <tr><td>Mental Health</td><td><span id="MHealth">0</span></td></tr>
-    <tr><td>Morale</td><td><span id="Morale">0</span></td></tr>
+     <tr><td>Healing</td><td><span id="Healing">0</span></td></tr>
+   <tr><td>Mental Health</td><td><span id="MHealth">0</span></td></tr>
+    <tr><td>Mental Healing</td><td><span id="MHealing">0</span></td></tr>
     <tr><td>Mana</td><td><span id="Mana">0</span></td></tr>
 	<tr><td>Armor</td><td><span id="Armor">0</span></td></tr>
     <tr><td>Magic Resistance</td><td><span id="MResistance">0</span></td></tr>
-    <tr><td>Healing</td><td><span id="Healing">0</span></td></tr>
     <tr><td>Dodge/Parry Chance</td><td><span id="Dodge">0</span><span>/</span><span id="Parry">0</span></td></tr>
   </table> 
   <table id="CraftingStatsTable" align="right"   style="display: none">
@@ -52,7 +53,7 @@
 	 <tr><td>Magical Power</td><td><span id="EMPower">0</span></td></tr>
      <tr><td>Physical Health</td><td><span id="EPHealth">0</span></td></tr>
      <tr><td>Mental Health</td><td><span id="EMeHealth">0</span></td></tr>
-     <tr><td>Morale Health</td><td><span id="EMoHealth">0</span></td></tr>
+     <tr><td>Mental Health</td><td><span id="EMHealing">0</span></td></tr>
      <tr><td>Armor Reduction</td><td><span id="EArmor">0</span></td></tr>
      <tr><td>Magic Resistance</td><td><span id="EMResistance">0</span></td></tr>
 	 <tr><td>Mana Reduction</td><td><span id="EMana">0</span></td></tr>
@@ -66,6 +67,7 @@
   <tr><td>Resource Detection</td><td><span id="RDetection">0</span></td></tr>
   <tr><td>Prophecy Skill</td><td><span id="PSkill">0</span></td></tr>
  </table>  
+
   <select id="SelectStatTable" style="float:right" size="5" onchange="changeStatsTable()" >
     <option selected value = "CombatStats">Combat Stats</option>
     <option value = "CraftingSkills">Crafting Skills</option>
@@ -73,6 +75,14 @@
     <option value = "EnemyStats">Enemy Stats</option>
     <option value = "DiscoveryStats">Discovery Stats</option>
 	</select>
+	<br>
+<button onClick="saveButton()">Save !</button>
+<button onClick="loadButton()">Load !</button>
+<br>
+<button onClick="Cheat()">TestingCheat</button><br>
+</div>
+
+<div class="delta" id="nw">
 <button onClick="clicker(1)">Do Research</button>
 <span id="researchPoints"> 0 </span>
 <br>
@@ -86,25 +96,7 @@
 
 <br>
 <div id="myProgress" >
-  <div id="myBar"></div>
-</div>
-<br>
-<button onclick="move()">Click Me</button> 
-<br>
-	<label for="mySelect" id = mySelectLabel style="float:left">First Ingredient</label>	
-  <select id="mySelect"  >
-    <option value=""  disabled selected>Ingredient</option>
-  </select>  <br>
-	<label for="mySelect2" id = mySelect2Label style="float:left">Second Ingredient</label>	
-
-  <select id="mySelect2" >
-    <option value=""  disabled selected>Ingredient</option>
-	</select>  <br>
-	<label for="mySelect3" id = mySelect3Label style="float:left">Third Ingredient</label>	
-  <select id="mySelect3" >
-    <option value=""  disabled selected>Ingredient</option>
-  </select>
-  <br>
+  <div id="myBar"></div></div>
 
 <br>
 <table >
@@ -123,23 +115,52 @@
 </td><td><span id="discoverPropertyCostSecond">160</span></td></tr>
     <tr><td><button onClick="discoverPropertyThird()">Discover a Third Property</button>
 </td><td><span id="discoverPropertyCostThird">720</span></td></tr>
-</table><br><br><br>
+</table>
+</div>
+<div class="delta" id="sw" >
+<div style = "float:right; border:3px solid darkblue">
+	<label for="mySelect" id = mySelectLabel style="float:left">First Ingredient</label>	
+  <select id="mySelect"  >
+    <option value=""  disabled selected>Ingredient</option>
+  </select>  <br>
+	<label for="mySelect2" id = mySelect2Label style="float:left">Second Ingredient</label>	
+
+  <select id="mySelect2" >
+    <option value=""  disabled selected>Ingredient</option>
+	</select>  <br>
+	<label for="mySelect3" id = mySelect3Label style="float:left">Third Ingredient</label>	
+  <select id="mySelect3" >
+    <option value=""  disabled selected>Ingredient</option>
+  </select>
+ </div>
  <select id="SelectType2" size="4" onchange="changeTable()" >
     <option selected value = "DiscoveredIngredients">Discovered Ingredients</option>
     <option value = "DiscoveredRecipes">Discovered Recipes</option>
     <option value = "OwnedPotions">Owned Potions</option>
     <option value = "OwnedEnchantements">Owned Enchantements</option>
 	</select>
-<br>
-<table class="beta" id="potionTable"></table>
-<br><br>
-<button onClick="saveButton()">Save !</button>
-<button onClick="loadButton()">Load !</button>
-<br>
-<button onClick="Cheat()">TestingCheat</button><br>
-<button onClick="reloadIngredientsTest()">Empty Ingredients</button>
-<button onClick="reloadIngredients()">Reload Ingredients</button>
-<br>
-<button onClick="updateEnchantements()">Update Enchantements</button>
+<br><div style="overflow:auto; height:300px;">
+<table class="beta" id="potionTable" ></table>
+</div>
+
+</div>
+<div class="delta" id="se">
+<button id="EnemySpawn" onClick="enemySpawn()">Spawn an Enemy !</button>
+<div id="EnemyDisplay">
+  </table>
+     <table id="CurrentEnemyStatsTable" align="right"   style="display: none">
+	 <tr><th>Stats</th><th>Power</th></tr>
+	 <tr><td>Physical Power</td><td><span id="FEPPower">0</span></td></tr>
+	 <tr><td>Magical Power</td><td><span id="FEMPower">0</span></td></tr>
+     <tr><td>Physical Health</td><td><span id="FEPHealth">0</span></td></tr>
+     <tr><td>Mental Health</td><td><span id="FEMeHealth">0</span></td></tr>
+     <tr><td>Armor</td><td><span id="FEArmor">0</span></td></tr>
+     <tr><td>Magic Resistance</td><td><span id="FEMResistance">0</span></td></tr>
+	 <tr><td>Mana</td><td><span id="FEMana">0</span></td></tr>
+     <tr><td>Dodge Chance</td><td><span id="FEDodge">0</span></td></tr>
+     <tr><td>Parry Chance</td><td><span id="FEParry">0</span></td></tr>
+  </table>
+</div></div>
+
 
 </body>
