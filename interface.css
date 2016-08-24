@@ -4,15 +4,20 @@ table, th, td {
 }
 
 
-select{max-width:150px;
+select{max-width:300px;
 color: black;}
 
-label {
+.ingredients  {
 
   width:150px;
 
   display: inline-block;}
   
+.estate  {
+
+  width:80px;
+
+  display: inline-block;}  
   
 .beta tr:hover{
 background-color:lightblue;
@@ -41,3 +46,41 @@ html, body{width: 100%; height: 100%; padding: 0; margin: 0}
 #ne{background: white; top: 0; left: 65%; right: 0; bottom: 50%}
 #sw{background: white; top: 50%; left: 0; right: 40%; bottom: 0}
 #se{background: white; top: 50%; left: 60%; right: 0; bottom: 0}
+
+
+ /* Style the list */
+ul.tab {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Float the list items side by side */
+ul.tab li {float: left;}
+
+/* Style the links inside the list items */
+ul.tab li a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 9px 11px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of links on hover */
+ul.tab li a:hover {background-color: #0066ff}
+
+/* Create an active/current tablink class */
+ul.tab li a:focus, .active {background-color: #ccc;}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border-top: none;
+}
