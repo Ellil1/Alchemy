@@ -70,7 +70,7 @@ var InventoryPotion = function(name,quantity,effect,sellPrice){
 }
 
 // The Default elements are there to allow testing as well as ease the spawning of the tables
-var discoveredIngredients = [Default = new Ingredient("  Ingredient",["Property 1",3],["Property 2",2],["Property 3",2,0],2,"Quantity","Cost","Market Stock","Type")]
+var discoveredIngredients = [Default = new Ingredient(" Owned Ingredient",["Property 1",3],["Property 2",2],["Property 3",2,0],2,"Quantity","Cost","Market Stock","Type")]
 var estateAgriculture = []
 var estateMining = []
 
@@ -699,7 +699,6 @@ function loadButton(){
      var nextCost = Math.floor(10 * Math.pow(1.1,helpers));
 	document.getElementById('helpersCost').innerHTML = nextCost;	
 	changeTable();
-
 //enemyChooseTableSpawn() //This makes sure that if the enemy spawner is at the choosing stage, it restores the table on load
 discoverTableUpdate();
 updateEnchantements();
@@ -712,6 +711,8 @@ clicker(10000000000)
 money+=100000000
 for(i=1;i<discoveredIngredients.length;i++){discoveredIngredients[i].quantity+=1000}
 changeTable()
+updateIngredientSelect();
+
 }
 function reloadIngredientsTest(){
 	for(i=1;i<discoveredIngredients.length;i++){
