@@ -2,69 +2,107 @@
 <head>
 <link rel="stylesheet" type="text/css" href="interface.css" />
 </head>
-<body onload="tableUpdate(); changeStatsTable(); computeStats(); instructions()">
+<body onload="changeStatsTable(); computeStats(); loadButton(); instructions();">
 
-<script type="text/javascript" src="main.js" ></script>
+<script type="text/javascript" src="main.js">
+</script>
+<script  src="mousetrap.min.js" >
+</script>
+<script >
+Mousetrap.bind('1', function() { document.getElementById("SelectType2").options.selectedIndex = 0; changeTable() });
+Mousetrap.bind('2', function() { document.getElementById("SelectType2").options.selectedIndex = 1; changeTable() });
+Mousetrap.bind('3', function() { document.getElementById("SelectType2").options.selectedIndex = 2; changeTable() });
+Mousetrap.bind('4', function() { document.getElementById("SelectType2").options.selectedIndex = 3; changeTable() });
+Mousetrap.bind('5', function() { document.getElementById("SelectType2").options.selectedIndex = 4; changeTable() });
+Mousetrap.bind('6', function() { document.getElementById("SelectType2").options.selectedIndex = 5; changeTable() });
+Mousetrap.bind('7', function() { document.getElementById("SelectType2").options.selectedIndex = 6; changeTable() });
+</script>
+
+
+<div class="delta" id="ce" style="display:block; overflow:auto">
+     <div id="object1" style="float:left; width:50%">
+<h1>Choose a Class</h1>
+<br><button onClick="chooseClass('Thaumaturgist')">Choose Class</button><span>  <b>Thaumaturgist</b> <br> Experts in the primal forces of Life and Death, Thaumaturgists are well-versed in the cycle of life. They are patient, let their garden bloom, starting weak as a sapling but growing strong as the oak.<br>
+ <b>Preferred Effects</b>: Healing, Fertility, Rebirth, Transformation, Death, Power</span>
+<br>
+<br><button onClick="chooseClass('Elementalist')">Choose Class</button><span>  <b>Elementalist</b> <br> Manipulating the primal Titanic forces of the elements, Elementalists are versatile and impulsive. They can display an incredible array of different powers, with monstrous bursts of energies pulverizing any obstacle.<br>
+ <b>Preferred Effects</b>: Water, Fire, Earth, Wind, Light, Darkness</span>
+<br>
+<br><button onClick="chooseClass('Biomancer')">Choose Class</button><span>  <b>Biomancer</b> <br> Believing that doing a job right means doing it yourself, Biomancers are an aggressive, focused type. Using any means available to improve their abilities, they then use their perfected body to crush their foes.<br>
+ <b>Preferred Effects</b>: Strength, Toughness, Speed, Intellect, Protection, Weakness</span>
+<br>
+<br><button onClick="chooseClass('Guru')">Choose Class</button><span>  <b>Guru</b> <br> Reveling in the attention others can't help but give them, Gurus get along with anyone and everyone, carefully planning each social encounter like a general plans for a battle.<br>
+ <b>Preferred Effects</b>: Luck, Sociality, Seduction, Riches, Beauty, Worship</span>
+<br></div>
+     <div id="object2" style="float:right; width:50%">
+
+<br><br><br><br><button onClick="chooseClass('Yogi')">Choose Class</button><span>  <b>Yogi</b> <br> Living true to the adage of "Wellness is Goodness", Yogis bless others - and themselves - with positivity. They always have to be doing something - even if that thing is peaceful meditation.<br>
+ <b>Preferred Effects</b>: Happiness, Confidence, Peace, Courage, Love, Truth</span>
+<br>
+<br><button onClick="chooseClass('Hexer')">Choose Class</button><span>  <b>Hexer</b> <br> Using the darkest of magics, Hexers eschew the dangers of self-experimentation...by experimenting on others. Voodoo dolls, curses, bad luck and bad omens are their trade.<br>
+ <b>Preferred Effects</b>: Confusion, Fear, Madness, Anger, Sadness, Illusion</span>
+<br>
+<br><button onClick="chooseClass('Wyrdseer')">Choose Class</button><span>  <b>Wyrdseer</b> <br> Peering into the very Web of Fate, wyrdseers possess the most complex of abilities. Quite often, their strange manneurisms and patterns only reveal their sense much later - to world-shattering effect.<br>
+ <b>Preferred Effects</b>: Fate, Perception, Dreams, Mystery, Soul, Messages, Travel</span>
+<br></div>
+</div>
 
 <div class="delta" id="ne">
-
  <table id="CombatStatsTable" align="right"   style="display: none">
   <tr><th>Combat Stats</th><th>Power</th></tr>
-	<tr><td>Physical Damage</td><td id="PPowerMod" title=""><span id="PPower">0</span></td></tr>
-	<tr><td>Magical Damage</td><td id="MPowerMod" title=""><span id="MPower">0</span></td></tr>
-	<tr><td>Physical Health</td><td id="PHealthMod" title=""><span id="PHealth">0</span></td></tr>
-    <tr><td>Healing/sec</td><td id="HealingMod" title=""><span id="Healing">0</span></td></tr>
-    <tr><td>Mental Health</td><td id="MHealthMod" title=""><span id="MHealth">0</span></td></tr>
-    <tr><td>Mental Healing/sec</td><td id="MHealingMod" title=""><span id="MHealing">0</span></td></tr>
-    <tr><td>Mana</td><td id="ManaMod" title=""><span id="Mana">0</span></td></tr>
-	<tr><td>Physical Damage Reduction</td><td id="ArmorMod" title=""><span id="Armor">0</span></td></tr>
-    <tr><td>Magic Damage Reduction</td><td id="MResistanceMod" title=""><span id="MResistance">0</span></td></tr>
-    <tr><td>Dodge Chance</td><td id="DodgeMod" title=""><span id="Dodge">0</span></td></tr>
-    <tr><td>Parry Chance</td><td id="ParryMod" title=""><span id="Parry">0</span></td></tr>
+	<tr><td title="Improves Physical Damage in Combat">Physical Damage</td><td id="PPowerMod" title=""><span id="PPower">0</span></td></tr>
+	<tr><td title="Improves Magical Damage in Combat">Magical Damage</td><td id="MPowerMod" title=""><span id="MPower">0</span></td></tr>
+	<tr><td title="Improves Physical Health to resist Physical attacks">Physical Health</td><td id="PHealthMod" title=""><span id="PHealth">0</span></td></tr>
+    <tr><td title="Improves Physical Healing to recover from Physical attacks">Healing</td><td id="HealingMod" title=""><span id="Healing">0</span></td></tr>
+    <tr><td title="Improves Mental Health to resist Magical attacks">Mental Health</td><td id="MHealthMod" title=""><span id="MHealth">0</span></td></tr>
+    <tr><td title="Improves Mental Healing to recover from Magical attacks">Mental Healing</td><td id="MHealingMod" title=""><span id="MHealing">0</span></td></tr>
+	<tr><td title="Reduces Damage taken from Physical attacks">Armor</td><td id="ArmorMod" title=""><span id="Armor">0</span></td></tr>
+    <tr><td title="Reduces Damage taken from Magical attacks">Magic Resistance</td><td id="MResistanceMod" title=""><span id="MResistance">0</span></td></tr>
+    <tr><td title="Increases chance to Dodge Physical and Magical attacks">Dodge</td><td id="DodgeMod" title=""><span id="Dodge">0</span></td></tr>
+    <tr><td title="Increases chance to Parry Physical and Magical attacks">Parry</td><td id="ParryMod" title=""><span id="Parry">0</span></td></tr>
   </table> 
   <table id="CraftingStatsTable" align="right"   style="display: none">
 	 <tr><th>Crafting Stats</th><th>Power</th></tr>
-	 <tr><td>Research Points/Click</td><td id="RSkillMod" title=""><span id="RSkill">0</span></td></tr>
-     <tr><td>Contract Research Multiplier</td><td id="RSpeedMod" title=""><span id="RSpeed">0</span></td></tr>
-     <tr><td>Helpers Bonus</td><td id="HSkillMod" title=""><span id="HSkill">0</span></td></tr>
-	 <tr><td>Potion-Making Bonus</td><td id="PMSkillMod" title=""><span id="PMSkill">0</span></td></tr>
-	 <tr><td>Spellcasting Bonus</td><td id="SSkillMod" title=""><span id="SSkill">0</span></td></tr>
-     <tr><td>Enchanting Bonus</td><td id="ESkillMod" title=""><span id="ESkill">0</span></td></tr>
-	 <tr><td>Prophecy Skill</td><td id="PSkillMod" title=""><span id="PSkill">0</span></td></tr>
-     <tr><td>Income/sec</td><td id="MoneyMod" title=""><span id="Money">0</span></td></tr>
+	 <tr><td title="Increases points gained by clicking the Research button">Research Points/Click</td><td id="RSkillMod" title=""><span id="RSkill">0</span></td></tr>
+     <tr><td title="Improves Contracts Research Speed, and reduces the time it takes to research and craft Rituals.">Research Speed</td><td id="RSpeedMod" title=""><span id="RSpeed">0</span></td></tr>
+     <tr><td title="Improves Helpers Production">Helpers Skill</td><td id="HSkillMod" title=""><span id="HSkill">0</span></td></tr>
+	 <tr><td title="Increases the potency of your Potions">Potion-Making Skill</td><td id="PMSkillMod" title=""><span id="PMSkill">0</span></td></tr>
+	 <tr><td title="Increases the potency of your Spells">Spellcasting Skill</td><td id="SSkillMod" title=""><span id="SSkill">0</span></td></tr>
+     <tr><td title="Increases the potency of your Enchantements">Enchanting Skill</td><td id="ESkillMod" title=""><span id="ESkill">0</span></td></tr>
+	 <tr><td title="Increases XP gain">Prophecy Skill</td><td id="PSkillMod" title=""><span id="PSkill">0</span></td></tr>
+     <tr><td title="Grants you Gold over time">Income/sec</td><td id="MoneyMod" title=""><span id="Money">0</span></td></tr>
   </table> 
    <table id="ResourceStatsTable" align="right"   style="display: none">
  	 <tr><th>Estate Resources</th><th>Power</th></tr>
-     <tr><td>Agriculture Skill</td><td id="ASkillMod" title=""><span id="ASkill">0</span></td></tr>
-     <tr><td>Agriculture Prosperity</td><td id="AProsperityMod" title=""><span id="AProsperity">0</span></td></tr>
-     <tr><td>Mining Skill</td><td id="MSkillMod" title=""><span id="MSkill">0</span></td></tr>
-     <tr><td>Mining Prosperity</td><td id="MProsperityMod" title=""><span id="MProsperity">0</span></td></tr>
-	 <tr><td>Resource Detection</td><td id="RDetectionMod" title=""><span id="RDetection">0</span></td></tr>
+     <tr><td title="Decreases Estate Agriculture Time">Agriculture Skill</td><td id="ASkillMod" title=""><span id="ASkill">0</span></td></tr>
+     <tr><td title="Increases how many Estate Agriculture plots can be active at once">Agriculture Prosperity</td><td id="AProsperityMod" title=""><span id="AProsperity">0</span></td></tr>
+     <tr><td title="Decreases Estate Mining Time">Mining Skill</td><td id="MSkillMod" title=""><span id="MSkill">0</span></td></tr>
+     <tr><td title="Increases how many Estate Mining plots can be active at once">Mining Prosperity</td><td id="MProsperityMod" title=""><span id="MProsperity">0</span></td></tr>
+	 <tr><td title="Increases Estate Resources Yield">Resource Detection</td><td id="RDetectionMod" title=""><span id="RDetection">0</span></td></tr>
   </table>   <table id="SocialStatsTable" align="right"   style="display: none">
 	 <tr><th>Social Skills</th><th>Power</th></tr>
-     <tr><td>Manipulation</td><td id="ManipulationMod" title=""><span id="Manipulation">0</span></td></tr>
-     <tr><td>Presence</td><td id="PresenceMod" title=""><span id="Presence">0</span></td></tr>
-	 <tr><td>Seduction</td><td id="SeductionMod" title=""><span id="Seduction">0</span></td></tr>
-	 <tr><td>Charisma</td><td id="CharismaMod" title=""><span id="Charisma">0</span></td></tr>
-     <tr><td>Influence</td><td id="InfluenceMod" title=""><span id="Influence">0</span></td></tr>
-     <tr><td>Reputation</td><td id="ReputationMod" title=""><span id="Reputation">0</span></td></tr>
+     <tr><td title="Increases Illuminati Contract Rewards">Manipulation</td><td id="ManipulationMod" title=""><span id="Manipulation">0</span></td></tr>
+     <tr><td title="Increases Order of the Jade Fist Contract Rewards">Presence</td><td id="PresenceMod" title=""><span id="Presence">0</span></td></tr>
+	 <tr><td title="Increases Cabal Contract Rewards">Seduction</td><td id="SeductionMod" title=""><span id="Seduction">0</span></td></tr>
+	 <tr><td title="Increases Circle of Merlin Contract Rewards">Charisma</td><td id="CharismaMod" title=""><span id="Charisma">0</span></td></tr>
+     <tr><td title="Mildly Increases all Contract Rewards">Influence</td><td id="InfluenceMod" title=""><span id="Influence">0</span></td></tr>
+     <tr><td title="Grants more Contracts Points per Research Point spent">Reputation</td><td id="ReputationMod" title=""><span id="Reputation">0</span></td></tr>
   </table>
      <table id="EnemyStatsTable" align="right"   style="display: none">
 	 <tr><th>Enemy Debuffs</th><th>Power</th></tr>
-	 <tr><td>Physical Power</td><td id="EPPowerMod" title=""><span id="EPPower">0</span></td></tr>
-	 <tr><td>Magical Power</td><td id="EMPowerMod" title=""><span id="EMPower">0</span></td></tr>
-     <tr><td>Physical Health</td><td id="EPHealthMod" title=""><span id="EPHealth">0</span></td></tr>
-     <tr><td>Mental Health</td><td id="EMeHealthMod" title=""><span id="EMeHealth">0</span></td></tr>
-     <tr><td>Armor Reduction</td><td id="EArmorMod" title=""><span id="EArmor">0</span></td></tr>
-     <tr><td>Magic Resistance</td><td id="EMResistanceMod" title=""><span id="EMResistance">0</span></td></tr>
-	 <tr><td>Mana Reduction</td><td id="EManaMod" title=""><span id="EMana">0</span></td></tr>
-     <tr><td>Dodge Reduction</td><td id="EDodgeMod" title=""><span id="EDodge">0</span></td></tr>
-     <tr><td>Parry Reduction</td><td id="EParryMod" title=""><span id="EParry">0</span></td></tr>
-	 <tr><td>Enemy Detection</td><td id="EDetectionMod" title=""><span id="EDetection">0</span></td></tr>
+	 <tr><td title="Decreases Enemy Physical Damage">Physical Damage</td><td id="EPPowerMod" title=""><span id="EPPower">0</span></td></tr>
+	 <tr><td title="Decreases Enemy Magical Power">Magical Power</td><td id="EMPowerMod" title=""><span id="EMPower">0</span></td></tr>
+     <tr><td title="Decreases Enemy Physical Health">Physical Health</td><td id="EPHealthMod" title=""><span id="EPHealth">0</span></td></tr>
+     <tr><td title="Decreases Enemy Mental Health">Mental Health</td><td id="EMeHealthMod" title=""><span id="EMeHealth">0</span></td></tr>
+     <tr><td title="Decreases Enemy Armor">Armor</td><td id="EArmorMod" title=""><span id="EArmor">0</span></td></tr>
+     <tr><td title="Decreases Enemy Magic Resistance">Magic Resistance</td><td id="EMResistanceMod" title=""><span id="EMResistance">0</span></td></tr>
+     <tr><td title="Decreases Enemy Dodge Chance">Dodge</td><td id="EDodgeMod" title=""><span id="EDodge">0</span></td></tr>
+     <tr><td title="Decreases Enemy Parry Chance">Parry</td><td id="EParryMod" title=""><span id="EParry">0</span></td></tr>
+	 <tr><td title="Improves you choice of available Enemies.">Enemy Detection</td><td id="EDetectionMod" title=""><span id="EDetection">0</span></td></tr>
 
   </table>
 
-  <select id="SelectStatTable" style="float:right" size="5" onchange="changeStatsTable()" >
+  <select class="mousetrap" id="SelectStatTable" style="float:right" size="5" onchange="changeStatsTable()" >
     <option value = "CraftingSkills">Crafting Skills</option>
     <option selected value = "CombatStats">Combat Stats</option>
     <option value = "EnemyStats">Enemy Stats</option>
@@ -75,24 +113,31 @@
 	<div style="float:right">
 
 </div></div>
+
 <div class="delta" id="nw">
+<ul class="tab">
+  <li><a id="MainDisplayTab" href="#" class="tablinks" onclick="openNW(event, 'mainDisplay')">Main</a></li>
+  <li><a id="QuestDisplayTab" href="#" class="tablinks" onclick="openNW(event, 'classQuestDisplay')">Class and Quests</a></li>
+  <li><a id="GlobalInfoDisplayTab" href="#" class="tablinks" onclick="openNW(event, 'globalInfoDisplay')">Progress</a></li>
+</ul>
+<div id="mainDisplay" class="tabcontent" style="display:block">
 <div style="float:right">
- <textarea id="log"  rows="8" cols="25" placeholder="Log Text" readonly style="resize: none; font-size: 14px;"></textarea>
-<br><br><span>Progress Bar</span><br>
+ <textarea id="log"  rows="8" cols="35" placeholder="Log Text" readonly style="resize: none; font-size: 14px;"></textarea>
+<br><br><span>Research Bar</span><br>
  <div id="myProgress"  >
   <div id="myBar"></div></div>
   <br><br>
   	<label class="ingredients" for="mySelect" id = mySelectLabel style="float:left">First Ingredient</label>	
-  <select id="mySelect"  >
+  <select class="mousetrap" id="mySelect"  >
     <option value=""  disabled selected>Owned Ingredient</option>
   </select>  <br>
 	<label class="ingredients" for="mySelect2" id = mySelect2Label style="float:left">Second Ingredient</label>	
 
-  <select id="mySelect2" >
+  <select class="mousetrap" id="mySelect2" >
     <option value=""  disabled selected>Owned Ingredient</option>
 	</select>  <br>
 	<label class="ingredients" for="mySelect3" id = mySelect3Label style="float:left">Third Ingredient</label>	
-  <select id="mySelect3" >
+  <select class="mousetrap" id="mySelect3" >
     <option value=""  disabled selected>Owned Ingredient</option>
   </select>
   </div>
@@ -110,7 +155,7 @@
 <table >
 
     <tr><td><button onClick="research()">Research a new Ritual</button>
-</td><td> <select id="SelectType"  >
+</td><td> <select class="mousetrap" id="SelectType"  >
     <option value = "Potion">Potion</option>
     <option value = "Spell">Spell</option>
     <option value = "Enchantement">Enchantement</option>
@@ -126,23 +171,72 @@
 </table>
 <button onClick="saveButton()">Save !</button>
 <button onClick="loadButton()">Load !</button>
+<button onClick="resetButton()">Reset Save</button>
 <button onClick="Cheat()">TestingCheat</button>
+
 </div>
+<div id="classQuestDisplay" class="tabcontent">
+<div style="float:right">
+
+</div>
+<div style="float:left">
+<span>Class: <b id="ClassDisplay">None</b></span><br><span>Level: <b id="LevelDisplay">0</b></span><br>
+ <div id="myLevelProgress"  >
+  <div id="myLevelBar" ><div id="label">0</div></div></div>
+ <br>
+ <button onClick="xpGain(50)">Click !</button></div></div>
+<div id="globalInfoDisplay" class="tabcontent">
+
+
+  <table  style="display: block">
+	 <tr><td>Rituals Crafted</td><td><span id="TRituals">0</span></td></tr>
+     <tr><td>Potions Crafted</td><td><span id="TPotions">0</span></td></tr>
+     <tr><td>Spells Prepared</td><td><span id="TSpells">0</span></td></tr>
+	 <tr><td>Enchantements Prepared</td><td><span id="TEnchantements">0</span></td></tr>
+     <tr><td>Total Contracts Completed</td><td><span id="TContracts">0</span></td></tr>
+	 <tr><td>Illuminati Contracts Completed</td><td><span id="TIll">0</span></td></tr>
+     <tr><td>Jade Fist Contracts Completed</td><td><span id="TOJF">0</span></td></tr>
+	 <tr><td>Cabal Contracts Completed</td><td><span id="TCab">0</span></td></tr>
+     <tr><td>Circle of Merlin Contracts Completed</td><td><span id="TCoM">0</span></td></tr>
+	 <tr><td>Total Enemies Defeated</td><td><span id="TEnemies">0</span></td></tr>
+     <tr><td>Enemies Defeated by Type</td><td>
+	 <select class="mousetrap" id="TEnemiesType" onChange="displayTotalEnemiesType()">
+    <option selected value = "Aten">Aten</option>
+    <option value = "Zhulong">Zhulong</option>
+    <option value = "Helios">Helios</option>
+    <option value = "Huracan">Huracan</option>
+    <option value = "Ouranos">Ouranos</option>
+    <option value = "Typhon">Typhon</option>
+    <option value = "Surtr">Surtr</option>
+    <option value = "Prometheus">Prometheus</option>
+    <option value = "Vrtra">Vrtra</option>
+    <option value = "Yam">Yam</option>
+    <option value = "Abzu">Abzu</option>
+    <option value = "Cipactli">Cipactli</option>
+    <option value = "Gaia">Gaia</option>
+    <option value = "Kur">Kur</option>
+    <option value = "Crom Cruach">Crom Cruach</option>
+    <option value = "Mikaboshi">Mikaboshi</option>
+    <option value = "Erlik">Erlik</option>	
+    <option value = "Erebus">Erebus</option>		</select>
+	<span id="TEnemiesTypeNumber">0</span></td></tr>
+  </table> </div></div>
+ 
 <div class="delta" id="sw" >
- <select id="SelectType2" size="6" onchange="clearSecond(); changeTable()" >
+
+ <select class="mousetrap" id="SelectType2" onchange="changeTable()" >
     <option selected value = "DiscoveredIngredients">Encyclopedia (Discovered Ingredients)</option>
-    <option value = "DiscoveredRecipes">Recipe Book (Discovered Recipes)</option>
+    <option value = "DiscoveredRecipes" style="float:right">Recipe Book (Discovered Recipes)</option>
     <option value = "OwnedPotions">Cupboard (Owned Potions)</option>
     <option value = "OwnedEnchantements">Charms (Owned Enchantements)</option>
     <option value = "ReadySpells">Spellbook (Ready Spells)</option>
     <option value = "ActivePotions">Toxicology Report (Active Effects)</option>
-</select>
- <select id="SelectType3" size="5" onchange="clearFirst(); changeTable3()" >
     <option value = "EffectsTable">Effects Table</option>
 </select>
- <select id="SelectFilter" style="display:none; float:right" onchange = "changeTable3()">
- 	<option selected value = "No Filter">No Filter</option>   
-	<option value = "Physical Power">Physical Power</option>
+
+ <select class="mousetrap" id="SelectFilter" style="display:none; float:right" onchange = "changeTable()">
+ 	<option selected value = "No Filter">No Stat Filter</option>   
+	<option value = "Physical Damage">Physical Damage</option>
     <option value = "Magical Power">Magical Power</option>
     <option value = "Physical Health">Physical Health</option>
     <option value = "Healing">Healing</option>
@@ -162,7 +256,6 @@
     <option value = "Agriculture Prosperity">Agriculture Prosperity</option>
     <option value = "Mining Skill">Mining Skill</option>
     <option value = "Mining Prosperity">Mining Prosperity</option>
-    <option value = "Mana">Mana</option>
     <option value = "Dodge">Dodge</option>
     <option value = "Parry">Parry</option>
     <option value = "Armor">Armor</option>
@@ -173,24 +266,22 @@
     <option value = "Influence">Influence</option>
     <option value = "Money">Money</option>
     <option value = "Reputation">Reputation</option>
-    <option value = "Enemy Physical Power Reduction">Enemy Physical Power Reduction</option>
+    <option value = "Enemy Physical Damage Reduction">Enemy Physical Damage Reduction</option>
     <option value = "Enemy Physical Health Damage">Enemy Physical Health Damage</option>
     <option value = "Enemy Magical Power Reduction">Enemy Magical Power</option>
     <option value = "Enemy Mental Health Damage">Enemy Mental Health Damage</option>
     <option value = "Enemy Magic Resistance Reduction">Enemy Magic Resistance</option>
-    <option value = "Enemy Mana Reduction">Enemy Mana</option>
     <option value = "Enemy Dodge Reduction">Enemy Dodge</option>
     <option value = "Enemy Parry Reduction">Enemy Parry</option>
     <option value = "Enemy Armor Reduction">Enemy Armor Reduction</option>
 
 </select>
 
- <select id="SelectFilter2" style="display:none; float:right" onchange = "changeTable()">
- <option value = "No Filter">No Filter</option>
+ <select class="mousetrap" id="SelectFilter2" style="display:none; float:right" onchange = "changeTable()">
+ <option value = "No Filter">No Effect Filter</option>
  <option value = "11">Healing</option>
  <option value = "12">Fertility</option>
  <option value = "13">Rebirth</option>
- <option value = "14">Protection</option>
  <option value = "15">Transformation</option>
  <option value = "16">Death</option>
  <option value = "17">Power</option>
@@ -205,7 +296,7 @@
  <option value = "32">Toughness</option>
  <option value = "33">Speed</option>
  <option value = "34">Intellect</option>
- <option value = "35">Longevity</option>
+ <option value = "14">Protection</option>
  <option value = "36">Weakness</option>
  <option value = "41">Luck</option>
  <option value = "42">Sociality</option>
@@ -218,53 +309,52 @@
  <option value = "53">Peace</option>
  <option value = "54">Courage</option>
  <option value = "55">Love</option>
+ <option value = "73">Truth</option>
  <option value = "61">Confusion</option>
  <option value = "62">Fear</option>
  <option value = "63">Madness</option>
  <option value = "64">Anger</option>
  <option value = "65">Sadness</option>
+ <option value = "79">Illusion</option>
  <option value = "71">Fate</option>
  <option value = "72">Perception</option>
- <option value = "73">Truth</option>
  <option value = "74">Dreams</option>
  <option value = "75">Mystery</option>
  <option value = "76">Soul</option>
  <option value = "77">Messages</option>
  <option value = "78">Travel</option>
- <option value = "79">Illusion</option>
  </select>
-
-<br><div style="overflow:auto; height:280px; border: 1px solid black"">
+<br>
+<br><div style="overflow:auto; height:360px; border: 1px solid black"">
 <table class="beta"  style="width: 100%;" id="potionTable" ></table>
-</div>
+</div></div>
 
-</div>
-<div class="delta" id="se">
+<div class="delta" id="se" >
 <ul class="tab">
-  <li><a href="#" class="tablinks" onclick="openCity(event, 'CombatDisplay')">Monster Hunting</a></li>
-  <li><a href="#" class="tablinks" onclick="openCity(event, 'SocialDisplay')">Contracts</a></li>
-  <li><a href="#" class="tablinks" onclick="openCity(event, 'EstateDisplay')">Estate</a></li>
+  <li><a id="CombatTab" href="#" class="tablinks" onclick="openCity(event, 'CombatDisplay')">Monster Hunting</a></li>
+  <li><a id="SocialTab"  href="#" class="tablinks" onclick="openCity(event, 'SocialDisplay')">Contracts</a></li>
+  <li><a id="EstateTab"  href="#" class="tablinks" onclick="openCity(event, 'EstateDisplay')">Estate</a></li>
 </ul>
 
 <div id = "SocialDisplay" style="display:none" class="tabcontent">
      <table id="SocialContracts" align="right"  style="display: block">
 	 <tr><th>Contract</th><th>Research Rate</th><th>Reward</th><th>Remaining Points</th></tr>
-	 <tr><td>Illuminati</td><td><span id="IllContract">5</span></td><td><span id="IllRate">5</span></td><td><span id="IllRemaining">50</span></td><td><button id="IllButton" onClick="socialButtonChanger(2,this.id)">Research</button></td></tr>
-	 <tr><td>Order of the Jade Fist</td><td><span id="OJFContract">5</span></td><td><span id="OJFRate">5</span></td><td><span id="OJFRemaining">50</span></td><td><button id="OJFButton" onClick="socialButtonChanger(3,this.id)">Research</button></td></tr>
-     <tr><td>Cabal</td><td><span id="CabContract">5</span></td><td><span id="CabRate">5</span></td><td><span id="CabRemaining">50</span></td><td><button id="CabButton" onClick="socialButtonChanger(1,this.id)">Research</button></td></tr>
-     <tr><td>Circle of Merlin</td><td><span id="CoMContract">5</span></td><td><span id="CoMRate">5</span></td><td><span id="CoMRemaining">50</span></td><td><button id="CoMButton" onClick="socialButtonChanger(0,this.id)">Research</button></td></tr>
+	 <tr><td>Illuminati</td><td><span id="IllContract">5</span></td><td><span id="IllRate">0</span></td><td><span id="IllRemaining">50</span></td><td><button id="IllButton" onClick="socialButtonChanger(2,this.id)">Research</button></td></tr>
+	 <tr><td>Order of the Jade Fist</td><td><span id="OJFContract">5</span></td><td><span id="OJFRate">0</span></td><td><span id="OJFRemaining">50</span></td><td><button id="OJFButton" onClick="socialButtonChanger(3,this.id)">Research</button></td></tr>
+     <tr><td>Cabal</td><td><span id="CabContract">5</span></td><td><span id="CabRate">0</span></td><td><span id="CabRemaining">50</span></td><td><button id="CabButton" onClick="socialButtonChanger(1,this.id)">Research</button></td></tr>
+     <tr><td>Circle of Merlin</td><td><span id="CoMContract">5</span></td><td><span id="CoMRate">0</span></td><td><span id="CoMRemaining">50</span></td><td><button id="CoMButton" onClick="socialButtonChanger(0,this.id)">Research</button></td></tr>
   </table>
 </div>
 
 <div id="EstateDisplay" class="tabcontent">
 	<label class="estate" for="mySelectPlant" id = mySelectPlantLabel style="float:left width:50px">Agriculture</label>	
 
-	<select id="mySelectPlant" style="width:120px" >
+	<select class="mousetrap" id="mySelectPlant" style="width:120px" >
     <option value="Agriculture"  disabled selected>Owned Ingredient</option>
 	</select>  <button onclick = "addEstate('mySelectPlant',estateAgriculture,AgricultureProsperityBalance)">Add to Estate</button>  <br>
 	<label class="estate" for="mySelectMineral" id = mySelectMineralLabel style="float:left width:50px">Mining</label>	
 
-  <select id="mySelectMineral" style="width:120px" >
+  <select class="mousetrap" id="mySelectMineral" style="width:120px" >
     <option value="Mining"  disabled selected>Owned Ingredient</option>
 	</select> <button onclick = "addEstate('mySelectMineral',estateMining,MiningProsperityBalance)">Add to Estate</button>  <br>
 
@@ -278,14 +368,14 @@
 <div id="EnemyDisplay">
 
      <table id="CurrentEnemyStatsTable" align="right"  style="display: none">
+	 <tr><th id="EName">Name</th></tr>
 	 <tr><th>Stats</th><th>Power</th></tr>
-	 <tr><td>Physical Power</td><td><span id="FEPPower">0</span></td></tr>
+	 <tr><td>Physical Damage</td><td><span id="FEPPower">0</span></td></tr>
 	 <tr><td>Magical Power</td><td><span id="FEMPower">0</span></td></tr>
      <tr><td>Physical Health</td><td><span id="FEPHealth">0</span></td></tr>
      <tr><td>Mental Health</td><td><span id="FEMeHealth">0</span></td></tr>
      <tr><td>Armor</td><td><span id="FEArmor">0</span></td></tr>
      <tr><td>Magic Resistance</td><td><span id="FEMResistance">0</span></td></tr>
-	 <tr><td>Mana</td><td><span id="FEMana">0</span></td></tr>
      <tr><td>Dodge Chance</td><td><span id="FEDodge">0</span></td></tr>
      <tr><td>Parry Chance</td><td><span id="FEParry">0</span></td></tr>
   </table>
