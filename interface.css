@@ -1,8 +1,21 @@
+html {
+    position: relative;
+    min-width: 1154px;
+    min-height: 948px;
+    max-width: 1154px;
+    max-height: 948px;   height: 100%;
+}
+
+ 
+
+body {
+  font-family: Tahoma;
+}
+
 table, th, td {
     border: 1px solid black;
    text-align: center;
 }
-
 
 select{max-width:300px;
 color: black;}
@@ -22,8 +35,8 @@ color: black;}
 .beta tr:hover{
 background-color:lightblue;
 }
-.beta td:hover{
-background-color: #0066ff;
+.beta td:active{
+background-color:#0066ff;
 }
 
 #myProgress {
@@ -40,13 +53,32 @@ background-color: #0066ff;
   background-color: #0040ff;
 }
 
+#myLevelProgress {
+  position: relative;
+  width: 300px;
+  height: 20px;
+  background-color: #ddd;
+}
+
+#myLevelBar {
+  position: absolute;
+  width: 0%;
+  height: 100%;
+  background-color:  #4da6ff;
+}
+
+#label {
+  text-align: center;
+  font-weight: bold;
+}
+
 html, body{width: 100%; height: 100%; padding: 0; margin: 0}
-.delta{position: absolute; padding: 1em; border: 1px solid black}
+.delta{position: absolute; padding: 1em; border: 1px solid black; display:none}
 #nw{background: white; top: 0; left: 0; right: 35%; bottom: 50%}
 #ne{background: white; top: 0; left: 65%; right: 0; bottom: 50%}
-#sw{background: white; top: 50%; left: 0; right: 40%; bottom: 0}
+#sw{background: white; top: 50%; left: 0; right: 40%; bottom: 0; font-size:small}
 #se{background: white; top: 50%; left: 60%; right: 0; bottom: 0}
-
+#ce{background: white; top: 5%; left: 5%; right: 5%; bottom: 5%;}
 
  /* Style the list */
 ul.tab {
@@ -66,7 +98,7 @@ ul.tab li a {
     display: inline-block;
     color: black;
     text-align: center;
-    padding: 9px 11px;
+    padding: 7px 9px;
     text-decoration: none;
     transition: 0.3s;
     font-size: 17px;
