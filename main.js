@@ -30,14 +30,15 @@ var basicVariables = [
   
   totalContracts = 0,
   
-  totalHarvester = [],
+  totalAgriculture = [],
+  totalMining = [],
   
   totalEnemies = 0,
-  totalEnemyTypes = [["Aten",0],["Zhulong",0],["Helios",0],["Huracan",0],["Ouranos",0],["Typhon",0],["Surtr",0],["Prometheus",0],["Vrtra",0],["Yam",0],["Abzu",0],["Cipactli",0],["Gaia",0],["Kur",0],["Crom Cruach",0],["Mikaboshi",0],["Erlik",0],["Erebus",0]]
-] 
+  totalEnemyTypes = [["Aten",0],["Zhulong",0],["Helios",0],["Huracan",0],["Ouranos",0],["Typhon",0],["Surtr",0],["Prometheus",0],["Vrtra",0],["Yam",0],["Abzu",0],["Cipactli",0],["Gaia",0],["Kur",0],["Crom Cruach",0],["Mikaboshi",0],["Erlik",0],["Erebus",0]],
+  ] 
 
 var inProgressVariable = []
-
+var gameStarted = false
 var physicalDamage = 0
 var mentalDamage = 0
 var logText = []
@@ -57,15 +58,18 @@ var Enemy = function(name,physical,magical,health,mental,armor,magicResist,mana,
   this.parry = parry;
   this.difficulty = difficulty;
   };
-var socialVar = function(completed,timer,cost,reward,nextContract,researchRate,remainingPoints,totalCost){
+var socialVar = function(completed,rewardModifier,cost,reward,nextContract,researchRate,remainingPoints,totalCost,timeLeftCell,timeLeft,researchButton){
 	  this.completed = completed;
-  this.timer = timer;
+  this.rewardModifier = rewardModifier;
   this.cost = cost;
   this.reward = reward; 
   this.nextContract = nextContract;
   this.researchRate = researchRate;
   this.remainingPoints = remainingPoints;
   this.totalCost = totalCost;
+  this.timeLeftCell = timeLeftCell;
+  this.timeLeft = timeLeft;
+  this.researchButton = researchButton;
 }
   
 var Ingredient = function(name,first,second,third,rarity,quantity,price,marketStock,type) {
@@ -111,6 +115,7 @@ var activeEnemyFinal = []
 
 var activeSocial = -1
 
+
 	// Defines the Object categories
 var Environment = function(name,first,second,third,power) {
   this.name = name;
@@ -150,18 +155,12 @@ var Class = function(name,effects,questVars){
 	this.name = name
 	this.effects = effects
 	this.questVars = questVars}
-var Quest = function(questText,numberRequired,variableTestedCurrent,variableTestedQuest,difficulty){
-// Reach a Potency of ?? on a ??Ritual?? using Stat ??
-// Reach a Potency of ?? using Effect ?? ?? times on Ritual ??
-// Craft ?? ??Ritual??
-// Complete ?? Contracts with ??Faction/Factions??
-// Harvest ?? Ingredients with Effect ?? from ??Agriculture/Mining??
-// Defeat ?? Enemies of ??Titan??
-// Defeat ?? Enemies
-// Discover ??  ??Ingredients/Properties?? Total
-
+var Quest = function(questText,numbersRequired,variableTested,difficulty){
+	this.questText = questText
+	this.numbersRequired = numbersRequired
+	this.variableTested = variableTested
 }
-	// This array records all the variables used in determining the numbers for the game, to allow all balancing to take place in one area
+
 
 
 
@@ -564,25 +563,7 @@ RedCandle = new Ingredient(["Red Candle"],["43",1,0],["55",1,0],["12",1,0],1,0,2
 
 
   ]
-var environments = [
 
-Graveyard = new Environment(["Graveyard"],[["14",1],["16",2],["26",1],["37",1],["46",1],["53",1],["55",1],["62",2],["64",2],["76",2]]),
-Forest = new Environment(["Forest"],[["12",2],["13",2],["17",1],["23",1],["34",1],["46",1],["35",1],["37",1],["53",1],["62",1],["75",1]]),
-FullMoon = new Environment(["Full Moon"],[["15",1],["17",2],["25",2],["37",2],["41",2],["45",2],["46",2],["53",1],["63",3],["61",2],["71",2],["74",3],["75",2],["79",3]]),
-]
-var powerSources = [
-  // Gods    
-Zeus = new Environment("Zeus",[["17",3],["46",2],["52",3]],3),
-    
-
-    ]
-var magicItems = [
-    
-    
-Fan = new MagicItem(["Fan"],["14",2],["15",1],["18",1]),
-Mirror = new MagicItem(["Mirror"],["75",2],["15",2],["63",2]),
-    
-    ]
 
 var classes = [
  Thaumaturgist = new Class("Thaumaturgist",[Healingx, Fertility, Rebirth, Transformation, Death, Power],"???"),
@@ -635,15 +616,8 @@ var currentXp = 0
 var nextLevel = 100
 var level = 0
 var levelPoints = 0
+var questResetTime = 5
 
-	//var socialVar = function(completed,timer,cost,reward,nextContract,researchRate,remainingPoints)
-var SocialVars = [
-Merlin = new socialVar(0,5,50,0,"CoMContract","CoMRate","CoMRemaining",50),
-Cabal = new socialVar(0,5,50,0,"CabContract","CabRate","CabRemaining",50),
-Illuminati = new socialVar(0,5,50,0,"IllContract","IllRate","IllRemaining",50),
-JadeFist = new socialVar(0,5,50,0,"OJFContract","OJFRate","OJFRemaining",50)
-
-]
 
 var balancers = [
 rewardChanceBalance = 3,
@@ -659,16 +633,38 @@ MentalHealthBonusBalance = MentalHealthEnchantementBonus.value*1,
 // These are a multiplier on the base value of the Ritual
 
 // Social Variables
-baseRate = 5,
+baseRate = 1,
 baseRateBalance = (1+(0.1*Influence.value)),
 baseCost = 50,
 baseReward = 5,
 
-socialStatsBonusBalance = 0.25
+socialStatsBonusBalance = 0.25,
+
+// Ritual Potency Variables
+
+potionBalancer = 1.25,
+spellBalancer = 17.5,
+enchantmentBalancer = 0.175,
+
+// Combat Level Variable
+combatLevelBalancer = 0.1,
+
+miningBalancer = 2/5,
+agricultureBalancer = 2/5,
+
+socialBalancer = 0.5
 ]
 
-var introQuests = []
-var questChallengeLevel = 0
+
+//var socialVar = function(completed,rewardModifier,cost,reward,nextContract,researchRate,remainingPoints,timeLeftVar,timeLeft)
+var SocialVars = [
+Merlin = new socialVar(0,1,"Not Defined",0,"CoMContract","CoMRate","CoMRemaining",50,"CoMTime",40,"CoMButton"),
+Cabal = new socialVar(0,1,0,"Not Defined","CabContract","CabRate","CabRemaining",50,"CabTime",40,"CabButton"),
+Illuminati = new socialVar(0,1,"Not Defined",0,"IllContract","IllRate","IllRemaining",50,"IllTime",40,"IllButton"),
+JadeFist = new socialVar(0,1,"Not Defined",0,"OJFContract","OJFRate","OJFRemaining",50,"OJFTime",40,"OJFButton")
+
+]
+
 
 // Save and Testing Buttons
 function saveButton(){
@@ -699,6 +695,7 @@ var save = {
 	level : level,
 	levelPoints : levelPoints,
 	chosenClass : chosenClass,
+	gameStarted : gameStarted,
 
 	baseStatValue : baseStatValue,
 	effects : effects,
@@ -715,7 +712,8 @@ var save = {
   
   totalContracts : totalContracts,
   
-  totalHarvester : totalHarvester,
+  totalMining : totalMining,
+  totalAgriculture : totalAgriculture,
   
   totalEnemies : totalEnemies,
   totalEnemyTypes : totalEnemyTypes
@@ -723,7 +721,7 @@ var save = {
 	localStorage.setItem("save",JSON.stringify(save));
 }
 function loadButton(){
-	 savegame = JSON.parse(localStorage.getItem("save"));
+	if(localStorage.getItem("save")){ savegame = JSON.parse(localStorage.getItem("save"));
 	 if (typeof savegame.researchPoints !== "undefined") researchPoints = savegame.researchPoints; 
 	 if (typeof savegame.helpers !== "undefined") helpers = savegame.helpers; 
 	 if (typeof savegame.prestige !== "undefined") prestige = savegame.prestige;
@@ -762,12 +760,13 @@ function loadButton(){
 	 if (typeof savegame.totalCab !== "undefined") totalCab = savegame.totalCab;
 	 if (typeof savegame.totalCoM !== "undefined") totalCoM = savegame.totalCoM;
 	 if (typeof savegame.totalContracts !== "undefined") totalContracts = savegame.totalContracts;
-	 if (typeof savegame.totalHarvester !== "undefined") totalHarvester = savegame.totalHarvester;
+	 if (typeof savegame.totalAgriculture !== "undefined") totalAgriculture = savegame.totalAgriculture;
+	 if (typeof savegame.totalMining !== "undefined") totalMining = savegame.totalMining;
   	 if (typeof savegame.totalEnemies !== "undefined") totalEnemies = savegame.totalEnemies;
 	 if (typeof savegame.totalEnemyTypes !== "undefined") totalEnemyTypes = savegame.totalEnemyTypes;
+	 if (typeof savegame.gameStarted !== "undefined") gameStarted = savegame.gameStarted;
 
 
-	 xpGain(0)
 	document.getElementById('ClassDisplay').innerHTML = chosenClass.name
 	document.getElementById('LevelDisplay').innerHTML = level
 	
@@ -782,10 +781,10 @@ updateEnchantements();
 updateIngredientSelect()
 
 for(i=0;i<SocialVars.length;i++){
-document.getElementById(SocialVars[i].nextContract).innerHTML = SocialVars[i].timer
-document.getElementById(SocialVars[i].remainingPoints).innerHTML = SocialVars[i].cost
+document.getElementById(SocialVars[i].nextContract).innerHTML = SocialVars[i].rewardModifier
+document.getElementById(SocialVars[i].remainingPoints).innerHTML = Math.floor(SocialVars[i].cost*10)/10
 document.getElementById(SocialVars[i].researchRate).innerHTML = SocialVars[i].reward
-}}
+}}}
 function resetButton(){localStorage.clear()}
 function Cheat(){
 clicker(10000000000)
@@ -802,18 +801,20 @@ function reloadIngredientsTest(){
 changeTable()
 }
 function instructions(){
-alert("Welcome to Wyrdwalkers: Alchemist Idle ! \n\nYour goal is to create Potions, Spells and Enchantements to improve your abilities and become more and more powerful. \nResearch Ingredients using your own skills and hiring helpers to work for you. \nObtain Ingredients by buying them for gold, from killing monsters, or from your Estate. \nObtain gold from Contracts and from killing monsters.")
-alert("Alchemist Idle can be played with various degrees of idleness. \n- Spells (30sec effect) and Monster Hunting are best for active players.\n- Potions (10min effect) and Contracts are best for semi-active players. \n- Enchantements (passive effect) and the Estate are best for idle players.\nHowever, all three main activities (Monster Hunting, Contracts, and Estate) can be played concurrently." )
+	if(gameStarted === false){
+showAdvice("Welcome to Wyrdwalkers: Alchemist Idle ! I am Shanluo, your humble servant, and will be helping you get settled as an ambitious and independant alchemist !<br /><br /> Your goal is to create Potions, Spells and Enchantements to improve your abilities and become more and more powerful. <br />Research Ingredients using your own skills and hiring helpers to work for you. <br />Obtain Ingredients by buying them for gold, from killing monsters, or from your Estate. <br />Obtain gold from Contracts and from killing monsters. <br /><br />Alchemist Idle can be played with various degrees of idleness. <br />- Spells (30sec effect) and Monster Hunting are best for active players.<br />- Potions (10min effect) and Contracts are best for semi-active players. <br />- Enchantements (passive effect) and the Estate are best for idle players.<br />However, all three main activities (Monster Hunting, Contracts, and Estate) can be played concurrently." )
+	}gameStarted = true
 }
 
 function reloadIngredients(reward){
+	currentReward = reward
 	for(i=1;i<discoveredIngredients.length;i++){
 		var rand2 = Math.floor(Math.random()*discoveredIngredients.length)
 		if(discoveredIngredients[rand2].rarity === 1 && discoveredIngredients[rand2].marketStock<4 && reward >= 5){discoveredIngredients[rand2].marketStock+=1; reward-=5; logger("Market stock for " + discoveredIngredients[rand2].name + " has been increased !")}
 		if(discoveredIngredients[rand2].rarity === 2 && discoveredIngredients[rand2].marketStock<2 && reward >= 10){discoveredIngredients[rand2].marketStock+=1; reward-=5; logger("Market stock for " + discoveredIngredients[rand2].name + " has been increased !")}
 		if(discoveredIngredients[rand2].rarity === 3 && discoveredIngredients[rand2].marketStock<1 && reward >= 20){discoveredIngredients[rand2].marketStock+=1; reward-=5; logger("Market stock for " + discoveredIngredients[rand2].name + " has been increased !")}
 	}
-	if(reward > 5){reloadIngredients(reward)}
+	if(reward != currentReward ){reloadIngredients(reward)}
 changeTable()
 
 }
@@ -824,117 +825,194 @@ window.setInterval(function(){
 
 clicker(helpers*helpersBasePower*(1+HelpersSkillBalance)); 
 money = (money +(MoneyBalance))
-if(physicalDamage>0){physicalDamage -= HealingBalance}
-if(mentalDamage>0){mentalDamage -= MentalHealingBalance}
+if(physicalDamage>=0){physicalDamage -= HealingBalance}
+if(mentalDamage>=0){mentalDamage -= MentalHealingBalance}
 
+
+			updateEnchantements()
+// When testing, this will come differently than in the computeStats function. That is normal.
 PhysicalHealthBalance = (PhysicalHealthEnchantementBonus.value+PhysicalHealthBase.value)*10
 document.getElementById("PHealth").innerHTML = Math.round((PhysicalHealthBalance - physicalDamage)*10)/10
 MentalHealthBalance = (MentalHealthEnchantementBonus.value+MentalHealthBase.value)*10
 document.getElementById("MHealth").innerHTML = Math.round((MentalHealthBalance - mentalDamage)*10)/10
 
-			updateEnchantements()
 document.getElementById("gold").innerHTML = Math.floor(money)
-}, 1000);
-window.setInterval(function(){
+
+
 tick()
 tickSocial(activeSocial)
+	computeStats()	
+}, 1000);
+
+
+window.setInterval(function(){
 updateProgress()
-		updateEnchantements()
-		computeStats()		
-}, 5000);
+changeTable()
+if(questResetTime >= 0){questResetTime -=5}
+document.getElementById("QuestResetDisplay").innerHTML = "Time until next Quest Reset: "+ questResetTime
+},5000)
+
 window.setInterval(function(){
 reloadIngredients(50)}, 1800000)
 
 function tick(){
-	// This function ticks every second and removes duration from active potions (and spells ?)
+	// This function ticks every second and removes duration from active potions and spells)
 	for(i=0;i<activePotions.length;i++){
-		activePotions[i][1]-=5;
+		activePotions[i][1]-=1;
 		if(activePotions[i][1]<=0){activePotions.splice(i,1)
 		}
 }
 
-changeTable()
-
+// Sets Agriculture and Mining limits
 var remainderAgriculture = AgricultureProsperity.value % 5
 var remainderMining = MiningProsperity.value % 5
+
+// Big Agriculture Ticking function
 if(estateAgriculture.length > 0){
 	for(i=0;i<Math.floor(estateAgriculture.length);i++){
 // This checks the completed percentage of the Estate process
 var agriculturePercentDone =  (estateAgriculture[i][3] - estateAgriculture[i][1])/estateAgriculture[i][3]*100
-estateAgriculture[i][1]-=(5+AgricultureSkillBalance); 
+estateAgriculture[i][1]-=(1+AgricultureSkillBalance); 
+
 // This checks how the percentage changed in that tick
 var agriculturePercentDoneTick =  ((estateAgriculture[i][3] - estateAgriculture[i][1])/estateAgriculture[i][3]*100)-agriculturePercentDone
 // This adds reward based on the change in the tick, to avoid dropping spells on the last tick.
 estateAgriculture[i][2] += (4*ResourceDetectionBalance)/100*agriculturePercentDoneTick
+}
 
+
+	for(i=0;i<Math.floor(estateAgriculture.length);i++){
 // This triggers once the time is up
 	if(Math.floor(estateAgriculture[i][1])<=0){
-
 var givenAgriculture = discoveredIngredients.filter(function (entry) { return entry.name[0] === estateAgriculture[i][0][0]})		
 // This adds to an ingredient based on the reward created by the percentage ticks
+estateAgricultureLogQuest.push(estateAgriculture[i])
+estateAgricultureLog.push(estateAgriculture[i])
 givenAgriculture[0].quantity+= Math.round(estateAgriculture[i][2])
 xpGain(Math.round(estateAgriculture[i][2]*5))
-	estateAgriculture.splice(i,1); i -= 1}}
-	
-	if(estateAgriculture.length>AgricultureProsperityBalance) {
-estateAgriculture[estateAgriculture.length-1][1] += (5+AgricultureSkillBalance)*(1-remainderAgriculture/5)
-estateAgriculture[estateAgriculture.length-1][2] -= ((3*ResourceDetectionBalance)/100*agriculturePercentDoneTick)*(1-remainderAgriculture/5)
+//updateIngredientSelect()
 }}
 
+// Makes up for the difference in prosperity by adding back to the last element
+	if(estateAgriculture.length>AgricultureProsperityBalance) {
+estateAgriculture[estateAgriculture.length-1][1] += (1+AgricultureSkillBalance)*(Math.floor(1-remainderAgriculture/5))
+estateAgriculture[estateAgriculture.length-1][2] -= ((4*ResourceDetectionBalance)/100*agriculturePercentDoneTick)*(Math.floor(1-remainderAgriculture/5))
+}}
+
+// Same but for Mining
 if(estateMining.length > 0){
 	for(i=0;i<Math.floor(estateMining.length);i++){
 // This checks the completed percentage of the Estate process
 var miningPercentDone =  (estateMining[i][3] - estateMining[i][1])/estateMining[i][3]*100
-estateMining[i][1]-=(5+MiningSkillBalance);
+estateMining[i][1]-=(1+MiningSkillBalance);
 // This checks how the percentage changed in that tick
 var miningPercentDoneTick =  ((estateMining[i][3] - estateMining[i][1])/estateMining[i][3]*100)-miningPercentDone
 // This adds reward based on the change in the tick, to avoid dropping spells on the last tick.
 estateMining[i][2] += (4*ResourceDetectionBalance)/100*miningPercentDoneTick
-
+} 
 // This triggers once the time is up
+
+	for(i=0;i<Math.floor(estateMining.length);i++){
 if(Math.floor(estateMining[i][1])<=0){
 var givenMining = discoveredIngredients.filter(function (entry) { return entry.name[0] === estateMining[i][0][0]})		
 
 // This adds to an ingredient based on the reward created by the percentage ticks
+estateMiningLogQuest.push(estateMining[i])
+estateMiningLog.push(estateMining[i])
 givenMining[0].quantity+= Math.round(estateMining[i][2])
-	estateMining.splice(i,1); i -= 1}} 
-	if(estateMining.length>MiningProsperityBalance) {estateMining[estateMining.length-1][1] += (5+MiningSkillBalance)*(1-remainderMining/5)
+xpGain(Math.round(estateMining[i][2]*5))
+updateIngredientSelect()
+	}}
+
+
+	if(estateMining.length>MiningProsperityBalance) {estateMining[estateMining.length-1][1] += (1+MiningSkillBalance)*(1-remainderMining/5)
 	estateMining[estateMining.length-1][2] -= ((3*ResourceDetectionBalance)/100*miningPercentDoneTick)*(1-remainderMining/5)
 }
 }
+
+estateAgriculture = estateAgriculture.filter(function (entry) { return entry[1] > 0})
+estateMining = estateMining.filter(function (entry) { return entry[1] > 0})
+
 estateTableUpdate(document.getElementById("agricultureTable"),estateAgriculture)
 estateTableUpdate(document.getElementById("miningTable"),estateMining)
 
-changeTable()
+
+defineQuest()
+
+for(i=0;i<SocialVars.length;i++){
+if(SocialVars[i]){
+	SocialVars[i].timeLeft -= 1; document.getElementById(SocialVars[i].timeLeftCell).innerHTML = Math.floor(SocialVars[i].timeLeft)}
+	if(SocialVars[i].timeLeft <= 0){spawnSocialChallenges()}
 
 }
+
+for(j=0;j<activeQuests.length;j++){
+if(questDifficultyArray.indexOf(activeQuests[j][1]) === 0){
+	activeQuestArray[j] = logsQuestActive[0].filter(function (entry) { return entry[0].difficulty >= questDifficultyArray[0].difficulty+5})
+	if(activeQuestArray[j].length === Math.floor(questDifficultyArray[0].activeCheck[questDifficultyArray[0].chosenVariable]) && questDifficultyArray[0].activeCheck[questDifficultyArray[0].chosenVariable] != 0 && questDifficultyArray[0].activeCheck[questDifficultyArray[0].chosenVariable] != undefined){questWon(0)}
+	}
+if(questDifficultyArray.indexOf(activeQuests[j][1]) === 1){activeQuestArray[j] = logsQuestActive[1].filter(function (entry) { return entry.nextContract === questTypeArray[1].variableTested[questDifficultyArray[1].chosenVariable]})
+	if(activeQuestArray[j].length === Math.floor(questDifficultyArray[1].activeCheck[questDifficultyArray[1].chosenVariable]) && questDifficultyArray[1].activeCheck[questDifficultyArray[1].chosenVariable] != 0 && questDifficultyArray[1].activeCheck[questDifficultyArray[1].chosenVariable] != undefined){questWon(1)}
+	}
+if(questDifficultyArray.indexOf(activeQuests[j][1]) === 2){activeQuestArray[j] = logsQuestActive[2].filter(function (entry) { return (entry.sellPrice[0] + entry.sellPrice[1])  >= questDifficultyArray[2].difficulty})
+	if(activeQuestArray[j].length === Math.floor(questDifficultyArray[2].activeCheck[questDifficultyArray[2].chosenVariable]) && questDifficultyArray[2].activeCheck[questDifficultyArray[2].chosenVariable] != 0 && questDifficultyArray[2].activeCheck[questDifficultyArray[2].chosenVariable] != undefined){questWon(2)}
+}
+if(questDifficultyArray.indexOf(activeQuests[j][1]) === 3){activeQuestArray[j] = logsQuestActive[3].filter(function (entry) { return (entry.sellPrice[0] + entry.sellPrice[1])  >= questDifficultyArray[3].difficulty})
+	if(activeQuestArray[j].length === Math.floor(questDifficultyArray[3].activeCheck[questDifficultyArray[3].chosenVariable]) && questDifficultyArray[3].activeCheck[questDifficultyArray[3].chosenVariable] != 0 && questDifficultyArray[3].activeCheck[questDifficultyArray[3].chosenVariable] != undefined){questWon(3)}	
+}
+if(questDifficultyArray.indexOf(activeQuests[j][1]) === 4){activeQuestArray[j] = logsQuestActive[4].filter(function (entry) { return (entry.sellPrice[0] + entry.sellPrice[1])  >= questDifficultyArray[4].difficulty})
+	if(activeQuestArray[j].length === Math.floor(questDifficultyArray[4].activeCheck[questDifficultyArray[4].chosenVariable]) && questDifficultyArray[4].activeCheck[questDifficultyArray[4].chosenVariable] != 0 && questDifficultyArray[4].activeCheck[questDifficultyArray[4].chosenVariable] != undefined){questWon(4)}	
+}
+if(questDifficultyArray.indexOf(activeQuests[j][1]) === 5){activeQuestArray[j] = logsQuestActive[5].filter(function (entry) { return (Math.floor(entry[2]))  >= questDifficultyArray[5].difficulty})
+	if(activeQuestArray[j].length === Math.floor(questDifficultyArray[5].activeCheck[questDifficultyArray[5].chosenVariable]) && questDifficultyArray[5].activeCheck[questDifficultyArray[5].chosenVariable] != 0 && questDifficultyArray[5].activeCheck[questDifficultyArray[5].chosenVariable] != undefined){questWon(5)}
+}
+if(questDifficultyArray.indexOf(activeQuests[j][1]) === 6){activeQuestArray[j] = logsQuestActive[6].filter(function (entry) { return (Math.floor(entry[2]))  >= questDifficultyArray[6].difficulty})
+	if(activeQuestArray[j].length === Math.floor(questDifficultyArray[6].activeCheck[questDifficultyArray[6].chosenVariable]) && questDifficultyArray[6].activeCheck[questDifficultyArray[6].chosenVariable] != 0 && questDifficultyArray[6].activeCheck[questDifficultyArray[6].chosenVariable] != undefined){questWon(6)}
+}//	console.log(activeQuestArray[j].length)
+	
+//
+
+/* The function goes through the Active Quests, and finds if the activeQuestArray (based in the relevant logsQuestActive trackings)
+"j" is the active quest currently checked. The function has already made sure the relevant activeQuestArray 0,1,2 follow the activeQuests 0,1,2
+this loop goes through the array of possible quests, and checks is each activeQuestArray element is equal to the 
+needed variable in the right quests. 
+
+*/
+
+}
+
+
+//main quest array = active quest array . filter (entry.property = variable))  
+// if main quest array.length > number required: quest completed
+}
 function tickSocial(number){
-
-	if(researchPoints >= 5 && SocialVars[number]){
+	if(researchPoints >= 1 && SocialVars[number]){
 		var socialPercentDone =  (SocialVars[number].totalCost - SocialVars[number].cost)/SocialVars[number].totalCost*100
-		SocialVars[number].cost -= Math.round(SocialVars[number].timer*ReputationBalance)
+		SocialVars[number].cost -= (baseRate*baseRateBalance+ResearchSpeedBalance)*ReputationBalance
 		var socialPercentDoneTick =  ((SocialVars[number].totalCost - SocialVars[number].cost)/SocialVars[number].totalCost*100)-socialPercentDone
-		researchPoints -= SocialVars[number].timer
-document.getElementById(SocialVars[number].remainingPoints).innerHTML = SocialVars[number].cost
+		researchPoints -=  Math.floor(baseRate*baseRateBalance+ResearchSpeedBalance)
+document.getElementById(SocialVars[number].remainingPoints).innerHTML = Math.floor(SocialVars[number].cost*10)/10
 
-SocialVars[number].reward += Math.floor((baseReward+socialStatsBonusBalance*stats[number+24].value+InfluenceBalance)*Math.pow(1.1,SocialVars[number].completed))/100*socialPercentDoneTick
+	SocialVars[number].reward += (baseReward+socialStatsBonusBalance*stats[number+24].value)*(baseRate*baseRateBalance+ResearchSpeedBalance)*ReputationBalance/25*SocialVars[number].rewardModifier
 document.getElementById(SocialVars[number].researchRate).innerHTML = Math.floor(SocialVars[number].reward*10)/10
 
-SocialVars[number].timer = Math.floor(baseRate*baseRateBalance+ResearchSpeedBalance)
-document.getElementById(SocialVars[number].nextContract).innerHTML = SocialVars[number].timer
-
-if(SocialVars[number].cost <= 0){
-	if(SocialVars[number] === Illuminati){totalIll += 1;totalContracts++; logger("You have completed an Illuminati Contract !")}
-	if(SocialVars[number] === JadeFist){totalOJF += 1;totalContracts++; logger("You have completed an Order of the Jade Fist Contract !")}
-	if(SocialVars[number] === Cabal){totalCab += 1;totalContracts++; logger("You have completed a Cabal Contract !")}
-	if(SocialVars[number] === Merlin){totalCoM += 1;totalContracts++; logger("You have completed a Circle of Merlin Contract !")}
+//SocialVars[number].rewardModifier = Math.random()-0.5 + Math.random()-0.5 + Math.random()-0.5 + Math.random()-0.5 
+document.getElementById(SocialVars[number].nextContract).innerHTML = SocialVars[number].rewardModifier
+if(SocialVars[number].cost <= 0){ completedContractsLog.push(SocialVars[number]);completedContractsLogQuest.push(SocialVars[number]);
+	if(SocialVars[number].nextContract === Illuminati.nextContract){totalIll += 1;totalContracts++; logger("You have completed an Illuminati Contract !")}
+	if(SocialVars[number].nextContract === JadeFist.nextContract){totalOJF += 1;totalContracts++; logger("You have completed an Order of the Jade Fist Contract !")}
+	if(SocialVars[number].nextContract === Cabal.nextContract){totalCab += 1;totalContracts++; logger("You have completed a Cabal Contract !")}
+	if(SocialVars[number].nextContract === Merlin.nextContract){totalCoM += 1;totalContracts++; logger("You have completed a Circle of Merlin Contract !")}
 xpGain(Math.round(SocialVars[number].reward*10)/50)
 money += SocialVars[number].reward
+logger("Reward: " + Math.round(SocialVars[number].reward) + " gold !")
 reloadIngredients(SocialVars[number].reward)
 activeSocial = -1
 SocialVars[number].completed += 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 spawnSocialChallenges()
-}}} 
+
+}
+}} 
 
 
 // Stats Update Functions
@@ -953,6 +1031,7 @@ if(activePotions[i][0].effect[1] === enchantementStatBonus[j].name){enchantement
 function computeStats(){
 
 for(i=0;i<stats.length;i++){
+//	enchantementStatBonus[i].value += 10
 	stats[i].value = enchantementStatBonus[i].value + baseStatValue[i].value; document.getElementById(stats[i].statBox).title = (Math.floor(stats[i].value*10))/10	}
 		
 
@@ -978,17 +1057,17 @@ document.getElementById("Dodge").innerHTML = DodgeBalance + " %"
 ParryBalance =  Math.floor(100-(1/(1+Parry.value/25))*100)
 document.getElementById("Parry").innerHTML = ParryBalance + " %"
 
-ResearchSkillBalance = ResearchSkill.value/10
+ResearchSkillBalance = ResearchSkill.value/2
 document.getElementById("RSkill").innerHTML =  1 + ResearchSkillBalance
 ResearchSpeedBalance = (Math.round(ResearchSpeed.value))/5
 document.getElementById("RSpeed").innerHTML = "Bonus: + " + ResearchSpeedBalance
 HelpersSkillBalance = (Math.round(HelpersSkill.value))/20
 document.getElementById("HSkill").innerHTML = HelpersSkillBalance + "/sec"
-PotionMakingSkillBalance = (Math.round(PotionMakingSkill.value))
+PotionMakingSkillBalance = (Math.round(PotionMakingSkill.value*2))
 document.getElementById("PMSkill").innerHTML = PotionMakingSkillBalance + " %"
-SpellCastingSkillBalance = (Math.round(SpellCastingSkill.value))
+SpellCastingSkillBalance = (Math.round(SpellCastingSkill.value*2))
 document.getElementById("SSkill").innerHTML = SpellCastingSkillBalance + " %"
-EnchantingSkillBalance = (Math.round(EnchantingSkill.value))
+EnchantingSkillBalance = (Math.round(EnchantingSkill.value*2))
 document.getElementById("ESkill").innerHTML = EnchantingSkillBalance + " %"
 
 potionPotencyBalancer = (1+(PotionMakingSkill.value/100)+(ResearchSkill.value/300))
@@ -1008,7 +1087,7 @@ MiningSkillBalance = (Math.round(MiningSkill.value))/5
 document.getElementById("MSkill").innerHTML = "+ " + MiningSkillBalance +"/sec"
 MiningProsperityBalance = (Math.round(MiningProsperity.value))/5+1
 document.getElementById("MProsperity").innerHTML = MiningProsperityBalance + " Plots"
-ResourceDetectionBalance = 1+(Math.floor(ResourceDetection.value)/2.5)
+ResourceDetectionBalance = 1+(Math.floor(ResourceDetection.value)/10)
 document.getElementById("RDetection").innerHTML = ResourceDetectionBalance
 
 EnemyPhysicalPowerBalance = (Math.round(EnemyPhysicalPower.value))/5
@@ -1040,12 +1119,12 @@ PresenceBalance = 0.25*Presence.value
 document.getElementById("Presence").innerHTML = PresenceBalance
 InfluenceBalance = 0.10*Influence.value
 document.getElementById("Influence").innerHTML = Math.floor(InfluenceBalance*10)/10
-ReputationBalance = 1+Reputation.value/100
+ReputationBalance = 1+Reputation.value/10
 document.getElementById("Reputation").innerHTML = ReputationBalance
 
 		for(i=0;i<SocialVars.length;i++){
-SocialVars[i].timer = Math.floor(baseRate*baseRateBalance+ResearchSpeedBalance)
-document.getElementById(SocialVars[i].nextContract).innerHTML = SocialVars[i].timer
+//SocialVars[i].rewardModifier = Math.random()-0.5 + Math.random()-0.5 + Math.random()-0.5 + Math.random()-0.5 
+document.getElementById(SocialVars[i].nextContract).innerHTML = SocialVars[i].rewardModifier
 		}
 }
 
@@ -1058,18 +1137,195 @@ function chooseClass(buttonClick){
 document.getElementById("ClassDisplay").innerHTML = chosenClass.name
 document.getElementById("ce").style = "display:none"
 document.getElementById("nw").style = "display:block"
-alert("Top Left is your Main control panel. Through it you can research ingredients, craft rituals, and obtain information about your current progress.")
+//alert("Top Left is your Main control panel. Through it you can research ingredients, craft rituals, and obtain information about your current progress.")
 document.getElementById("ne").style = "display:block"
-alert("Top Right is the Stats panel. Everything in the game can be upgraded by improving those stats.")
+//alert("Top Right is the Stats panel. Everything in the game can be upgraded by improving those stats.")
 document.getElementById("sw").style = "display:block"
-alert("Bottom Left is the Tables panel. It lists your various creations and discoveries. Use keys 1-7 for shortcuts on which table to show.")
+//alert("Bottom Left is the Tables panel. It lists your various creations and discoveries. Use keys 1-7 for shortcuts on which table to show.")
 document.getElementById("se").style = "display:block"
-alert("Bottom Right is the Activities panel. It displays the main ways you can obtain gold and ingredients. \n- Monster Hunting allows you to defeat enemies for gold and random ingredients. Different enemies have different strengths and weaknesses, which at higher difficulties can mean life or death !\n- Contracts allow you to spend research points to gain gold. The reward starts at 0 and increases over time.\n- Your Estate allows you to invest ingredients which later on yield more of those ingredients.")	
+//alert("Bottom Right is the Activities panel. It displays the main ways you can obtain gold and ingredients. \n- Monster Hunting allows you to defeat enemies for gold and random ingredients. Different enemies have different strengths and weaknesses, which at higher difficulties can mean life or death !\n- Contracts allow you to spend research points to gain gold. The reward starts at 0 and increases over time.\n- Your Estate allows you to invest ingredients which later on yield more of those ingredients.")	
 for(i=0;i<effects.length;i++){
 for(j=0;j<chosenClass.effects.length;j++){
 	if(chosenClass.effects[j].name === effects[i].name){effects[i].potency+=1}
 
 }}}
+
+
+//
+//----- Quests -----
+//	
+
+Array.prototype.allValuesSame = function() {
+
+    for(var i = 1; i < this.length; i++)
+    {
+        if(this[i] != 0)
+            return false;
+    }
+
+    return true;
+}
+
+  // The point of this is to allow the Quest Maker function to find the right variables to choose from
+var questDatabaseArrays = [
+   SocialTotals = [totalIll, totalOJF, totalCab, totalCoM],
+   Rituals = [readySpells,ownedPotions,ownedEnchantements],
+   StatStudy = [stats,effects],
+   QuestEstatetypes = [totalAgriculture,totalMining]
+  ]
+var logs = [
+ killedEnemies = [],
+ completedContractsLog = [],
+ craftedPotionsLog = [],
+ craftedSpellsLog = [],
+ craftedEnchantementsLog = [],
+ estateMiningLog = [],
+ estateAgricultureLog = []
+]
+var activeQuestArray = [[],[],[]]
+ 
+var QuestDifficulty = function(activeCheck,difficulty,amount,difficultyIncreaseModifier,difficultyBalancer,challengeVariable,chosenVariable) {
+  this.activeCheck = activeCheck;
+  this.difficulty = difficulty;
+  this.amount = amount;
+  this.difficultyIncreaseModifier = difficultyIncreaseModifier;
+  this.difficultyBalancer = difficultyBalancer; 
+  this.challengeVariable = challengeVariable;
+  this.chosenVariable = chosenVariable;
+};
+
+var questDifficultyArray = [
+questDifficultyCombat = new QuestDifficulty([0],0,1,1.25,combatLevelBalancer,0,"Not Defined"), // Kill Enemies
+questDifficultySocial = new QuestDifficulty([0,0,0,0],0,1,1.05,socialBalancer,0,"Not Defined"), // Complete Social Contracts
+questDifficultyPotions = new QuestDifficulty([0],0,1,1.05,potionBalancer,0,"Not Defined"), // Craft Potions
+questDifficultySpells = new QuestDifficulty([0],0,1,1.05,spellBalancer,0,"Not Defined"), // Craft Spells
+questDifficultyEnchantements = new QuestDifficulty([0],0,1,1.05,enchantmentBalancer,0,"Not Defined"), // Craft Enchantments
+questDifficultyMining = new QuestDifficulty([0],0,1,1.025,miningBalancer,0,"Not Defined"), // Mine Ingredients
+questDifficultyAgriculture = new QuestDifficulty([0],0,1,1.025,agricultureBalancer,0,"Not Defined"), // Mine Ingredients
+]
+
+/*
+
+Estate
+ Harvest ?? Ingredients with Effect ?? from ??Agriculture/Mining??
+ 
+*/
+
+function chooseQuest(){
+	
+	  logsQuestActive = [
+ killedEnemiesQuest = [],
+ completedContractsLogQuest = [],
+ craftedPotionsLogQuest = [],
+ craftedSpellsLogQuest = [],
+ craftedEnchantementsLogQuest = [],
+ estateMiningLogQuest = [],
+ estateAgricultureLogQuest = []
+ ]
+	
+	amountModifier = 2
+	difficultyModifier = 1
+	logMaker = (Math.random()*10)
+	totalModifier = level*5 + logMaker - 5
+	logTotalModifier = level*5 + logMaker - 5
+
+	function spreader(){
+		choice = Math.random()
+		if(choice <= 0.5){totalModifier -= 10*(1.25*difficultyModifier); difficultyModifier += 1; }
+		if(choice > 0.5){totalModifier -= 10*(1.1*amountModifier) ; amountModifier += 1}
+}
+	while(totalModifier > 0){spreader()}
+
+	function questFinder(){
+	questChosen = Math.floor(Math.random()*7) //looks through the array to find a quest type (combat, social, etc)
+	}
+	questFinder()
+	
+	
+	while(questDifficultyArray[questChosen].chosenVariable != "Not Defined" && questDifficultyArray[questChosen].chosenVariable != undefined){questFinder()}
+	
+	questDifficultyArray[questChosen].chosenVariable = Math.floor(Math.random()*questDifficultyArray[questChosen].activeCheck.length) // Finds a specific element in an array of variables.
+	questDifficultyArray[questChosen].activeCheck [questDifficultyArray[questChosen].chosenVariable] = questDifficultyArray[questChosen].amount*amountModifier // Gives it the amount needed value
+	questDifficultyArray[questChosen].difficulty = Math.floor(questDifficultyArray[questChosen].difficultyBalancer *10*Math.pow(difficultyModifier,questDifficultyArray[questChosen].difficultyIncreaseModifier))
+	questDifficultyArray[questChosen].challengeVariable = totalModifier
+//	console.log(questDifficultyArray[questChosen].difficulty)
+
+	}
+
+
+//console.log(questDifficultyArray)
+
+function defineQuest(){
+// This array contains the quests that can be found. Their first variable is the te displayed. The second is the difficulty modifier. The third is the array checked.
+ questTypeArray = [
+ combatQuestTotal = new Quest([["Kill "," Enemies ","of Difficulty "," or higher"]],0,[killedEnemiesQuest.length]),
+ socialQuest = new Quest([["Complete "," Illuminati Contracts"," with a Reward of "," or higher"],["Complete "," Cabal Contracts"," with a Reward of "," or higher"],["Complete "," Circle of Merlin Contracts"," with a Reward of "," or higher"],["Complete "," Jade Fist Contracts"," with a Reward of "," or higher"]],0,["IllContract","CabContract","CoMContract","OJFContract"]),
+ potionQuest = new Quest([["Craft "," Potions ","of Potency "," or higher"]],0,[craftedPotionsLogQuest.length]),
+ spellQuest = new Quest([["Craft "," Spells ","of Potency "," or higher"]],0,[craftedSpellsLogQuest.length]),
+ enchantmentQuest = new Quest([["Craft "," Enchantments ","of Potency "," or higher"]],0,[craftedEnchantementsLogQuest.length]),
+ miningQuest = new Quest([["Perform "," Mining Operations ","yielding at least "," ingredients each."]],0,[estateMiningLogQuest.length]),
+ agricultureQuest = new Quest([["Perform "," Agriculture Operations ","yielding at least "," ingredients each."]],0,[estateAgricultureLogQuest.length])
+ ] 	
+
+
+// "active quests" is primarily for the displaying of what quests are active
+activeQuests = [] 
+for(i=0;i<questTypeArray.length;i++){
+//		console.log(i + ": " + questDifficultyArray[i].activeCheck[questDifficultyArray[i].chosenVariable])
+	if(questDifficultyArray[i].activeCheck[questDifficultyArray[i].chosenVariable] != 0 && questDifficultyArray[i].activeCheck[questDifficultyArray[i].chosenVariable] != undefined){
+	activeQuests.push([questTypeArray[i],questDifficultyArray[i]])}}
+//console.log(questDifficultyArray[questChosen].chosenVariable +  " " + activeQuests[0][0].questText[questDifficultyArray[questChosen].chosenVariable][1])
+//console.log(activeQuests.length)
+
+	document.getElementById("Quest1").innerHTML = activeQuests[0][0].questText[activeQuests[0][1].chosenVariable][0] + activeQuests[0][1].activeCheck[activeQuests[0][1].chosenVariable] + activeQuests[0][0].questText[activeQuests[0][1].chosenVariable][1] + activeQuests[0][0].questText[activeQuests[0][1].chosenVariable][2] + activeQuests[0][1].difficulty + activeQuests[0][0].questText[activeQuests[0][1].chosenVariable][3] 
+	document.getElementById("Quest2").innerHTML = activeQuests[1][0].questText[activeQuests[1][1].chosenVariable][0] + activeQuests[1][1].activeCheck[activeQuests[1][1].chosenVariable] + activeQuests[1][0].questText[activeQuests[1][1].chosenVariable][1] + activeQuests[1][0].questText[activeQuests[1][1].chosenVariable][2] + activeQuests[1][1].difficulty + activeQuests[1][0].questText[activeQuests[1][1].chosenVariable][3] 
+	document.getElementById("Quest3").innerHTML = activeQuests[2][0].questText[activeQuests[2][1].chosenVariable][0] + activeQuests[2][1].activeCheck[activeQuests[2][1].chosenVariable] + activeQuests[2][0].questText[activeQuests[2][1].chosenVariable][1] + activeQuests[2][0].questText[activeQuests[2][1].chosenVariable][2] + activeQuests[2][1].difficulty + activeQuests[2][0].questText[activeQuests[2][1].chosenVariable][3] }
+function questWon(number){
+		logger("You have completed a quest !");
+	questDifficultyArray[number].activeCheck[questDifficultyArray[number].chosenVariable] = 0 ; questDifficultyArray[number].chosenVariable = 0; chooseQuest()
+	logsQuestActive[number] = []
+	var choice2 = Math.random()
+	var reward = (10 + logTotalModifier - totalModifier)
+	if(choice2<= 0.5) {xpGain(reward)}
+	if(choice2 > 0.5) {money+= reward; logger("Reward: " + reward + " gold !")}
+}
+
+function resetQuest(questNumber){
+	if(questResetTime <= 0){
+	questDifficultyArray[questDifficultyArray.indexOf(questNumber[1])].activeCheck[questDifficultyArray[questDifficultyArray.indexOf(questNumber[1])].chosenVariable] = 0 ; questDifficultyArray[questDifficultyArray.indexOf(questNumber[1])].chosenVariable = "Not Defined"; chooseQuest()
+	questResetTime += 600
+	}
+	}
+
+
+function questGeneration(){
+	var questDifficulty = 1
+	var questTypeRoll = Math.random()*100
+	
+	if(questTypeRoll <= chosenClass.questVars[0][0]){
+	}
+	
+	else if(questTypeRoll <= chosenClass.questVars[1][0]){
+		
+	}	
+	
+	else if(questTypeRoll <= chosenClass.questVars[2][0]){
+		
+	}	
+	
+	else if(questTypeRoll <= chosenClass.questVars[3][0]){
+		
+	}	
+	
+	else if(questTypeRoll <= chosenClass.questVars[4][0]){
+		
+	}	
+}
+
+//
+//----- ^^^^ (Quests) -----
+//	
+
 
 //
 //----- North East DIV -----
@@ -1150,8 +1406,8 @@ function logger(logelement){
 	logText.push(logelement + "\n")
 	if(logText.length>8){logText.shift()}
 
-for(i=logText.length-1;i>=0;i--){
-document.getElementById("log").value += logText[i]
+for(e=logText.length-1;e>=0;e--){
+document.getElementById("log").value += logText[e]
 }}
 
 
@@ -1365,9 +1621,9 @@ var typeTextName = ""
 function adjuster(){
 	var type = 1
 	 
- 	if(document.getElementById('SelectType').value ==="Potion"){type = 0.75;typeTextName = "Potion"; typeText = "Potion of the "}
-	if(document.getElementById('SelectType').value ==="Spell"){type = 1; typeTextName = "Spell"; typeText = "Spell of the "}
-	if(document.getElementById('SelectType').value ==="Enchantement"){type = 0.1; typeTextName = "Enchantement"; typeText = "Enchantement of the "}
+ 	if(document.getElementById('SelectType').value ==="Potion"){typeTextName = "Potion"; typeText = "Potion of the "}
+	if(document.getElementById('SelectType').value ==="Spell"){typeTextName = "Spell"; typeText = "Spell of the "}
+	if(document.getElementById('SelectType').value ==="Enchantement"){typeTextName = "Enchantement"; typeText = "Enchantement of the "}
 
 	}
 	
@@ -1394,9 +1650,9 @@ var index2 = statsSorted.findIndex(function(element, index, array) {
 });
 stats[index].value+=10000
   
-if(typeTextName === "Potion"){stats[index].value*= 1.25; stats[index2].value*= 1.25}
-if(typeTextName === "Spell"){stats[index].value*= 17.5;stats[index2].value*= 17.5}
-if(typeTextName === "Enchantement"){stats[index].value*= 0.175;stats[index2].value *= 0.175}
+if(typeTextName === "Potion"){stats[index].value*= potionBalancer; stats[index2].value*= potionBalancer}
+if(typeTextName === "Spell"){stats[index].value*= spellBalancer;stats[index2].value*= spellBalancer}
+if(typeTextName === "Enchantement"){stats[index].value*= enchantmentBalancer;stats[index2].value *= enchantmentBalancer}
 
 // This adds to the list of Created Rituals
 if(stats[index].value,stats[index2].value > 1.1){
@@ -1435,9 +1691,9 @@ working()
 	 // Adds to the relevant Array
 	  inProgressVariable[2].push(inProgressVariable[0]);
 	  if(inProgressVariable[2] === craftedRituals){logger("You have discovered: " + inProgressVariable[0].name.join([separator = " "]) + "!")}
-	  if(inProgressVariable[2] === ownedPotions){logger("You have crafted a " + inProgressVariable[0].name.join([separator = " "]) + "!");xpGain(10); totalPotions+= 1; totalRituals+= 1}
-	  if(inProgressVariable[2] === readySpells){logger("You have prepared a " + inProgressVariable[0].name.join([separator = " "]) + "!");xpGain(10); totalSpells+= 1; totalRituals+= 1}
-	  if(inProgressVariable[2] === ownedEnchantements){logger("You have crafted a " + inProgressVariable[0].name.join([separator = " "]) + "!");xpGain(10); totalEnchantements+= 1; totalRituals+= 1}
+	  if(inProgressVariable[2] === ownedPotions){logger("You have crafted a " + inProgressVariable[0].name.join([separator = " "]) + "!");xpGain(10); totalPotions+= 1; totalRituals+= 1;craftedPotionsLog.push(newPotion);craftedPotionsLogQuest.push(newPotion)}
+	  if(inProgressVariable[2] === readySpells){logger("You have prepared a " + inProgressVariable[0].name.join([separator = " "]) + "!");xpGain(10); totalSpells+= 1; totalRituals+= 1;craftedSpellsLog.push(newPotion);craftedSpellsLogQuest.push(newPotion)}
+	  if(inProgressVariable[2] === ownedEnchantements){logger("You have crafted a " + inProgressVariable[0].name.join([separator = " "]) + "!");xpGain(10); totalEnchantements+= 1; totalRituals+= 1;craftedEnchantementsLog.push(newPotion);craftedEnchantementsLogQuest.push(newPotion)}
 	  inProgressVariable.shift()
 	  inProgressVariable.shift()
 	  inProgressVariable.shift()
@@ -1456,6 +1712,7 @@ changeTable()}
 
 	// XP Tab
 function xpGain(experienceGain) {
+	
   var elem = document.getElementById("myLevelBar");   
     if (currentXp + experienceGain >= nextLevel) {
       currentXp = currentXp-nextLevel
@@ -1584,7 +1841,7 @@ for(j=0;j<discoveredIngredients.length;j++){
 	if(discoveredIngredients[j].name[0] === craftedRituals[i].second){if(discoveredIngredients[j].quantity>0){second = discoveredIngredients[j]}};
 	if(discoveredIngredients[j].name[0] === craftedRituals[i].third){if(discoveredIngredients[j].quantity>0){third = discoveredIngredients[j]}};
 }
-if(first === "nope" || first === "nope" || first === "nope"){logger("You do not have Sufficient Ingredients !")}
+if(first === "nope" || second === "nope" || third === "nope"){logger("You do not have Sufficient Ingredients !")}
 else{
 	first.quantity -= 1; second.quantity -= 1; third.quantity -= 1;
 
@@ -1662,7 +1919,7 @@ changeTable()
 cell9.onclick = function() {
 	for(i=1;i<document.getElementById("potionTable").rows.length;i++){
 if(this.id === i.toString()){
-		money = money + ownedPotions[i].sellPrice[0]*6; 
+		money = money + ownedPotions[i].sellPrice[0]*6 + ownedPotions[i].sellPrice[1]*6; 
 	if(ownedPotions[i].quantity>=1){ownedPotions[i].quantity-=1}
 	if(ownedPotions[i].quantity===0){ownedPotions.splice(i,1)}
 
@@ -1681,7 +1938,7 @@ cell3.innerHTML = ownedPotions[i].effect[0]
 cell4.innerHTML = ownedPotions[i].sellPrice[0];
 cell5.innerHTML = ownedPotions[i].effect[1]
 cell6.innerHTML = ownedPotions[i].sellPrice[1];
-cell7.innerHTML = ownedPotions[i].sellPrice[0]*6;
+cell7.innerHTML = ownedPotions[i].sellPrice[0]*6 + ownedPotions[i].sellPrice[1]*6;
 cell8.innerHTML = "Use".bold()
 cell9.innerHTML = "Sell".bold()
 ;
@@ -1727,7 +1984,7 @@ cell8.id = i.toString()
 cell8.onclick = function() {
 	for(i=1;i<document.getElementById("potionTable").rows.length;i++){
 if(this.id === i.toString()){
-		money = money + ownedEnchantements[i].sellPrice[0]*75; 
+		money = money + ownedEnchantements[i].sellPrice[0]*75 + ownedEnchantements[i].sellPrice[1]*75; 
 	if(ownedEnchantements[i].quantity>=1){ownedEnchantements[i].quantity-=1}
 	if(ownedEnchantements[i].quantity===0){ownedEnchantements.splice(i,1)}
 
@@ -1745,7 +2002,7 @@ cell3.innerHTML = ownedEnchantements[i].effect[0];
 cell4.innerHTML = ownedEnchantements[i].sellPrice[0];
 cell5.innerHTML = ownedEnchantements[i].effect[1];
 cell6.innerHTML = ownedEnchantements[i].sellPrice[1];
-cell7.innerHTML = ownedEnchantements[i].sellPrice[0]*75;
+cell7.innerHTML = ownedEnchantements[i].sellPrice[0]*75 + ownedEnchantements[i].sellPrice[1]*75;
 cell8.innerHTML = "Sell".bold()
 ;
 }
@@ -1862,11 +2119,9 @@ var table = document.getElementById("potionTable");
 	return entry.affectedStats.indexOf(document.getElementById("SelectFilter").value)!=-1})
 }
 
-for(i=0;i<filteredEffects.length;i++){
+for(i=0;i<effects.length;i++){
 // Create an empty <tr> element and add it to the 1st position of the table:
-
 var row = table.insertRow(-1);
-
 // Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
 var cell1 = row.insertCell(0);
 var cell2 = row.insertCell(1);
@@ -1877,11 +2132,11 @@ var cell6 = row.insertCell(5);
 
 // Add some text to the new cells, row by row.
 //This updates the cells with the different results.
-cell1.innerHTML = filteredEffects[i].name
-cell2.innerHTML = filteredEffects[i].affectedStats[0]
-cell3.innerHTML = filteredEffects[i].affectedStats[1]
-cell4.innerHTML = filteredEffects[i].affectedStats[2]
-cell5.innerHTML = " " + filteredEffects[i].potency + " "
+cell1.innerHTML = effects[i].name
+cell2.innerHTML = effects[i].affectedStats[0]
+cell3.innerHTML = effects[i].affectedStats[1]
+cell4.innerHTML = effects[i].affectedStats[2]
+cell5.innerHTML = " " + effects[i].potency + " "
 if(levelPoints === 0){cell6.innerHTML = "Level Up".fontcolor("#d9d9d9")}
 else{
 cell6.innerHTML = "Level Up".bold()
@@ -1891,11 +2146,13 @@ cell6.onclick = function() {
 	for(i=0;i<document.getElementById("potionTable").rows.length;i++){
 if(this.id === i.toString()){
 	//logger(filteredEffects[i].name)
-	if(filteredEffects[i].name === effects[i].name){effects[i].potency+=1}
+	effects[i].potency+=1
 }}
 
 levelPoints -= 1; changeTable()}
-}}}
+}row.style.display = "none"
+if(effects[i].affectedStats.indexOf(document.getElementById("SelectFilter").value)!=-1){row.style.display = "table-row"}
+}}
 
 function tableUpdate(){
 var table = document.getElementById("potionTable");
@@ -2091,14 +2348,14 @@ activeEnemy = []
 enemiesList.style.display = "none"
 
 document.getElementById("EName").innerHTML = "Titanspawn of " + activeEnemyFinal[0].name;
-document.getElementById("FEPPower").innerHTML = activeEnemyFinal[0].physical;
-document.getElementById("FEMPower").innerHTML = activeEnemyFinal[0].magical;
-document.getElementById("FEPHealth").innerHTML = activeEnemyFinal[0].health;
-document.getElementById("FEMeHealth").innerHTML = activeEnemyFinal[0].mental;
-document.getElementById("FEArmor").innerHTML = activeEnemyFinal[0].armor;
-document.getElementById("FEMResistance").innerHTML = activeEnemyFinal[0].magicResist;
-document.getElementById("FEDodge").innerHTML = activeEnemyFinal[0].dodge;
-document.getElementById("FEParry").innerHTML = activeEnemyFinal[0].parry;
+document.getElementById("FEPPower").innerHTML = Math.floor(activeEnemyFinal[0].physical*10)/10;
+document.getElementById("FEMPower").innerHTML = Math.floor(activeEnemyFinal[0].magical*10)/10;
+document.getElementById("FEPHealth").innerHTML = Math.floor(activeEnemyFinal[0].health);
+document.getElementById("FEMeHealth").innerHTML = Math.floor(activeEnemyFinal[0].mental);
+document.getElementById("FEArmor").innerHTML = Math.floor(activeEnemyFinal[0].armor);
+document.getElementById("FEMResistance").innerHTML = Math.floor(activeEnemyFinal[0].magicResist);
+document.getElementById("FEDodge").innerHTML = Math.floor(activeEnemyFinal[0].dodge);
+document.getElementById("FEParry").innerHTML = Math.floor(activeEnemyFinal[0].parry);
 document.getElementById('CurrentEnemyStatsTable').style.display = 'block'
 	}};
 
@@ -2137,7 +2394,7 @@ document.getElementById("FEParry").innerHTML = Math.floor(activeEnemyFinal[0].pa
 	//combatTextLog += activeEnemyFinal[0].name + ": " + Math.round(physicalDamage) + " " + Math.round(mentalDamage) + "\n"; physicalDamage = 0; mentalDamage = 0; enemyChoose();
 	// This isn't
 	
-	document.getElementById('CurrentEnemyStatsTable').style.display = 'none'; ingredientReward();logger("You defeated an enemy !"); totalEnemies++; totalEnemyTypes.filter(function (entry) { return entry[0] === activeEnemyFinal[0].name})[0][1]++;activeEnemyFinal = [] }
+	document.getElementById('CurrentEnemyStatsTable').style.display = 'none'; ingredientReward();logger("You defeated an enemy !"); totalEnemies++; totalEnemyTypes.filter(function (entry) { return entry[0] === activeEnemyFinal[0].name})[0][1]++;killedEnemies.push(activeEnemyFinal);killedEnemiesQuest.push(activeEnemyFinal);  activeEnemyFinal = [] }
 	if(Math.round((PhysicalHealthBalance - physicalDamage)*10)/10<0){physicalDamage = PhysicalHealthBalance; activeEnemyFinal= [] ;document.getElementById('CurrentEnemyStatsTable').style.display = 'none'; logger("You are out of Physical Health ! Wait and heal to continue hunting !")}
 	if(Math.round((MentalHealthBalance - mentalDamage)*10)/10<0){mentalDamage = MentalHealthBalance;activeEnemyFinal = [];document.getElementById('CurrentEnemyStatsTable').style.display = 'none'; logger("You are out of Mental Health ! Wait and heal to continue hunting !")}
 
@@ -2173,21 +2430,20 @@ function increaseDifficulty(){
 	// Social Interface
 
 function spawnSocialChallenges(){
-	
 	for(i=0;i<SocialVars.length;i++){
-if(SocialVars[i].cost<=0){
-SocialVars[i].timer = Math.floor(baseRate*baseRateBalance+ResearchSpeedBalance)
-document.getElementById(SocialVars[i].nextContract).innerHTML = SocialVars[i].timer
-SocialVars[i].cost = Math.floor(baseCost*Math.pow(1.1,SocialVars[i].completed))
-document.getElementById(SocialVars[i].remainingPoints).innerHTML = SocialVars[i].cost
-SocialVars[i].totalCost = Math.floor(baseCost*Math.pow(1.1,SocialVars[i].completed))
+if( SocialVars[i].timeLeft <=0 || SocialVars[i].cost<=0 || SocialVars[i].cost === "Not Defined"){
+SocialVars[i].rewardModifier = 1+((Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1)/5)
+document.getElementById(SocialVars[i].nextContract).innerHTML = Math.floor(SocialVars[i].rewardModifier*10)/10
+SocialVars[i].cost = Math.floor((1+((Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1)/5))*50)
+document.getElementById(SocialVars[i].remainingPoints).innerHTML = Math.floor(SocialVars[i].cost*10)/10
+SocialVars[i].totalCost = Math.floor(((1+((Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1))/5))*50)
 SocialVars[i].reward = 0
 document.getElementById(SocialVars[i].researchRate).innerHTML = SocialVars[i].reward
-document.getElementById("IllButton").innerHTML = "Research";
-document.getElementById("OJFButton").innerHTML = "Research";
-document.getElementById("CabButton").innerHTML = "Research";
-document.getElementById("CoMButton").innerHTML = "Research";
+SocialVars[i].timeLeft = 40+((Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1)*8)
+document.getElementById(SocialVars[i].timeLeftCell).innerHTML = SocialVars[i].timeLeft
+if(document.getElementById(SocialVars[i].researchButton).innerHTML === "Stop"){ document.getElementById(SocialVars[i].researchButton).innerHTML = "Research"};
 }}}
+
 function socialButtonChanger(number,chosenElement){
 if(activeSocial === number){activeSocial = -1; document.getElementById(chosenElement).innerHTML  = "Research"}
 else{
@@ -2220,9 +2476,12 @@ if(pushedIngredient[0].quantity >= 1 && targetArray.length<=targetProperty){
 newEstateElement = []
 pushedIngredient[0].quantity -= 1
 newEstateElement.push(pushedIngredient[0].name);
-newEstateElement.push(10*pushedIngredient[0].rarity);
+newEstateElement.push(1200*pushedIngredient[0].rarity);
 newEstateElement.push(0);
-newEstateElement.push(10*pushedIngredient[0].rarity);
+newEstateElement.push(1200*pushedIngredient[0].rarity);
+newEstateElement.push(pushedIngredient[0].first);
+newEstateElement.push(pushedIngredient[0].second);
+newEstateElement.push(pushedIngredient[0].third);
 
 targetArray.push(newEstateElement)
 estateTableUpdate(document.getElementById("agricultureTable"),estateAgriculture)
