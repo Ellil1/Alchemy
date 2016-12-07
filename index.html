@@ -2,7 +2,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="interface.css" />
 </head>
-<body onload="changeStatsTable(); computeStats(); loadButton(); instructions();">
+<body onload="spawnSocialChallenges(); chooseQuest(); chooseQuest(); chooseQuest(); changeStatsTable(); computeStats(); loadButton(); instructions()">
 
 <script type="text/javascript" src="main.js">
 </script>
@@ -18,10 +18,56 @@ Mousetrap.bind('6', function() { document.getElementById("SelectType2").options.
 Mousetrap.bind('7', function() { document.getElementById("SelectType2").options.selectedIndex = 6; changeTable() });
 </script>
 
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close"></span>
+    <img src="http://i.imgur.com/lMK7qcw.png" align="left" style="width:85px;height:128px;"></img>
+	<p  style="padding-left: 120px" id="ShanluoAdvice"></p>
+	<br>	<br>
+	<br>
+	<br>
+
+ </div>
+ </div> 
 
 <div class="delta" id="ce" style="display:block; overflow:auto">
+
+
      <div id="object1" style="float:left; width:50%">
 <h1>Choose a Class</h1>
+
+
+<script>
+// Modal Box Function
+// Get the modal
+var modal = document.getElementById('myModal');
+
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks the button, open the modal 
+ function showAdvice(givenText) {
+	document.getElementById('ShanluoAdvice').innerHTML = givenText
+    modal.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function() {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function(event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
+</script>
+
 <br><button onClick="chooseClass('Thaumaturgist')">Choose Class</button><span>  <b>Thaumaturgist</b> <br> Experts in the primal forces of Life and Death, Thaumaturgists are well-versed in the cycle of life. They are patient, let their garden bloom, starting weak as a sapling but growing strong as the oak.<br>
  <b>Preferred Effects</b>: Healing, Fertility, Rebirth, Transformation, Death, Power</span>
 <br>
@@ -184,7 +230,16 @@ Mousetrap.bind('7', function() { document.getElementById("SelectType2").options.
  <div id="myLevelProgress"  >
   <div id="myLevelBar" ><div id="label">0</div></div></div>
  <br>
- <button onClick="xpGain(50)">Click !</button></div></div>
+ <button onClick="xpGain(50)">Click !</button></div>
+ <br> <br><br><br><br><br><br>
+
+<div id="questList" style="width:700px;border:1px solid black">
+<a id="Quest1">   </a><button id="QuestButton1" onclick="resetQuest(activeQuests[0])" style="float:right">Reset Quest</button><br><br>
+<a id="Quest2">   </a><button id="QuestButton2" onclick="resetQuest(activeQuests[1])" style="float:right">Reset Quest</button><br><br>
+<a id="Quest3">   </a><button id="QuestButton3" onclick="resetQuest(activeQuests[2])" style="float:right">Reset Quest</button><br><br>
+</div>
+<a id="QuestResetDisplay"></a>
+ </div>
 <div id="globalInfoDisplay" class="tabcontent">
 
 
@@ -220,7 +275,9 @@ Mousetrap.bind('7', function() { document.getElementById("SelectType2").options.
     <option value = "Erlik">Erlik</option>	
     <option value = "Erebus">Erebus</option>		</select>
 	<span id="TEnemiesTypeNumber">0</span></td></tr>
-  </table> </div></div>
+  </table> 
+
+  </div></div>
  
 <div class="delta" id="sw" >
 
@@ -266,14 +323,14 @@ Mousetrap.bind('7', function() { document.getElementById("SelectType2").options.
     <option value = "Influence">Influence</option>
     <option value = "Money">Money</option>
     <option value = "Reputation">Reputation</option>
-    <option value = "Enemy Physical Damage Reduction">Enemy Physical Damage Reduction</option>
-    <option value = "Enemy Physical Health Damage">Enemy Physical Health Damage</option>
+    <option value = "Enemy Physical Damage Reduction">Enemy Damage Reduction</option>
+    <option value = "Enemy Physical Health Damage">Enemy Health</option>
     <option value = "Enemy Magical Power Reduction">Enemy Magical Power</option>
-    <option value = "Enemy Mental Health Damage">Enemy Mental Health Damage</option>
-    <option value = "Enemy Magic Resistance Reduction">Enemy Magic Resistance</option>
+    <option value = "Enemy Mental Health Damage">Enemy Magical Damage</option>
+    <option value = "Enemy Magic Resistance Reduction">Enemy Magic Resist</option>
     <option value = "Enemy Dodge Reduction">Enemy Dodge</option>
     <option value = "Enemy Parry Reduction">Enemy Parry</option>
-    <option value = "Enemy Armor Reduction">Enemy Armor Reduction</option>
+    <option value = "Enemy Armor Reduction">Enemy Armor</option>
 
 </select>
 
@@ -325,8 +382,8 @@ Mousetrap.bind('7', function() { document.getElementById("SelectType2").options.
  <option value = "78">Travel</option>
  </select>
 <br>
-<br><div style="overflow:auto; height:360px; border: 1px solid black"">
-<table class="beta"  style="width: 100%;" id="potionTable" ></table>
+<br><div style="overflow:auto; height:360px; border: 1px solid black">
+<table class="beta" style="width: 100%;" id="potionTable" ></table>
 </div></div>
 
 <div class="delta" id="se" >
@@ -338,11 +395,11 @@ Mousetrap.bind('7', function() { document.getElementById("SelectType2").options.
 
 <div id = "SocialDisplay" style="display:none" class="tabcontent">
      <table id="SocialContracts" align="right"  style="display: block">
-	 <tr><th>Contract</th><th>Research Rate</th><th>Reward</th><th>Remaining Points</th></tr>
-	 <tr><td>Illuminati</td><td><span id="IllContract">5</span></td><td><span id="IllRate">0</span></td><td><span id="IllRemaining">50</span></td><td><button id="IllButton" onClick="socialButtonChanger(2,this.id)">Research</button></td></tr>
-	 <tr><td>Order of the Jade Fist</td><td><span id="OJFContract">5</span></td><td><span id="OJFRate">0</span></td><td><span id="OJFRemaining">50</span></td><td><button id="OJFButton" onClick="socialButtonChanger(3,this.id)">Research</button></td></tr>
-     <tr><td>Cabal</td><td><span id="CabContract">5</span></td><td><span id="CabRate">0</span></td><td><span id="CabRemaining">50</span></td><td><button id="CabButton" onClick="socialButtonChanger(1,this.id)">Research</button></td></tr>
-     <tr><td>Circle of Merlin</td><td><span id="CoMContract">5</span></td><td><span id="CoMRate">0</span></td><td><span id="CoMRemaining">50</span></td><td><button id="CoMButton" onClick="socialButtonChanger(0,this.id)">Research</button></td></tr>
+	 <tr><th>Contract</th><th>Contract Quality</th><th>Reward</th><th>Remaining Points</th><th>Time Left</th></tr>
+	 <tr><td>Illuminati</td><td><span id="IllContract">5</span></td><td><span id="IllRate">0</span></td><td><span id="IllRemaining">50</span></td><td id="IllTime"></td><td><button id="IllButton" onClick="socialButtonChanger(2,this.id)">Research</button></td></tr>
+	 <tr><td>Order of the Jade Fist</td><td><span id="OJFContract">5</span></td><td><span id="OJFRate">0</span></td><td><span id="OJFRemaining">50</span></td><td id="OJFTime"></td><td><button id="OJFButton" onClick="socialButtonChanger(3,this.id)">Research</button></td></tr>
+     <tr><td>Cabal</td><td><span id="CabContract">5</span></td><td><span id="CabRate">0</span></td><td><span id="CabRemaining">50</span></td><td id="CabTime"></td><td><button id="CabButton" onClick="socialButtonChanger(1,this.id)">Research</button></td></tr>
+     <tr><td>Circle of Merlin</td><td><span id="CoMContract">5</span></td><td><span id="CoMRate">0</span></td><td><span id="CoMRemaining">50</span></td><td id="CoMTime"></td><td><button id="CoMButton" onClick="socialButtonChanger(0,this.id)">Research</button></td></tr>
   </table>
 </div>
 
