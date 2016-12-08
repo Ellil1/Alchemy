@@ -114,7 +114,7 @@ var activeEnemy = []
 var activeEnemyFinal = []
 
 var activeSocial = -1
-
+var starterQuest = 0
 
 	// Defines the Object categories
 var Environment = function(name,first,second,third,power) {
@@ -802,7 +802,7 @@ changeTable()
 }
 function instructions(){
 	if(gameStarted === false){
-showAdvice("Welcome to Wyrdwalkers: Alchemist Idle ! I am Shanluo, your humble servant, and will be helping you get settled as an ambitious and independant alchemist !<br /><br /> Your goal is to create Potions, Spells and Enchantements to improve your abilities and become more and more powerful. <br />Research Ingredients using your own skills and hiring helpers to work for you. <br />Obtain Ingredients by buying them for gold, from killing monsters, or from your Estate. <br />Obtain gold from Contracts and from killing monsters. <br /><br />Alchemist Idle can be played with various degrees of idleness. <br />- Spells (30sec effect) and Monster Hunting are best for active players.<br />- Potions (10min effect) and Contracts are best for semi-active players. <br />- Enchantements (passive effect) and the Estate are best for idle players.<br />However, all three main activities (Monster Hunting, Contracts, and Estate) can be played concurrently." )
+showAdvice(["Welcome to Wyrdwalkers: Alchemist Idle !","The Alchemists' Guild is looking for new recruits. Lucky for you, you made the cut! I am Shanluo, your humble servant, and will be helping you get settled as an ambitious and independant Alchemist!","Your goal is to create Potions, Spells and Enchantements to improve your abilities and become more and more powerful. Research Ingredients using your own skills and hiring helpers to work for you. Obtain Ingredients by buying them for gold, from killing monsters, or from your Estate. Obtain gold from Contracts and from killing monsters.","Alchemist Idle can be played with various degrees of idleness. Spells (30sec effect) and Monster Hunting are best for active players. Potions (10min effect) and Contracts are best for semi-active players. Enchantements (passive effect) and the Estate are best for idle players. However, all three main activities (Monster Hunting, Contracts, and Estate) can be played concurrently."])
 	}gameStarted = true
 }
 
@@ -841,7 +841,20 @@ document.getElementById("gold").innerHTML = Math.floor(money)
 
 tick()
 tickSocial(activeSocial)
-	computeStats()	
+	computeStats()
+if(starterQuest != -1){
+
+
+if(Math.round(starterQuest) === 7 && level > 0 ){showAdvice(["You have gained a level! This will passively increase your crafting skills, and gives you an Upgrade Point to improve one of the Effects (Shortcut: '7'). That means all Ingredients using that Effect will be more powerful!","You now have Quests. Accomplishing them will provide you with gold and experience, but most importantly will allow you to rise through the ranks of the Alchemists' Guild, unlocking new upgrades!"]);starterQuest+=1}
+if(Math.round(starterQuest) === 6 && (estateAgriculture.length > 0 || estateMining.length > 0 )){starterQuest+=1;showAdvice(["Alright, you've got the basics! Get some gold and ingredients, craft some Rituals to make yourself stronger, and gain some experience!"])}
+if(Math.round(starterQuest) === 5 && totalContracts > 0){showAdvice(["Finally, add an Ingredient to your Estate. It takes a while, but it's well worth it!"]);starterQuest+=1}
+if(Math.round(starterQuest) === 4 && totalEnemies > 0){showAdvice(["Great! But be careful to watch your Health and Mental Health. Wouldn't want you to get defeated and let the monster run away! Now let's complete a Contract for one of the mysterious Secret Societies.","Contracts cost Research Points, and have a limited time to complete. Make sure you have time to complete whichever one you attempt. If not, just wait for new ones!"]);starterQuest+=1}
+if(Math.round(starterQuest) === 3 && totalRituals > 0){showAdvice(["Alright, now we're cooking! But I'm afraid I'm all out of gold to give you...There's a way for you to get your own, though ! Let's take a look at the Activities you can undertake.","Let's start by hunting a monster, shall we?. Discover one, and choose which one you want to fight. Each type has strengths and weaknesses, which only become more pronounced the tougher they are."]);starterQuest+=1}
+if(Math.round(starterQuest) === 2 && craftedRituals.length > 1){money += 40; showAdvice(["Nice, you have discovered your first Ritual, the " + craftedRituals[1].name.join([separator = " "]) + "! Now all you need to do is to go in your Recipe Book (Shortcut '2') and craft it!"]);starterQuest+=1}
+if(Math.round(starterQuest) === 1 && discoveredIngredients.length > 1){money += 100; showAdvice(["Good start! Now Discover a couple more Ingredients, and buy a few to combine them and Research your first Ritual! Here's a little gold to get you started. If you run out, try some Monster Hunting for some quick (and dangerous) cash!"]);starterQuest+=1}
+}
+
+
 }, 1000);
 
 
@@ -993,7 +1006,7 @@ function tickSocial(number){
 		researchPoints -=  Math.floor(baseRate*baseRateBalance+ResearchSpeedBalance)
 document.getElementById(SocialVars[number].remainingPoints).innerHTML = Math.floor(SocialVars[number].cost*10)/10
 
-	SocialVars[number].reward += (baseReward+socialStatsBonusBalance*stats[number+24].value)*(baseRate*baseRateBalance+ResearchSpeedBalance)*ReputationBalance/25*SocialVars[number].rewardModifier
+	SocialVars[number].reward += (baseReward+socialStatsBonusBalance*stats[number+24].value)*(baseRate*baseRateBalance+ResearchSpeedBalance)*ReputationBalance/50*SocialVars[number].rewardModifier
 document.getElementById(SocialVars[number].researchRate).innerHTML = Math.floor(SocialVars[number].reward*10)/10
 
 //SocialVars[number].rewardModifier = Math.random()-0.5 + Math.random()-0.5 + Math.random()-0.5 + Math.random()-0.5 
@@ -1137,13 +1150,11 @@ function chooseClass(buttonClick){
 document.getElementById("ClassDisplay").innerHTML = chosenClass.name
 document.getElementById("ce").style = "display:none"
 document.getElementById("nw").style = "display:block"
-//alert("Top Left is your Main control panel. Through it you can research ingredients, craft rituals, and obtain information about your current progress.")
 document.getElementById("ne").style = "display:block"
-//alert("Top Right is the Stats panel. Everything in the game can be upgraded by improving those stats.")
 document.getElementById("sw").style = "display:block"
-//alert("Bottom Left is the Tables panel. It lists your various creations and discoveries. Use keys 1-7 for shortcuts on which table to show.")
 document.getElementById("se").style = "display:block"
-//alert("Bottom Right is the Activities panel. It displays the main ways you can obtain gold and ingredients. \n- Monster Hunting allows you to defeat enemies for gold and random ingredients. Different enemies have different strengths and weaknesses, which at higher difficulties can mean life or death !\n- Contracts allow you to spend research points to gain gold. The reward starts at 0 and increases over time.\n- Your Estate allows you to invest ingredients which later on yield more of those ingredients.")	
+showAdvice(["Top Left is your Main control panel. Through it you can research ingredients, craft rituals, and obtain information about your current progress.","Top Right is the Stats panel. Everything in the game can be upgraded by improving those stats.","Bottom Left is the Tables panel. It lists your various creations and discoveries. Use keys 1-7 for shortcuts on which table to show.","Bottom Right is the Activities panel. It displays the main ways you can obtain gold and ingredients.","Alright, enough talk, let's get some work done, shall we ? Start by getting some Research Points ! Click on the Do Research button until you have 20 Research Points, then use it to Discover an Ingredient!"])	
+starterQuest +=1
 for(i=0;i<effects.length;i++){
 for(j=0;j<chosenClass.effects.length;j++){
 	if(chosenClass.effects[j].name === effects[i].name){effects[i].potency+=1}
@@ -1414,7 +1425,7 @@ document.getElementById("log").value += logText[e]
 	
 function discoverIngredient(){
 
-    var discoverCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length));     //works out the cost of this cursor
+    var discoverCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length-1));     //works out the cost of this cursor
     if(researchPoints >= discoverCost){                                   //checks that the player can afford the cursor
     	researchPoints = researchPoints - discoverCost;                          //removes the researchPoints spent
         document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
@@ -1511,7 +1522,7 @@ changeTable()
 function discoverTableUpdate(){
 	
 	
-    var nextCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length));       //works out the cost of the next cursor
+    var nextCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length-1));       //works out the cost of the next cursor
     document.getElementById('discoverCost').innerHTML = nextCost;  //updates the cursor cost for the user
 
 	var nextCostFirst = Math.floor(40 * Math.pow(1.1,discoveredFirstProperties));       //works out the cost of the next cursor
