@@ -27,9 +27,8 @@ Mousetrap.bind('7', function() { document.getElementById("SelectType2").options.
     <img src="http://i.imgur.com/lMK7qcw.png" align="left" style="width:85px;height:128px;"></img>
 	<p  style="padding-left: 120px" id="ShanluoAdvice"></p>
 	<br>	<br>
+		<button id="continueButton" style="float:right"> Continue </button><br>
 	<br>
-	<br>
-
  </div>
  </div> 
 
@@ -42,30 +41,44 @@ Mousetrap.bind('7', function() { document.getElementById("SelectType2").options.
 
 <script>
 // Modal Box Function
+
+var activeAdviceText = []
+
 // Get the modal
 var modal = document.getElementById('myModal');
 
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+var span = document.getElementById("continueButton");
 
 // When the user clicks the button, open the modal 
  function showAdvice(givenText) {
-	document.getElementById('ShanluoAdvice').innerHTML = givenText
+	activeAdviceText = givenText
+	document.getElementById('ShanluoAdvice').innerHTML = activeAdviceText[0]
     modal.style.display = "block";
+
 }
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function() {
+/*span.onclick = function() {
+	console.log(activeAdviceText.indexOf(document.getElementById('ShanluoAdvice').innerHTML))
+	if(document.getElementById('ShanluoAdvice').innerHTML === activeAdviceText[activeAdviceText.indexOf(activeAdviceText.length-1)]){
     modal.style.display = "none";
-}
+	}
+	
+	else if(document.getElementById('ShanluoAdvice').innerHTML === activeAdviceText[activeAdviceText.indexOf(document.getElementById('ShanluoAdvice').innerHTML)]){
+	document.getElementById('ShanluoAdvice').innerHTML = activeAdviceText[activeAdviceText.indexOf(document.getElementById('ShanluoAdvice').innerHTML)]
+	}}*/
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
+span.onclick = function() {
+
+	if(document.getElementById('ShanluoAdvice').innerHTML === activeAdviceText[(activeAdviceText.length)-1]){
+    modal.style.display = "none";
+	}
+	else if(document.getElementById('ShanluoAdvice').innerHTML === activeAdviceText[activeAdviceText.indexOf(document.getElementById('ShanluoAdvice').innerHTML)]){
+	document.getElementById('ShanluoAdvice').innerHTML = activeAdviceText[activeAdviceText.indexOf(document.getElementById('ShanluoAdvice').innerHTML)+1]
+	}}
 </script>
 
 <br><button onClick="chooseClass('Thaumaturgist')">Choose Class</button><span>  <b>Thaumaturgist</b> <br> Experts in the primal forces of Life and Death, Thaumaturgists are well-versed in the cycle of life. They are patient, let their garden bloom, starting weak as a sapling but growing strong as the oak.<br>
@@ -383,7 +396,7 @@ window.onclick = function(event) {
  </select>
 <br>
 <br><div style="overflow:auto; height:360px; border: 1px solid black">
-<table class="beta" style="width: 100%;" id="potionTable" ></table>
+<table class="beta"  style="width: 100%" id="potionTable" ></table>
 </div></div>
 
 <div class="delta" id="se" >
