@@ -1,11 +1,3 @@
-/* This game is in testing phase. To restore to normal functionality, 
-add "instructions()" to onload, and remove comment tags in the "chooseClass" function alerts.
-
-
-
-*/
-
-
 var basicVariables = [
  researchPoints = 0,
  money = 0,
@@ -35,6 +27,9 @@ var basicVariables = [
   
   totalEnemies = 0,
   totalEnemyTypes = [["Aten",0],["Zhulong",0],["Helios",0],["Huracan",0],["Ouranos",0],["Typhon",0],["Surtr",0],["Prometheus",0],["Vrtra",0],["Yam",0],["Abzu",0],["Cipactli",0],["Gaia",0],["Kur",0],["Crom Cruach",0],["Mikaboshi",0],["Erlik",0],["Erebus",0]],
+  
+  
+  questsDoneTotal = 0
   ] 
 
 var inProgressVariable = []
@@ -72,7 +67,7 @@ var socialVar = function(completed,rewardModifier,cost,reward,nextContract,resea
   this.researchButton = researchButton;
 }
   
-var Ingredient = function(name,first,second,third,rarity,quantity,price,marketStock,type) {
+var Ingredient = function(name,first,second,third,rarity,quantity,price,marketStock,type,level) {
   this.name = name;
   this.first = first;
   this.second = second;
@@ -188,11 +183,11 @@ MiningProsperityEnchantementBonus= new Stats("Mining Prosperity",0,"Placeholder"
 DodgeEnchantementBonus= new Stats("Dodge",0,"Dodge",["Fleeting","Boxer"],[]),
 ParryEnchantementBonus= new Stats("Parry",0,"Parry",["Skillful","Blademaster"],[]),
 ArmorEnchantementBonus= new Stats("Armor",0,"Armor",["Protective","Protector"],[]),
-CharismaEnchantementBonus= new Stats("Charisma",0,"Placeholder",["Charismatic","Gentleman"],[]),
-SeductionEnchantementBonus= new Stats("Seduction",0,"Placeholder",["Seductive","Succubus"],[]),
-ManipulationEnchantementBonus= new Stats("Manipulation",0,"Placeholder",["Manipulative","Manipulator"],[]),
-PresenceEnchantementBonus= new Stats("Presence",0,"Placeholder",["Impressive","General"],[]),
-InfluenceEnchantementBonus= new Stats("Influence",0,"Placeholder",["Influential","Socialite"],[]),
+InfluenceEnchantementBonus= new Stats("Influence",0,"InfluenceMod",["Influential","Socialite"],[]),
+CharismaEnchantementBonus= new Stats("Charisma",0,"CharismaMod",["Charismatic","Gentleman"],[]),
+SeductionEnchantementBonus= new Stats("Seduction",0,"SeductionMod",["Seductive","Succubus"],[]),
+ManipulationEnchantementBonus= new Stats("Manipulation",0,"ManipulationMod",["Manipulative","Manipulator"],[]),
+PresenceEnchantementBonus= new Stats("Presence",0,"PresenceMod",["Impressive","General"],[]),
 MoneyEnchantementBonus= new Stats("Money",0,"Placeholder",["Wealthy","Merchant"],[]),
 ReputationEnchantementBonus= new Stats("Reputation",0,"Placeholder",["Famous","Paragon"],[]),
 EnemyPhysicalPowerEnchantementBonus= new Stats("Enemy Physical Damage Reduction",0,"Placeholder",["Weakening","Vainquisher"],[]),
@@ -229,11 +224,11 @@ MiningProsperityBase= new Stats("Mining Prosperity",0,"Placeholder",["Rich","Dwa
 DodgeBase= new Stats("Dodge",0,"Dodge",["Fleeting","Boxer"],[]),
 ParryBase= new Stats("Parry",0,"Parry",["Skillful","Blademaster"],[]),
 ArmorBase= new Stats("Armor",0,"Armor",["Protective","Protector"],[]),
-CharismaBase= new Stats("Charisma",0,"Placeholder",["Charismatic","Gentleman"],[]),
-SeductionBase= new Stats("Seduction",0,"Placeholder",["Seductive","Succubus"],[]),
-ManipulationBase= new Stats("Manipulation",0,"Placeholder",["Manipulative","Manipulator"],[]),
-PresenceBase= new Stats("Presence",0,"Placeholder",["Impressive","General"],[]),
-InfluenceBase= new Stats("Influence",0,"Placeholder",["Influential","Socialite"],[]),
+InfluenceBase= new Stats("Influence",0,"InfluenceMod",["Influential","Socialite"],[]),
+CharismaBase= new Stats("Charisma",0,"CharismaMod",["Charismatic","Gentleman"],[]),
+SeductionBase= new Stats("Seduction",0,"SeductionMod",["Seductive","Succubus"],[]),
+ManipulationBase= new Stats("Manipulation",0,"ManipulationMod",["Manipulative","Manipulator"],[]),
+PresenceBase= new Stats("Presence",0,"PresenceMod",["Impressive","General"],[]),
 MoneyBase= new Stats("Money",0,"Placeholder",["Wealthy","Merchant"],[]),
 ReputationBase= new Stats("Reputation",0,"Placeholder",["Famous","Paragon"],[]),
 EnemyPhysicalPowerBase= new Stats("Enemy Physical Damage Reduction",0,"Placeholder",["Weakening","Vainquisher"],[]),
@@ -269,11 +264,11 @@ MiningProsperity= new Stats("Mining Prosperity",0,"MProsperityMod",["Rich","Dwar
 Dodge= new Stats("Dodge",0,"DodgeMod",["Fleeting","Boxer"],[]),
 Parry= new Stats("Parry",0,"ParryMod",["Skillful","Blademaster"],[]),
 Armor= new Stats("Armor",0,"ArmorMod",["Protective","Protector"],[]),
+Influence= new Stats("Influence",0,"InfluenceMod",["Influential","Socialite"],[]),
 Charisma= new Stats("Charisma",0,"CharismaMod",["Charismatic","Gentleman"],[]),
 Seduction= new Stats("Seduction",0,"SeductionMod",["Seductive","Succubus"],[]),
 Manipulation= new Stats("Manipulation",0,"ManipulationMod",["Manipulative","Manipulator"],[]),
 Presence= new Stats("Presence",0,"PresenceMod",["Impressive","General"],[]),
-Influence= new Stats("Influence",0,"InfluenceMod",["Influential","Socialite"],[]),
 Money= new Stats("Money",0,"MoneyMod",["Wealthy","Merchant"],[]),
 Reputation= new Stats("Reputation",0,"ReputationMod",["Famous","Paragon"],[]),
 EnemyPhysicalPower= new Stats("Enemy Physical Damage Reduction",0,"EPPowerMod",["Weakening","Vainquisher"],[]),
@@ -286,275 +281,266 @@ EnemyParry= new Stats("Enemy Parry Reduction",0,"EParryMod",["Distracting","Dist
 EnemyArmor= new Stats("Enemy Armor Reduction",0,"EArmorMod",["Rusting","Rustmaker"],[])
 ]
 var effects = [
-Healingx = new BasicEffect("Healing","11",["Healing","Physical Health","Agriculture Prosperity"],0),
-Fertility  = new BasicEffect("Fertility","12",["Agriculture Prosperity","Agriculture Skill","Physical Health"],0),
-Rebirth  = new BasicEffect("Rebirth","13",["Agriculture Skill","Healing","Magical Power"],0),
-Transformation  = new BasicEffect("Transformation","15",["Enchanting Skill","Enemy Armor Reduction","Potion-Making Skill"],0),
-Death  = new BasicEffect("Death","16",["Enemy Physical Health Damage","Enemy Physical Health Damage","Enemy Parry Reduction"],0),
-Power  = new BasicEffect("Power","17",["Magical Power","Enchanting Skill","Spell-Casting Skill"],0),
+    
+Anger  = new BasicEffect("Anger","63",["Enemy Armor Reduction","Enemy Mental Health Damage","Enemy Parry Reduction"],0),
+Beauty  = new BasicEffect("Beauty","45",["Charisma","Seduction","Manipulation"],0),
 Cleansing = new BasicEffect("Cleansing","18",["Magic Resistance","Enemy Magical Power Reduction","Enemy Magic Resistance Reduction"],0),
-Water  = new BasicEffect("Water","21",["Mental Healing","Magic Resistance","Prophecy Skill"],0),
-Fire  = new BasicEffect("Fire","22",["Enemy Physical Health Damage","Research Speed","Physical Damage"],0),
-Earth  = new BasicEffect("Earth","23",["Mining Prosperity","Armor","Magic Resistance"],0),
-Wind  = new BasicEffect("Wind","24",["Dodge","Spell-Casting Skill","Money"],0),
-Light  = new BasicEffect("Light","25",["Enemy Parry Reduction","Enemy Detection","Mental Healing"],0),
+Confidence   = new BasicEffect("Confidence","52",["Presence","Mental Healing","Charisma"],0),
+Confusion   = new BasicEffect("Confusion","61",["Manipulation","Enemy Mental Health Damage","Enemy Magical Power Reduction"],0),
+Courage   = new BasicEffect("Courage","54",["Mental Health","Spell-Casting Skill","Presence"],0),
 Darkness = new BasicEffect("Darkness","26",["Magical Power","Enemy Physical Damage Reduction","Enemy Dodge Reduction"],0),
+Death  = new BasicEffect("Death","16",["Enemy Physical Health Damage","Enemy Physical Health Damage","Enemy Parry Reduction"],0),
+Dreams  = new BasicEffect("Dreams","74",["Resource Detection","Magic Resistance","Seduction"],0),
+Earth  = new BasicEffect("Earth","23",["Mining Prosperity","Armor","Magic Resistance"],0),
+Fate  = new BasicEffect("Fate","71",["Prophecy Skill","Helpers Skill","Enchanting Skill"],0),
+Fear  = new BasicEffect("Fear","62",["Enemy Mental Health Damage","Enemy Dodge Reduction","Enemy Physical Damage Reduction"],0),
+Fertility  = new BasicEffect("Fertility","12",["Agriculture Prosperity","Agriculture Skill","Physical Health"],0),
+Fire  = new BasicEffect("Fire","22",["Enemy Physical Health Damage","Research Speed","Physical Damage"],0),
+Happiness   = new BasicEffect("Happiness","51",["Mental Healing","Charisma","Influence"],0),
+Healingx = new BasicEffect("Healing","11",["Healing","Physical Health","Agriculture Prosperity"],0),
+Illusion  = new BasicEffect("Illusion","79",["Enemy Dodge Reduction","Manipulation","Dodge"],0),
+Intellect  = new BasicEffect("Intellect","34",["Research Skill","Enemy Magic Resistance Reduction","Agriculture Skill"],0),
+Light  = new BasicEffect("Light","25",["Enemy Parry Reduction","Enemy Detection","Mental Healing"],0),
+Love  = new BasicEffect("Love","55",["Reputation","Potion-Making Skill","Mining Skill"],0),
+Luck   = new BasicEffect("Luck","41",["Potion-Making Skill","Mining Prosperity","Helpers Skill"],0),
+Madness   = new BasicEffect("Madness","62",["Enemy Mental Health Damage","Manipulation","Enemy Magic Resistance Reduction"],0),
+Messages  = new BasicEffect("Messages","77",["Reputation","Prophecy Skill","Research Speed"],0),
+Mystery  = new BasicEffect("Mystery","75",["Prophecy Skill","Spell-Casting Skill","Enchanting Skill"],0),
+Peace   = new BasicEffect("Peace","53",["Enemy Magical Power Reduction","Mental Health","Reputation"],0),
+Perception  = new BasicEffect("Perception","72",["Enemy Detection","Research Skill","Mining Prosperity"],0),
+Power  = new BasicEffect("Power","17",["Magical Power","Enchanting Skill","Spell-Casting Skill"],0),
+Protection  = new BasicEffect("Protection","14",["Armor","Dodge","Parry"],0),
+Rebirth  = new BasicEffect("Rebirth","13",["Agriculture Skill","Healing","Magical Power"],0),
+Riches   = new BasicEffect("Riches","44",["Money","Mining Prosperity","Agriculture Prosperity"],0),
+Sadness  = new BasicEffect("Sadness","64",["Enemy Magic Resistance Reduction","Manipulation","Enemy Mental Health Damage"],0),
+Seductionx   = new BasicEffect("Seduction","43",["Seduction","Reputation","Charisma"],0),
+Sociality   = new BasicEffect("Sociality","42",["Influence","Presence","Money"],0),
+Soul  = new BasicEffect("Soul","76",["Spell-Casting Skill","Magical Power","Enemy Detection"],0),
+Speed  = new BasicEffect("Speed","33",["Parry","Mining Skill","Research Speed"],0),
 Strength  = new BasicEffect("Strength","31",["Physical Damage","Parry","Healing"],0),
 Toughness  = new BasicEffect("Toughness","32",["Physical Health","Physical Damage","Armor"],0),
-Speed  = new BasicEffect("Speed","33",["Parry","Mining Skill","Research Speed"],0),
-Intellect  = new BasicEffect("Intellect","34",["Research Skill","Enemy Magic Resistance Reduction","Agriculture Skill"],0),
-Protection  = new BasicEffect("Protection","14",["Armor","Dodge","Parry"],0),
-Weakness  = new BasicEffect("Weakness","36",["Enemy Physical Damage Reduction","Enemy Parry Reduction","Enemy Physical Health Damage"],0),
-Luck   = new BasicEffect("Luck","41",["Potion-Making Skill","Mining Prosperity","Helpers Skill"],0),
-Sociality   = new BasicEffect("Sociality","42",["Influence","Presence","Money"],0),
-Seductionx   = new BasicEffect("Seduction","43",["Seduction","Reputation","Charisma"],0),
-Riches   = new BasicEffect("Riches","44",["Money","Mining Prosperity","Agriculture Prosperity"],0),
-Beauty  = new BasicEffect("Beauty","45",["Charisma","Seduction","Manipulation"],0),
-Worship  = new BasicEffect("Worship","46",["Helpers Skill","Influence","Mental Health"],0),
-Happiness   = new BasicEffect("Happiness","51",["Mental Healing","Charisma","Influence"],0),
-Confidence   = new BasicEffect("Confidence","52",["Presence","Mental Healing","Charisma"],0),
-Peace   = new BasicEffect("Peace","53",["Enemy Magical Power Reduction","Mental Health","Reputation"],0),
-Courage   = new BasicEffect("Courage","54",["Mental Health","Spell-Casting Skill","Presence"],0),
-Love  = new BasicEffect("Love","55",["Reputation","Potion-Making Skill","Mining Skill"],0),
-Truth   = new BasicEffect("Truth","73",["Research Speed","Agriculture Prosperity","Resource Detection"],0),
-Confusion   = new BasicEffect("Confusion","61",["Manipulation","Enemy Mental Health Damage","Enemy Magical Power Reduction"],0),
-Fear  = new BasicEffect("Fear","62",["Enemy Mental Health Damage","Enemy Dodge Reduction","Enemy Physical Damage Reduction"],0),
-Madness   = new BasicEffect("Madness","62",["Enemy Mental Health Damage","Manipulation","Enemy Magic Resistance Reduction"],0),
-Anger  = new BasicEffect("Anger","63",["Enemy Armor Reduction","Enemy Mental Health Damage","Enemy Parry Reduction"],0),
-Sadness  = new BasicEffect("Sadness","64",["Enemy Magic Resistance Reduction","Manipulation","Enemy Mental Health Damage"],0),
-Illusion  = new BasicEffect("Illusion","79",["Enemy Dodge Reduction","Manipulation","Dodge"],0),
-Fate  = new BasicEffect("Fate","71",["Prophecy Skill","Helpers Skill","Enchanting Skill"],0),
-Perception  = new BasicEffect("Perception","72",["Enemy Detection","Research Skill","Mining Prosperity"],0),
-Dreams  = new BasicEffect("Dreams","74",["Resource Detection","Magic Resistance","Seduction"],0),
-Mystery  = new BasicEffect("Mystery","75",["Prophecy Skill","Spell-Casting Skill","Enchanting Skill"],0),
-Soul  = new BasicEffect("Soul","76",["Spell-Casting Skill","Magical Power","Enemy Detection"],0),
-Messages  = new BasicEffect("Messages","77",["Reputation","Prophecy Skill","Research Speed"],0),
+Transformation  = new BasicEffect("Transformation","15",["Enchanting Skill","Enemy Armor Reduction","Potion-Making Skill"],0),
 Travel  = new BasicEffect("Travel","78",["Dodge","Resource Detection","Research Skill"],0),
-    
-    
+Truth   = new BasicEffect("Truth","73",["Research Speed","Agriculture Prosperity","Resource Detection"],0),
+Water  = new BasicEffect("Water","21",["Mental Healing","Magic Resistance","Prophecy Skill"],0),
+Weakness  = new BasicEffect("Weakness","36",["Enemy Physical Damage Reduction","Enemy Parry Reduction","Enemy Physical Health Damage"],0),
+Wind  = new BasicEffect("Wind","24",["Dodge","Spell-Casting Skill","Money"],0),
+Worship  = new BasicEffect("Worship","46",["Helpers Skill","Influence","Mental Health"],0),
+
 ]
 var ingredients = [
   
   // Animals
-Antelope = new Ingredient(["Antelope"],["33",3,0],["42",2,0],["14",2,0],2,0,40,2,"Agriculture"),
-Armadillo = new Ingredient(["Armadillo"],["14",3,0],["54",1,0],["73",1,0],2,0,40,2,"Agriculture"),
-Bat = new Ingredient(["Bat"],["26",2,0],["13",1,0],["72",1,0],2,0,40,2,"Agriculture"), 
-Butterfly = new Ingredient(["Butterfly"],["15",3,0],["13",2,0],["76",2,0],1,0,20,4,"Agriculture"),
-Bear = new Ingredient(["Bear"],["31",2,0],["32",2,0],["74",2,0],3,0,80,1,"Agriculture"),
-Beaver = new Ingredient(["Beaver"],["44",2,0],["52",2,0],["74",2,0],2,0,40,2,"Agriculture"),
-Bee = new Ingredient(["Bee"],["42",3,0],["44",1,0],["32",1,0],1,0,20,4,"Agriculture"),
-BlueJay = new Ingredient(["Blue Jay"],["24",1,0],["34",1,0],["52",1,0],1,0,20,4,"Agriculture"),
-Buffalo = new Ingredient(["Buffalo"],["44",2,0],["32",2,0],["76",2,0],3,0,80,1,"Agriculture"),
-Bull = new Ingredient(["Bull"],["31",2,0],["12",1,0],["63",1,0],2,0,40,2,"Agriculture"),
-Caribou = new Ingredient(["Caribou"],["78",2,0],["23",2,0],["42",2,0],3,0,80,1,"Agriculture"),
-Cardinal = new Ingredient(["Cardinal"],["55",2,0],["24",2,0],["52",2,0],1,0,20,4,"Agriculture"),
-Cat = new Ingredient(["Cat"],["26",2,0],["52",2,0],["75",2,0],2,0,40,2,"Agriculture"),
-Cheetah = new Ingredient(["Cheetah"],["33",3,0],["52",1,0],["78",1,0],3,0,80,1,"Agriculture"),
-Chimpanzee = new Ingredient(["Chimpanzee"],["34",2,0],["42",1,0],["41",1,0],2,0,40,2,"Agriculture"),
-Cicada = new Ingredient(["Cicada"],["15",2,0],["12",1,0],["13",1,0],1,0,20,4,"Agriculture"),
-Cougar = new Ingredient(["Cougar"],["31",2,0],["33",2,0],["52",2,0],3,0,80,1,"Agriculture"),
-Coyote = new Ingredient(["Coyote"],["34",2,0],["79",1,0],["74",1,0],3,0,80,1,"Agriculture"),
-Crow = new Ingredient(["Crow"],["34",2,0],["75",2,0],["15",2,0],1,0,20,4,"Agriculture"),
-Deer = new Ingredient(["Deer"],["33",1,0],["42",1,0],["75",1,0],2,0,40,2,"Agriculture"),
-Dog = new Ingredient(["Dog"],["42",2,0],["46",1,0],["54",1,0],2,0,40,2,"Agriculture"),
-Dolphin = new Ingredient(["Dolphin"],["42",3,0],["14",2,0],["53",2,0],3,0,80,1,"Agriculture"),
-Dove = new Ingredient(["Dove"],["53",3,0],["55",2,0],["77",2,0],2,0,40,2,"Agriculture"),
-Dragonfly = new Ingredient(["Dragonfly"],["15",2,0],["51",2,0],["72",2,0],1,0,20,4,"Agriculture"),  
-Eagle = new Ingredient(["Eagle"],["52",3,0],["24",3,0],["73",3,0],3,0,80,1,"Agriculture"),
-Elephant = new Ingredient(["Elephant"],["32",3,0],["31",2,0],["34",2,0],3,0,80,1,"Agriculture"),
-Falcon = new Ingredient(["Falcon"],["31",2,0],["24",2,0],["75",2,0],2,0,40,2,"Agriculture"),
-Fox = new Ingredient(["Fox"],["79",2,0],["72",2,0],["26",2,0],2,0,40,2,"Agriculture"),
-Frog = new Ingredient(["Frog"],["13",2,0],["75",1,0],["16",1,0],1,0,20,4,"Agriculture"),  
-Goose = new Ingredient(["Goose"],["32",2,0],["42",2,0],["11",2,0],2,0,40,2,"Agriculture"),
-Hawk = new Ingredient(["Hawk"],["77",2,0],["52",2,0],["76",2,0],2,0,40,2,"Agriculture"),
-Horse = new Ingredient(["Horse"],["14",1,0],["43",2,0],["52",2,0],2,0,40,2,"Agriculture"),  
-Hummingbird = new Ingredient(["Hummingbird"],["51",2,0],["33",1,0],["32",1,0],1,0,20,4,"Agriculture"),
-Lion = new Ingredient(["Lion"],["52",3,0],["31",1,0],["17",1,0],3,0,80,1,"Agriculture"),
-Magpie = new Ingredient(["Magpie"],["79",3,0],["42",2,0],["34",2,0],2,0,40,2,"Agriculture"),
-Mosquito = new Ingredient(["Mosquito"],["16",3,0],["12",2,0],["64",2,0],1,0,20,4,"Agriculture"),
-Owl = new Ingredient(["Owl"],["72",3,0],["16",2,0],["34",2,0],2,0,40,2,"Agriculture"), 
-Panda = new Ingredient(["Panda"],["53",3,0],["41",2,0],["31",2,0],3,0,80,1,"Agriculture"),
-Panther = new Ingredient(["Panther"],["78",2,0],["13",2,0],["64",2,0],3,0,80,1,"Agriculture"),
-Peacock = new Ingredient(["Peacock"],["46",3,0],["52",1,0],["74",1,0],2,0,40,2,"Agriculture"),
-Pelican = new Ingredient(["Pelican"],["44",2,0],["42",1,0],["21",1,0],2,0,40,2,"Agriculture"),
-PrayingMantis = new Ingredient(["Praying Mantis"],["72",1,0],["34",1,0],["16",1,0],2,0,40,2,"Agriculture"),
-Rabbit = new Ingredient(["Rabbit"],["12",2,0],["41",1,0],["72",1,0],2,0,40,2,"Agriculture"),
-Raven = new Ingredient(["Raven"],["75",3,0],["74",2,0],["17",2,0],2,0,40,2,"Agriculture"),
-Rooster = new Ingredient(["Rooster"],["52",2,0],["64",1,0],["46",1,0],2,0,40,2,"Agriculture"),
-Shark = new Ingredient(["Shark"],["62",3,0],["31",2,0],["52",2,0],2,0,40,2,"Agriculture"),
-Sheep = new Ingredient(["Sheep"],["36",3,0],["42",1,0],["12",1,0],2,0,40,2,"Agriculture"),
-Snake = new Ingredient(["Snake"],["13",2,0],["16",1,0],["75",1,0],2,0,40,2,"Agriculture"),
-Spider = new Ingredient(["Spider"],["71",3,0],["26",2,0],["16",2,0],1,0,20,4,"Agriculture"),
-Swan = new Ingredient(["Swan"],["55",2,0],["74",1,0],["15",1,0],2,0,40,2,"Agriculture"),
-Tiger = new Ingredient(["Tiger"],["54",3,0],["26",2,0],["64",2,0],3,0,80,1,"Agriculture"),
-Turkey = new Ingredient(["Turkey"],["44",2,0],["12",1,0],["52",1,0],2,0,40,2,"Agriculture"),
-Turtle = new Ingredient(["Turtle"],["14",3,0],["21",2,0],["53",2,0],2,0,40,2,"Agriculture"),
-Vulture = new Ingredient(["Vulture"],["16",2,0],["13",1,0],["14",1,0],2,0,40,2,"Agriculture"),
-Wolf = new Ingredient(["Wolf"],["34",2,0],["42",2,0],["74",2,0],3,0,80,1,"Agriculture"),
-Whale = new Ingredient(["Whale"],["34",3,0],["13",3,0],["17",3,0],3,0,80,1,"Agriculture"),
+Antelope = new Ingredient(["Antelope"],["33",3,0],["42",2,0],["14",2,0],2,0,40,2,"Agriculture",1),
+Armadillo = new Ingredient(["Armadillo"],["14",3,0],["54",1,0],["73",1,0],2,0,40,2,"Agriculture",1),
+Bat = new Ingredient(["Bat"],["26",2,0],["13",1,0],["72",1,0],2,0,40,2,"Agriculture",1), 
+Butterfly = new Ingredient(["Butterfly"],["15",3,0],["13",2,0],["76",2,0],1,0,20,4,"Agriculture",1),
+Bear = new Ingredient(["Bear"],["31",2,0],["32",2,0],["74",2,0],3,0,80,1,"Agriculture",1),
+Beaver = new Ingredient(["Beaver"],["44",2,0],["52",2,0],["74",2,0],2,0,40,2,"Agriculture",1),
+Bee = new Ingredient(["Bee"],["42",3,0],["44",1,0],["32",1,0],1,0,20,4,"Agriculture",1),
+BlueJay = new Ingredient(["Blue Jay"],["24",1,0],["34",1,0],["52",1,0],1,0,20,4,"Agriculture",1),
+Buffalo = new Ingredient(["Buffalo"],["44",2,0],["32",2,0],["76",2,0],3,0,80,1,"Agriculture",1),
+Bull = new Ingredient(["Bull"],["31",2,0],["12",1,0],["63",1,0],2,0,40,2,"Agriculture",1),
+Caribou = new Ingredient(["Caribou"],["78",2,0],["23",2,0],["42",2,0],3,0,80,1,"Agriculture",1),
+Cardinal = new Ingredient(["Cardinal"],["55",2,0],["24",2,0],["52",2,0],1,0,20,4,"Agriculture",1),
+Cat = new Ingredient(["Cat"],["26",2,0],["52",2,0],["75",2,0],2,0,40,2,"Agriculture",1),
+Cheetah = new Ingredient(["Cheetah"],["33",3,0],["52",1,0],["78",1,0],3,0,80,1,"Agriculture",1),
+Chimpanzee = new Ingredient(["Chimpanzee"],["34",2,0],["42",1,0],["41",1,0],2,0,40,2,"Agriculture",1),
+Cicada = new Ingredient(["Cicada"],["15",2,0],["12",1,0],["13",1,0],1,0,20,4,"Agriculture",1),
+Cougar = new Ingredient(["Cougar"],["31",2,0],["33",2,0],["52",2,0],3,0,80,1,"Agriculture",1),
+Coyote = new Ingredient(["Coyote"],["34",2,0],["79",1,0],["74",1,0],3,0,80,1,"Agriculture",1),
+Crow = new Ingredient(["Crow"],["34",2,0],["75",2,0],["15",2,0],1,0,20,4,"Agriculture",1),
+Deer = new Ingredient(["Deer"],["33",1,0],["42",1,0],["75",1,0],2,0,40,2,"Agriculture",1),
+Dog = new Ingredient(["Dog"],["42",2,0],["46",1,0],["54",1,0],2,0,40,2,"Agriculture",1),
+Dolphin = new Ingredient(["Dolphin"],["42",3,0],["14",2,0],["53",2,0],3,0,80,1,"Agriculture",1),
+Dove = new Ingredient(["Dove"],["53",3,0],["55",2,0],["77",2,0],2,0,40,2,"Agriculture",1),
+Dragonfly = new Ingredient(["Dragonfly"],["15",2,0],["51",2,0],["72",2,0],1,0,20,4,"Agriculture",1),  
+Eagle = new Ingredient(["Eagle"],["52",3,0],["24",3,0],["73",3,0],3,0,80,1,"Agriculture",1),
+Elephant = new Ingredient(["Elephant"],["32",3,0],["31",2,0],["34",2,0],3,0,80,1,"Agriculture",1),
+Falcon = new Ingredient(["Falcon"],["31",2,0],["24",2,0],["75",2,0],2,0,40,2,"Agriculture",1),
+Fox = new Ingredient(["Fox"],["79",2,0],["72",2,0],["26",2,0],2,0,40,2,"Agriculture",1),
+Frog = new Ingredient(["Frog"],["13",2,0],["75",1,0],["16",1,0],1,0,20,4,"Agriculture",1),  
+Goose = new Ingredient(["Goose"],["32",2,0],["42",2,0],["11",2,0],2,0,40,2,"Agriculture",1),
+Hawk = new Ingredient(["Hawk"],["77",2,0],["52",2,0],["76",2,0],2,0,40,2,"Agriculture",1),
+Horse = new Ingredient(["Horse"],["14",1,0],["43",2,0],["52",2,0],2,0,40,2,"Agriculture",1),  
+Hummingbird = new Ingredient(["Hummingbird"],["51",2,0],["33",1,0],["32",1,0],1,0,20,4,"Agriculture",1),
+Lion = new Ingredient(["Lion"],["52",3,0],["31",1,0],["17",1,0],3,0,80,1,"Agriculture",1),
+Magpie = new Ingredient(["Magpie"],["79",3,0],["42",2,0],["34",2,0],2,0,40,2,"Agriculture",1),
+Mosquito = new Ingredient(["Mosquito"],["16",3,0],["12",2,0],["64",2,0],1,0,20,4,"Agriculture",1),
+Owl = new Ingredient(["Owl"],["72",3,0],["16",2,0],["34",2,0],2,0,40,2,"Agriculture",1), 
+Panda = new Ingredient(["Panda"],["53",3,0],["41",2,0],["31",2,0],3,0,80,1,"Agriculture",1),
+Panther = new Ingredient(["Panther"],["78",2,0],["13",2,0],["64",2,0],3,0,80,1,"Agriculture",1),
+Peacock = new Ingredient(["Peacock"],["46",3,0],["52",1,0],["74",1,0],2,0,40,2,"Agriculture",1),
+Pelican = new Ingredient(["Pelican"],["44",2,0],["42",1,0],["21",1,0],2,0,40,2,"Agriculture",1),
+PrayingMantis = new Ingredient(["Praying Mantis"],["72",1,0],["34",1,0],["16",1,0],2,0,40,2,"Agriculture",1),
+Rabbit = new Ingredient(["Rabbit"],["12",2,0],["41",1,0],["72",1,0],2,0,40,2,"Agriculture",1),
+Raven = new Ingredient(["Raven"],["75",3,0],["74",2,0],["17",2,0],2,0,40,2,"Agriculture",1),
+Rooster = new Ingredient(["Rooster"],["52",2,0],["64",1,0],["46",1,0],2,0,40,2,"Agriculture",1),
+Shark = new Ingredient(["Shark"],["62",3,0],["31",2,0],["52",2,0],2,0,40,2,"Agriculture",1),
+Sheep = new Ingredient(["Sheep"],["36",3,0],["42",1,0],["12",1,0],2,0,40,2,"Agriculture",1),
+Snake = new Ingredient(["Snake"],["13",2,0],["16",1,0],["75",1,0],2,0,40,2,"Agriculture",1),
+Spider = new Ingredient(["Spider"],["71",3,0],["26",2,0],["16",2,0],1,0,20,4,"Agriculture",1),
+Swan = new Ingredient(["Swan"],["55",2,0],["74",1,0],["15",1,0],2,0,40,2,"Agriculture",1),
+Tiger = new Ingredient(["Tiger"],["54",3,0],["26",2,0],["64",2,0],3,0,80,1,"Agriculture",1),
+Turkey = new Ingredient(["Turkey"],["44",2,0],["12",1,0],["52",1,0],2,0,40,2,"Agriculture",1),
+Turtle = new Ingredient(["Turtle"],["14",3,0],["21",2,0],["53",2,0],2,0,40,2,"Agriculture",1),
+Vulture = new Ingredient(["Vulture"],["16",2,0],["13",1,0],["14",1,0],2,0,40,2,"Agriculture",1),
+Wolf = new Ingredient(["Wolf"],["34",2,0],["42",2,0],["74",2,0],3,0,80,1,"Agriculture",1),
+Whale = new Ingredient(["Whale"],["34",3,0],["13",3,0],["17",3,0],3,0,80,1,"Agriculture",1),
   
   // Plants
-Acacia = new Ingredient(["Acacia"],["16",1,0],["17",1,0],["76",1,0],1,0,20,4,"Agriculture"),
-AngelicaRoot = new Ingredient(["Angelica Root"],["62",2,0],["64",1,0],["61",1,0],1,0,20,4,"Agriculture"),
-Agrimony = new Ingredient(["Agrimony"],["14",1,0],["74",1,0],["12",1,0],1,0,20,4,"Agriculture"),
-AgueWeed = new Ingredient(["Ague Weed"],["61",2,0],["63",1,0],["64",1,0],1,0,20,4,"Agriculture"),
-Alfalfa = new Ingredient(["Alfalfa"],["44",1,0],["41",1,0],["23",1,0],1,0,20,4,"Agriculture"),
-Alkanet = new Ingredient(["Alkanet"],["34",2,0],["11",1,0],["25",1,0],1,0,20,4,"Agriculture"),
-Almond = new Ingredient(["Almond"],["44",1,0],["41",1,0],["34",1,0],1,0,20,4,"Agriculture"),
-Allspice = new Ingredient(["Allspice"],["44",1,0],["41",1,0],["11",1,0],1,0,20,4,"Agriculture"),
-Alocasia = new Ingredient(["Alocasia"],["25",2,0],["12",1,0],["78",1,0],1,0,20,4,"Agriculture"),
-AloeVera = new Ingredient(["Aloe Vera"],["32",2,0],["11",1,0],["72",1,0],1,0,20,4,"Agriculture"),
-Althaea = new Ingredient(["Althaea"],["17",1,0],["11",1,0],["25",1,0],1,0,20,4,"Agriculture"),
-Alyssum = new Ingredient(["Alyssum"],["45",2,0],["53",1,0],["52",1,0],1,0,20,4,"Agriculture"),
-Amaranth = new Ingredient(["Amaranth"],["11",1,0],["14",1,0],["79",1,0],1,0,20,4,"Agriculture"),
-Anemone = new Ingredient(["Anemone"],["11",1,0],["32",1,0],["14",1,0],1,0,20,4,"Agriculture"),
-Angelica = new Ingredient(["Angelica"],["18",2,0],["72",2,0],["75",2,0],1,0,20,4,"Agriculture"),
-Anise = new Ingredient(["Anise"],["18",2,0],["75",1,0],["74",1,0],1,0,20,4,"Agriculture"),
-Asafoetida = new Ingredient(["Asafoetida"],["79",2,0],["61",2,0],["62",2,0],1,0,20,4,"Agriculture"),
-Avocado = new Ingredient(["Avocado"],["43",1,0],["45",2,0],["55",2,0],1,0,20,4,"Agriculture"),
-Azalea = new Ingredient(["Azalea"],["53",2,0],["36",1,0],["12",1,0],1,0,20,4,"Agriculture"),
-Bamboo = new Ingredient(["Bamboo"],["14",2,0],["32",2,0],["31",2,0],1,0,20,4,"Agriculture"),
-Banana = new Ingredient(["Banana"],["12",1,0],["17",1,0],["44",1,0],1,0,20,4,"Agriculture"),
-Banewort = new Ingredient(["Banewort"],["26",2,0],["63",1,0],["16",1,0],1,0,20,4,"Agriculture"),
-Banyan = new Ingredient(["Banyan"],["46",3,0],["34",2,0],["76",2,0],2,0,40,2,"Agriculture"),
-Barley = new Ingredient(["Barley"],["55",1,0],["11",1,0],["14",1,0],1,0,20,4,"Agriculture"),
-Basil = new Ingredient(["Basil"],["18",2,0],["44",1,0],["14",1,0],1,0,20,4,"Agriculture"),
-Bay = new Ingredient(["Bay"],["71",2,0],["11",2,0],["31",2,0],1,0,20,4,"Agriculture"),
-Bayberry = new Ingredient(["Bayberry"],["79",2,0],["74",1,0],["23",1,0],1,0,20,4,"Agriculture"),
-Bean = new Ingredient(["Bean"],["14",1,0],["17",1,0],["55",1,0],1,0,20,4,"Agriculture"),
-Benzoin = new Ingredient(["Benzoin"],["72",1,0],["44",1,0],["15",1,0],1,0,20,4,"Agriculture"),
-Bergamot = new Ingredient(["Bergamot"],["11",2,0],["72",1,0],["18",1,0],1,0,20,4,"Agriculture"),
-BirdsEyeChili = new Ingredient(["Bird Eye Chili"],["22",2,0],["64",1,0],["63",1,0],1,0,20,4,"Agriculture"),
-Blackberry = new Ingredient(["Blackberry"],["32",2,0],["76",1,0],["13",1,0],1,0,20,4,"Agriculture"),
-Bladderwrack = new Ingredient(["Bladderwrack"],["21",2,0],["24",1,0],["44",1,0],1,0,20,4,"Agriculture"),
-Bloodroot = new Ingredient(["Bloodroot"],["55",1,0],["31",1,0],["11",1,0],1,0,20,4,"Agriculture"),
-Bluebell = new Ingredient(["Bluebell"],["41",2,0],["73",1,0],["77",1,0],1,0,20,4,"Agriculture"),
-Blueberry = new Ingredient(["Blueberry"],["61",2,0],["63",1,0],["64",1,0],1,0,20,4,"Agriculture"),
-Bodhi = new Ingredient(["Bodhi"],["34",1,0],["12",1,0],["14",1,0],1,0,20,4,"Agriculture"),
-Borage = new Ingredient(["Borage"],["54",1,0],["75",1,0],["23",1,0],1,0,20,4,"Agriculture"),
-Bracken = new Ingredient(["Bracken"],["11",1,0],["74",1,0],["75",1,0],1,0,20,4,"Agriculture"),
-Broom = new Ingredient(["Broom"],["18",1,0],["24",2,0],["73",2,0],1,0,20,4,"Agriculture"),
-Buchu = new Ingredient(["Buchu"],["74",2,0],["75",2,0],["71",2,0],1,0,20,4,"Agriculture"),
-Cactus = new Ingredient(["Cactus"],["52",1,0],["32",1,0],["14",1,0],1,0,20,4,"Agriculture"),
-CalamusRoot = new Ingredient(["Calamus Root"],["25",3,0],["22",1,0],["73",1,0],1,0,20,4,"Agriculture"),
-Carnation = new Ingredient(["Carnation"],["14",1,0],["31",1,0],["11",1,0],1,0,20,4,"Agriculture"),
-Cassia = new Ingredient(["Cassia"],["22",2],["43",3],["71",3],1,0,20,4,"Agriculture"),
-Cedarwood = new Ingredient(["Cedarwood"],["25",2,0],["45",1,0],["71",1,0],1,0,20,4,"Agriculture"),
-Celandine = new Ingredient(["Celandine"],["33",2,0],["71",1,0],["51",1,0],1,0,20,4,"Agriculture"),
-Celery = new Ingredient(["Celery"],["71",2,0],["75",1,0],["43",1,0],1,0,20,4,"Agriculture"),
-ChiliPepper = new Ingredient(["Chili Pepper"],["55",2,0],["72",1,0],["51",1,0],1,0,20,4,"Agriculture"),
-Cinquefoil = new Ingredient(["Cinquefoil"],["44",2,0],["74",1,0],["77",1,0],1,0,20,4,"Agriculture"),
-ClubMoss = new Ingredient(["Club Moss"],["14",1,0],["17",1,0],["11",1,0],1,0,20,4,"Agriculture"),
-Coconut = new Ingredient(["Coconut"],["18",1,0],["14",2,0],["32",2,0],1,0,20,4,"Agriculture"),
-Cotton = new Ingredient(["Cotton"],["41",1,0],["21",1,0],["12",1,0],1,0,20,4,"Agriculture"),
-Crocus = new Ingredient(["Crocus"],["55",1,0],["74",1,0],["75",1,0],1,0,20,4,"Agriculture"),
-Datura = new Ingredient(["Datura"],["72",2,0],["74",1,0],["14",1,0],1,0,20,4,"Agriculture"),
-DragonsBlood = new Ingredient(["Dragons Blood"],["55",1,0],["14",1,0],["17",1,0],1,0,20,4,"Agriculture"),
-Echinacea = new Ingredient(["Echinacea"],["17",2,0],["31",1,0],["71",1,0],1,0,20,4,"Agriculture"),
-Eryngo = new Ingredient(["Eryngo"],["78",2,0],["53",1,0],["55",1,0],1,0,20,4,"Agriculture"),
-Eucalyptus = new Ingredient(["Eucalyptus"],["11",2,0],["14",1,0],["32",1,0],1,0,20,4,"Agriculture"),
-Eyebright = new Ingredient(["Eyebright"],["77",1,0],["75",2,0],["73",2,0],1,0,20,4,"Agriculture"),
-Fern = new Ingredient(["Fern"],["44",2,0],["11",1,0],["21",1,0],1,0,20,4,"Agriculture"),
-Fig = new Ingredient(["Fig"],["74",2,0],["12",1,0],["55",1,0],1,0,20,4,"Agriculture"),
-Foxglove = new Ingredient(["Foxglove"],["36",2,0],["26",2,0],["45",2,0],1,0,20,4,"Agriculture"),
-Geranium = new Ingredient(["Geranium"],["12",2,0],["11",1,0],["55",1,0],1,0,20,4,"Agriculture"),
-GoldenSeal = new Ingredient(["Golden Seal"],["18",2,0],["11",2,0],["44",2,0],1,0,20,4,"Agriculture"),
-Grass = new Ingredient(["Grass"],["14",2,0],["32",2,0],["73",2,0],1,0,20,4,"Agriculture"),
-Hemlock = new Ingredient(["Hemlock"],["16",2,0],["73",2,0],["54",2,0],1,0,20,4,"Agriculture"),
-Lily = new Ingredient(["Lily"],["42",1,0],["53",2,0],["12",1,0],1,0,20,4,"Agriculture"),
-MilkThistle = new Ingredient(["Milk Thistle"],["12",2,0],["25",1,0],["51",1,0],1,0,20,4,"Agriculture"),
-Mistletoe = new Ingredient(["Mistletoe"],["53",3,0],["55",1,0],["13",1,0],1,0,20,4,"Agriculture"),
-Mugwort = new Ingredient(["Mugwort"],["76",2,0],["75",1,0],["16",1,0],1,0,20,4,"Agriculture"),
-Sunflower = new Ingredient(["Sunflower"],["25",2,0],["15",1,0],["78",1,0],1,0,20,4,"Agriculture"),
-Ylangylang = new Ingredient(["Ylang-ylang"],["45",2,0],["43",1,0],["79",1,0],1,0,20,4,"Agriculture"),
-Wormwood = new Ingredient(["Wormwood"],["76",3,0],["16",1,0],["64",1,0],1,0,20,4,"Agriculture"),
+Acacia = new Ingredient(["Acacia"],["16",1,0],["17",1,0],["76",1,0],1,0,20,4,"Agriculture",1),
+AngelicaRoot = new Ingredient(["Angelica Root"],["62",2,0],["64",1,0],["61",1,0],1,0,20,4,"Agriculture",1),
+Agrimony = new Ingredient(["Agrimony"],["14",1,0],["74",1,0],["12",1,0],1,0,20,4,"Agriculture",1),
+AgueWeed = new Ingredient(["Ague Weed"],["61",2,0],["63",1,0],["64",1,0],1,0,20,4,"Agriculture",1),
+Alfalfa = new Ingredient(["Alfalfa"],["44",1,0],["41",1,0],["23",1,0],1,0,20,4,"Agriculture",1),
+Alkanet = new Ingredient(["Alkanet"],["34",2,0],["11",1,0],["25",1,0],1,0,20,4,"Agriculture",1),
+Almond = new Ingredient(["Almond"],["44",1,0],["41",1,0],["34",1,0],1,0,20,4,"Agriculture",1),
+Allspice = new Ingredient(["Allspice"],["44",1,0],["41",1,0],["11",1,0],1,0,20,4,"Agriculture",1),
+Alocasia = new Ingredient(["Alocasia"],["25",2,0],["12",1,0],["78",1,0],1,0,20,4,"Agriculture",1),
+AloeVera = new Ingredient(["Aloe Vera"],["32",2,0],["11",1,0],["72",1,0],1,0,20,4,"Agriculture",1),
+Althaea = new Ingredient(["Althaea"],["17",1,0],["11",1,0],["25",1,0],1,0,20,4,"Agriculture",1),
+Alyssum = new Ingredient(["Alyssum"],["45",2,0],["53",1,0],["52",1,0],1,0,20,4,"Agriculture",1),
+Amaranth = new Ingredient(["Amaranth"],["11",1,0],["14",1,0],["79",1,0],1,0,20,4,"Agriculture",1),
+Anemone = new Ingredient(["Anemone"],["11",1,0],["32",1,0],["14",1,0],1,0,20,4,"Agriculture",1),
+Angelica = new Ingredient(["Angelica"],["18",2,0],["72",2,0],["75",2,0],1,0,20,4,"Agriculture",1),
+Anise = new Ingredient(["Anise"],["18",2,0],["75",1,0],["74",1,0],1,0,20,4,"Agriculture",1),
+Asafoetida = new Ingredient(["Asafoetida"],["79",2,0],["61",2,0],["62",2,0],1,0,20,4,"Agriculture",1),
+Avocado = new Ingredient(["Avocado"],["43",1,0],["45",2,0],["55",2,0],1,0,20,4,"Agriculture",1),
+Azalea = new Ingredient(["Azalea"],["53",2,0],["36",1,0],["12",1,0],1,0,20,4,"Agriculture",1),
+Bamboo = new Ingredient(["Bamboo"],["14",2,0],["32",2,0],["31",2,0],1,0,20,4,"Agriculture",1),
+Banana = new Ingredient(["Banana"],["12",1,0],["17",1,0],["44",1,0],1,0,20,4,"Agriculture",1),
+Banewort = new Ingredient(["Banewort"],["26",2,0],["63",1,0],["16",1,0],1,0,20,4,"Agriculture",1),
+Banyan = new Ingredient(["Banyan"],["46",3,0],["34",2,0],["76",2,0],2,0,40,2,"Agriculture",1),
+Barley = new Ingredient(["Barley"],["55",1,0],["11",1,0],["14",1,0],1,0,20,4,"Agriculture",1),
+Basil = new Ingredient(["Basil"],["18",2,0],["44",1,0],["14",1,0],1,0,20,4,"Agriculture",1),
+Bay = new Ingredient(["Bay"],["71",2,0],["11",2,0],["31",2,0],1,0,20,4,"Agriculture",1),
+Bayberry = new Ingredient(["Bayberry"],["79",2,0],["74",1,0],["23",1,0],1,0,20,4,"Agriculture",1),
+Bean = new Ingredient(["Bean"],["14",1,0],["17",1,0],["55",1,0],1,0,20,4,"Agriculture",1),
+Benzoin = new Ingredient(["Benzoin"],["72",1,0],["44",1,0],["15",1,0],1,0,20,4,"Agriculture",1),
+Bergamot = new Ingredient(["Bergamot"],["11",2,0],["72",1,0],["18",1,0],1,0,20,4,"Agriculture",1),
+BirdsEyeChili = new Ingredient(["Bird Eye Chili"],["22",2,0],["64",1,0],["63",1,0],1,0,20,4,"Agriculture",1),
+Blackberry = new Ingredient(["Blackberry"],["32",2,0],["76",1,0],["13",1,0],1,0,20,4,"Agriculture",1),
+Bladderwrack = new Ingredient(["Bladderwrack"],["21",2,0],["24",1,0],["44",1,0],1,0,20,4,"Agriculture",1),
+Bloodroot = new Ingredient(["Bloodroot"],["55",1,0],["31",1,0],["11",1,0],1,0,20,4,"Agriculture",1),
+Bluebell = new Ingredient(["Bluebell"],["41",2,0],["73",1,0],["77",1,0],1,0,20,4,"Agriculture",1),
+Blueberry = new Ingredient(["Blueberry"],["61",2,0],["63",1,0],["64",1,0],1,0,20,4,"Agriculture",1),
+Bodhi = new Ingredient(["Bodhi"],["34",1,0],["12",1,0],["14",1,0],1,0,20,4,"Agriculture",1),
+Borage = new Ingredient(["Borage"],["54",1,0],["75",1,0],["23",1,0],1,0,20,4,"Agriculture",1),
+Bracken = new Ingredient(["Bracken"],["11",1,0],["74",1,0],["75",1,0],1,0,20,4,"Agriculture",1),
+Broom = new Ingredient(["Broom"],["18",1,0],["24",2,0],["73",2,0],1,0,20,4,"Agriculture",1),
+Buchu = new Ingredient(["Buchu"],["74",2,0],["75",2,0],["71",2,0],1,0,20,4,"Agriculture",1),
+Cactus = new Ingredient(["Cactus"],["52",1,0],["32",1,0],["14",1,0],1,0,20,4,"Agriculture",1),
+CalamusRoot = new Ingredient(["Calamus Root"],["25",3,0],["22",1,0],["73",1,0],1,0,20,4,"Agriculture",1),
+Carnation = new Ingredient(["Carnation"],["14",1,0],["31",1,0],["11",1,0],1,0,20,4,"Agriculture",1),
+Cassia = new Ingredient(["Cassia"],["22",2],["43",3],["71",3],1,0,20,4,"Agriculture",1),
+Cedarwood = new Ingredient(["Cedarwood"],["25",2,0],["45",1,0],["71",1,0],1,0,20,4,"Agriculture",1),
+Celandine = new Ingredient(["Celandine"],["33",2,0],["71",1,0],["51",1,0],1,0,20,4,"Agriculture",1),
+Celery = new Ingredient(["Celery"],["71",2,0],["75",1,0],["43",1,0],1,0,20,4,"Agriculture",1),
+ChiliPepper = new Ingredient(["Chili Pepper"],["55",2,0],["72",1,0],["51",1,0],1,0,20,4,"Agriculture",1),
+Cinquefoil = new Ingredient(["Cinquefoil"],["44",2,0],["74",1,0],["77",1,0],1,0,20,4,"Agriculture",1),
+ClubMoss = new Ingredient(["Club Moss"],["14",1,0],["17",1,0],["11",1,0],1,0,20,4,"Agriculture",1),
+Coconut = new Ingredient(["Coconut"],["18",1,0],["14",2,0],["32",2,0],1,0,20,4,"Agriculture",1),
+Cotton = new Ingredient(["Cotton"],["41",1,0],["21",1,0],["12",1,0],1,0,20,4,"Agriculture",1),
+Crocus = new Ingredient(["Crocus"],["55",1,0],["74",1,0],["75",1,0],1,0,20,4,"Agriculture",1),
+Datura = new Ingredient(["Datura"],["72",2,0],["74",1,0],["14",1,0],1,0,20,4,"Agriculture",1),
+DragonsBlood = new Ingredient(["Dragons Blood"],["55",1,0],["14",1,0],["17",1,0],1,0,20,4,"Agriculture",1),
+Echinacea = new Ingredient(["Echinacea"],["17",2,0],["31",1,0],["71",1,0],1,0,20,4,"Agriculture",1),
+Eryngo = new Ingredient(["Eryngo"],["78",2,0],["53",1,0],["55",1,0],1,0,20,4,"Agriculture",1),
+Eucalyptus = new Ingredient(["Eucalyptus"],["11",2,0],["14",1,0],["32",1,0],1,0,20,4,"Agriculture",1),
+Eyebright = new Ingredient(["Eyebright"],["77",1,0],["75",2,0],["73",2,0],1,0,20,4,"Agriculture",1),
+Fern = new Ingredient(["Fern"],["44",2,0],["11",1,0],["21",1,0],1,0,20,4,"Agriculture",1),
+Fig = new Ingredient(["Fig"],["74",2,0],["12",1,0],["55",1,0],1,0,20,4,"Agriculture",1),
+Foxglove = new Ingredient(["Foxglove"],["36",2,0],["26",2,0],["45",2,0],1,0,20,4,"Agriculture",1),
+Geranium = new Ingredient(["Geranium"],["12",2,0],["11",1,0],["55",1,0],1,0,20,4,"Agriculture",1),
+GoldenSeal = new Ingredient(["Golden Seal"],["18",2,0],["11",2,0],["44",2,0],1,0,20,4,"Agriculture",1),
+Grass = new Ingredient(["Grass"],["14",2,0],["32",2,0],["73",2,0],1,0,20,4,"Agriculture",1),
+Hemlock = new Ingredient(["Hemlock"],["16",2,0],["73",2,0],["54",2,0],1,0,20,4,"Agriculture",1),
+Lily = new Ingredient(["Lily"],["42",1,0],["53",2,0],["12",1,0],1,0,20,4,"Agriculture",1),
+MilkThistle = new Ingredient(["Milk Thistle"],["12",2,0],["25",1,0],["51",1,0],1,0,20,4,"Agriculture",1),
+Mistletoe = new Ingredient(["Mistletoe"],["53",3,0],["55",1,0],["13",1,0],1,0,20,4,"Agriculture",1),
+Mugwort = new Ingredient(["Mugwort"],["76",2,0],["75",1,0],["16",1,0],1,0,20,4,"Agriculture",1),
+Sunflower = new Ingredient(["Sunflower"],["25",2,0],["15",1,0],["78",1,0],1,0,20,4,"Agriculture",1),
+Ylangylang = new Ingredient(["Ylang-ylang"],["45",2,0],["43",1,0],["79",1,0],1,0,20,4,"Agriculture",1),
+Wormwood = new Ingredient(["Wormwood"],["76",3,0],["16",1,0],["64",1,0],1,0,20,4,"Agriculture",1),
 
   
   // Trees
-AlderTree = new Ingredient(["Alder Tree"],["14",2,0],["75",1,0],["24",1,0],1,0,20,4,"Agriculture"),
-AppleTree = new Ingredient(["Apple Tree"],["44",2,0],["55",1,0],["11",1,0],1,0,20,4,"Agriculture"),
-AshTree = new Ingredient(["Ash Tree"],["11",1,0],["14",2,0],["75",2,0],1,0,20,4,"Agriculture"),
-BeechTree = new Ingredient(["Beech Tree"],["14",1,0],["34",2,0],["75",2,0],1,0,20,4,"Agriculture"),
-BirchTree = new Ingredient(["Birch Tree"],["18",2,0],["14",1,0],["12",1,0],1,0,20,4,"Agriculture"),
-Blackthorn = new Ingredient(["Blackthorn"],["36",2,0],["62",1,0],["18",1,0],1,0,20,4,"Agriculture"),
-Champak = new Ingredient(["Champak"],["54",2,0],["23",1,0],["15",1,0],1,0,20,4,"Agriculture"),
-ElderTree = new Ingredient(["Elder Tree"],["36",2,0],["16",2,0],["13",2,0],1,0,20,4,"Agriculture"),
-ElmTree = new Ingredient(["Elm Tree"],["12",2,0],["32",1,0],["18",1,0],1,0,20,4,"Agriculture"),
-FirTree = new Ingredient(["Fir Tree"],["72",2,0],["12",2,0],["14",2,0],1,0,20,4,"Agriculture"),
-Hawthorn = new Ingredient(["Hawthorn"],["12",2,0],["14",1,0],["55",1,0],1,0,20,4,"Agriculture"),
-HazelTree = new Ingredient(["Hazel Tree"],["75",2,0],["76",2,0],["74",2,0],1,0,20,4,"Agriculture"),
-HollyTree = new Ingredient(["Holly Tree"],["13",2,0],["11",1,0],["16",1,0],1,0,20,4,"Agriculture"),
-LarchTree = new Ingredient(["Larch Tree"],["14",1,0],["75",1,0],["73",1,0],1,0,20,4,"Agriculture"),
-OakTree = new Ingredient(["Oak Tree"],["31",2,0],["44",2,0],["14",2,0],1,0,20,4,"Agriculture"),
-OliveTree = new Ingredient(["Olive Tree"],["44",2,0],["53",2,0],["18",2,0],1,0,20,4,"Agriculture"),
-PeachTree = new Ingredient(["Peach Tree"],["46",2,0],["44",1,0],["51",1,0],1,0,20,4,"Agriculture"),
-PearTree = new Ingredient(["Pear Tree"],["55",2,0],["61",1,0],["12",1,0],1,0,20,4,"Agriculture"),
-PoplarTree = new Ingredient(["Poplar Tree"],["14",2,0],["24",1,0],["77",1,0],1,0,20,4,"Agriculture"),
-RowanTree = new Ingredient(["Rowan Tree"],["14",2,0],["72",2,0],["76",2,0],1,0,20,4,"Agriculture"),
-WillowTree = new Ingredient(["Willow Tree"],["75",2,0],["14",1,0],["12",1,0],1,0,20,4,"Agriculture"),
-YewTree = new Ingredient(["Yew Tree"],["15",2,0],["74",2,0],["64",2,0],1,0,20,4,"Agriculture"),
+AlderTree = new Ingredient(["Alder Tree"],["14",2,0],["75",1,0],["24",1,0],1,0,20,4,"Agriculture",1),
+AppleTree = new Ingredient(["Apple Tree"],["44",2,0],["55",1,0],["11",1,0],1,0,20,4,"Agriculture",1),
+AshTree = new Ingredient(["Ash Tree"],["11",1,0],["14",2,0],["75",2,0],1,0,20,4,"Agriculture",1),
+BeechTree = new Ingredient(["Beech Tree"],["14",1,0],["34",2,0],["75",2,0],1,0,20,4,"Agriculture",1),
+BirchTree = new Ingredient(["Birch Tree"],["18",2,0],["14",1,0],["12",1,0],1,0,20,4,"Agriculture",1),
+Blackthorn = new Ingredient(["Blackthorn"],["36",2,0],["62",1,0],["18",1,0],1,0,20,4,"Agriculture",1),
+Champak = new Ingredient(["Champak"],["54",2,0],["23",1,0],["15",1,0],1,0,20,4,"Agriculture",1),
+ElderTree = new Ingredient(["Elder Tree"],["36",2,0],["16",2,0],["13",2,0],1,0,20,4,"Agriculture",1),
+ElmTree = new Ingredient(["Elm Tree"],["12",2,0],["32",1,0],["18",1,0],1,0,20,4,"Agriculture",1),
+FirTree = new Ingredient(["Fir Tree"],["72",2,0],["12",2,0],["14",2,0],1,0,20,4,"Agriculture",1),
+Hawthorn = new Ingredient(["Hawthorn"],["12",2,0],["14",1,0],["55",1,0],1,0,20,4,"Agriculture",1),
+HazelTree = new Ingredient(["Hazel Tree"],["75",2,0],["76",2,0],["74",2,0],1,0,20,4,"Agriculture",1),
+HollyTree = new Ingredient(["Holly Tree"],["13",2,0],["11",1,0],["16",1,0],1,0,20,4,"Agriculture",1),
+LarchTree = new Ingredient(["Larch Tree"],["14",1,0],["75",1,0],["73",1,0],1,0,20,4,"Agriculture",1),
+OakTree = new Ingredient(["Oak Tree"],["31",2,0],["44",2,0],["14",2,0],1,0,20,4,"Agriculture",1),
+OliveTree = new Ingredient(["Olive Tree"],["44",2,0],["53",2,0],["18",2,0],1,0,20,4,"Agriculture",1),
+OliveOil = new Ingredient(["Olive Oil"],["18",2,0],["44",2,0],["51",2,0],1,0,20,4,"Agriculture",1),
+PeachTree = new Ingredient(["Peach Tree"],["46",2,0],["44",1,0],["51",1,0],1,0,20,4,"Agriculture",1),
+PearTree = new Ingredient(["Pear Tree"],["55",2,0],["61",1,0],["12",1,0],1,0,20,4,"Agriculture",1),
+PoplarTree = new Ingredient(["Poplar Tree"],["14",2,0],["24",1,0],["77",1,0],1,0,20,4,"Agriculture",1),
+RowanTree = new Ingredient(["Rowan Tree"],["14",2,0],["72",2,0],["76",2,0],1,0,20,4,"Agriculture",1),
+WillowTree = new Ingredient(["Willow Tree"],["75",2,0],["14",1,0],["12",1,0],1,0,20,4,"Agriculture",1),
+YewTree = new Ingredient(["Yew Tree"],["15",2,0],["74",2,0],["64",2,0],1,0,20,4,"Agriculture",1),
     
   // Metal
-Brass = new Ingredient(["Brass"],["14",2,0],["55",1,0],["52",1,0],1,0,20,4,"Mining"),
-Copper = new Ingredient(["Copper"],["55",2,0],["11",2,0],["45",2,0],1,0,20,4,"Mining"),
-Gold = new Ingredient(["Gold"],["44",3,0],["12",1,0],["17",1,0],2,0,40,2,"Mining"),
-Lead = new Ingredient(["Lead"],["36",3,0],["23",2,0],["14",2,0],1,0,20,4,"Mining"),
-Platinium = new Ingredient(["Platinium"],["14",3,0],["32",2,0],["17",2,0],3,0,80,1,"Mining"),
-Silver = new Ingredient(["Silver"],["14",3,0],["12",2,0],["17",2,0],2,0,40,2,"Mining"),
-Tin = new Ingredient(["Tin"],["44",2,0],["41",2,0],["75",2,0],1,0,20,4,"Mining"),
+Brass = new Ingredient(["Brass"],["14",2,0],["55",1,0],["52",1,0],1,0,20,4,"Mining",1),
+Copper = new Ingredient(["Copper"],["55",2,0],["11",2,0],["45",2,0],1,0,20,4,"Mining",1),
+Gold = new Ingredient(["Gold"],["44",3,0],["12",1,0],["17",1,0],2,0,40,2,"Mining",1),
+Lead = new Ingredient(["Lead"],["36",3,0],["23",2,0],["14",2,0],1,0,20,4,"Mining",1),
+Platinium = new Ingredient(["Platinium"],["14",3,0],["32",2,0],["17",2,0],3,0,80,1,"Mining",1),
+Silver = new Ingredient(["Silver"],["14",3,0],["12",2,0],["17",2,0],2,0,40,2,"Mining",1),
+Tin = new Ingredient(["Tin"],["44",2,0],["41",2,0],["75",2,0],1,0,20,4,"Mining",1),
 
   // Minerals
-Agate = new Ingredient(["Agate"],["23",2,0],["31",1,0],["53",1,0],1,0,20,4,"Mining"),
-Amazonite = new Ingredient(["Amazonite"],["72",2,0],["53",1,0],["51",1,0],1,0,20,4,"Mining"),
-Amber = new Ingredient(["Amber"],["22",2,0],["18",1,0],["45",1,0],1,0,20,4,"Mining"),
-Amethyst = new Ingredient(["Amethyst"],["53",0,2],["21",1,0],["34",1,0],1,0,20,4,"Mining"),
-Aquamarine = new Ingredient(["Aquamarine"],["53",2,0],["54",1,0],["14",1,0],1,0,20,4,"Mining"),
-Aventurine = new Ingredient(["Aventurine"],["44",2,0],["41",1,0],["74",1,0],1,0,20,4,"Mining"),
-Azurite = new Ingredient(["Azurite"],["21",2,0],["75",1,0],["73",1,0],1,0,20,4,"Mining"),
-BlackSalt = new Ingredient(["Black Salt"],["22",3,0],["23",1,0],["18",1,0],1,0,20,4,"Mining"),
-BlueCalcite = new Ingredient(["Blue Calcite"],["21",2,0],["53",2,0],["77",2,0],1,0,20,4,"Mining"),
-BlueLaceAgate = new Ingredient(["Blue Lace Agate"],["18",1,0],["53",1,0],["72",1,0],1,0,20,4,"Mining"),
-BlueTopaz = new Ingredient(["Blue Topaz"],["21",2,0],["52",2,0],["75",2,0],1,0,20,4,"Mining"),
-Carnelian = new Ingredient(["Carnelian"],["22",2,0],["42",2,0],["54",2,0],1,0,20,4,"Mining"),
-Celestite = new Ingredient(["Celestite"],["21",2,0],["77",1,0],["34",1,0],1,0,20,4,"Mining"),
-Citrine = new Ingredient(["Citrine"],["24",2,0],["17",1,0],["44",1,0],1,0,20,4,"Mining"),
-CrabFireAgate = new Ingredient(["Crab Fire Agate"],["22",2,0],["42",2,0],["54",2,0],1,0,20,4,"Mining"),
-DendriteAgate = new Ingredient(["Dendrite Agate"],["23",3,0],["43",2,0],["44",2,0],1,0,20,4,"Mining"),
-Diamond = new Ingredient(["Diamond"],["17",3,0],["32",3,0],["73",3,0],3,0,80,1,"Mining"),
-Dirt = new Ingredient(["Dirt"],["23",2,0],["18",2,0],["12",2,0],1,0,20,4,"Mining"),
-EyeAgate = new Ingredient(["Eye Agate"],["72",2,0],["62",1,0],["43",1,0],1,0,20,4,"Mining"),
-FireAgate = new Ingredient(["Fire Agate"],["22",3,0],["53",1,0],["64",1,0],1,0,20,4,"Mining"),
-FlameAgate = new Ingredient(["Flame Agate"],["22",2,0],["13",2,0],["53",2,0],1,0,20,4,"Mining"),
-HoledStone = new Ingredient(["Holed Stone"],["14",3,0],["72",2,0],["11",2,0],3,0,80,1,"Mining"),
-Jasper = new Ingredient(["Jasper"],["22",3,0],["76",1,0],["76",1,0],1,0,20,4,"Mining"),
-Lodestone = new Ingredient(["Lodestone"],["41",3,0],["44",2,0],["11",2,0],1,0,20,4,"Mining"),
-Moonstone = new Ingredient(["Moonstone"],["21",2,0],["53",1,0],["14",1,0],1,0,20,4,"Mining"),
-MossAgate = new Ingredient(["Moss Agate"],["53",2,0],["44",2,0],["46",2,0],1,0,20,4,"Mining"),
-Obsidian = new Ingredient(["Obsidian"],["23",2,0],["14",2,0],["18",2,0],1,0,20,4,"Mining"),
-Quartz = new Ingredient(["Quartz"],["17",3,0],["21",2,0],["72",2,0],1,0,20,4,"Mining"),
-RedCalcite = new Ingredient(["Red Calcite"],["22",2,0],["55",1,0],["31",1,0],1,0,20,4,"Mining"),
-RedJasper = new Ingredient(["Red Jasper"],["22",2,0],["73",2,0],["74",2,0],1,0,20,4,"Mining"),
-Ruby = new Ingredient(["Ruby"],["52",2,0],["25",2,0],["44",2,0],2,0,40,2,"Mining"),
-Salt = new Ingredient(["Salt"],["23",2,0],["72",2,0],["18",2,0],1,0,20,4,"Mining"),
-Sapphire = new Ingredient(["Sapphire"],["21",2,0],["25",1,0],["34",1,0],2,0,40,2,"Mining"),
-Sardonyx = new Ingredient(["Sardonyx"],["22",2,0],["31",2,0],["32",2,0],1,0,20,4,"Mining"),
-SeaSalt = new Ingredient(["Sea Salt"],["21",2,0],["23",2,0],["75",2,0],1,0,20,4,"Mining"),
-Selenite = new Ingredient(["Selenite"],["21",2,0],["52",1,0],["34",1,0],1,0,20,4,"Mining"),
-Sodalite = new Ingredient(["Sodalite"],["21",2,0],["53",2,0],["34",2,0],1,0,20,4,"Mining"),
-SnakeskinAgate = new Ingredient(["Snakeskin Agate"],["31",2,0],["79",2,0],["51",2,0],1,0,20,4,"Mining"),
-Sunstone = new Ingredient(["Sunstone"],["22",2,0],["44",1,0],["45",1,0],1,0,20,4,"Mining"),
+Agate = new Ingredient(["Agate"],["23",2,0],["31",1,0],["53",1,0],1,0,20,4,"Mining",1),
+Amazonite = new Ingredient(["Amazonite"],["72",2,0],["53",1,0],["51",1,0],1,0,20,4,"Mining",1),
+Amber = new Ingredient(["Amber"],["22",2,0],["18",1,0],["45",1,0],1,0,20,4,"Mining",1),
+Amethyst = new Ingredient(["Amethyst"],["53",0,2],["21",1,0],["34",1,0],1,0,20,4,"Mining",1),
+Aquamarine = new Ingredient(["Aquamarine"],["53",2,0],["54",1,0],["14",1,0],1,0,20,4,"Mining",1),
+Aventurine = new Ingredient(["Aventurine"],["44",2,0],["41",1,0],["74",1,0],1,0,20,4,"Mining",1),
+Azurite = new Ingredient(["Azurite"],["21",2,0],["75",1,0],["73",1,0],1,0,20,4,"Mining",1),
+BlackSalt = new Ingredient(["Black Salt"],["22",3,0],["23",1,0],["18",1,0],1,0,20,4,"Mining",1),
+BlueCalcite = new Ingredient(["Blue Calcite"],["21",2,0],["53",2,0],["77",2,0],1,0,20,4,"Mining",1),
+BlueLaceAgate = new Ingredient(["Blue Lace Agate"],["18",1,0],["53",1,0],["72",1,0],1,0,20,4,"Mining",1),
+BlueTopaz = new Ingredient(["Blue Topaz"],["21",2,0],["52",2,0],["75",2,0],1,0,20,4,"Mining",1),
+Carnelian = new Ingredient(["Carnelian"],["22",2,0],["42",2,0],["54",2,0],1,0,20,4,"Mining",1),
+Celestite = new Ingredient(["Celestite"],["21",2,0],["77",1,0],["34",1,0],1,0,20,4,"Mining",1),
+Citrine = new Ingredient(["Citrine"],["24",2,0],["17",1,0],["44",1,0],1,0,20,4,"Mining",1),
+CrabFireAgate = new Ingredient(["Crab Fire Agate"],["22",2,0],["42",2,0],["54",2,0],1,0,20,4,"Mining",1),
+DendriteAgate = new Ingredient(["Dendrite Agate"],["23",3,0],["43",2,0],["44",2,0],1,0,20,4,"Mining",1),
+Diamond = new Ingredient(["Diamond"],["17",3,0],["32",3,0],["73",3,0],3,0,80,1,"Mining",1),
+Dirt = new Ingredient(["Dirt"],["23",2,0],["18",2,0],["12",2,0],1,0,20,4,"Mining",1),
+EyeAgate = new Ingredient(["Eye Agate"],["72",2,0],["62",1,0],["43",1,0],1,0,20,4,"Mining",1),
+FireAgate = new Ingredient(["Fire Agate"],["22",3,0],["53",1,0],["64",1,0],1,0,20,4,"Mining",1),
+FlameAgate = new Ingredient(["Flame Agate"],["22",2,0],["13",2,0],["53",2,0],1,0,20,4,"Mining",1),
+HoledStone = new Ingredient(["Holed Stone"],["14",3,0],["72",2,0],["11",2,0],3,0,80,1,"Mining",1),
+Jasper = new Ingredient(["Jasper"],["22",3,0],["76",1,0],["76",1,0],1,0,20,4,"Mining",1),
+Lodestone = new Ingredient(["Lodestone"],["41",3,0],["44",2,0],["11",2,0],1,0,20,4,"Mining",1),
+Moonstone = new Ingredient(["Moonstone"],["21",2,0],["53",1,0],["14",1,0],1,0,20,4,"Mining",1),
+MossAgate = new Ingredient(["Moss Agate"],["53",2,0],["44",2,0],["46",2,0],1,0,20,4,"Mining",1),
+Obsidian = new Ingredient(["Obsidian"],["23",2,0],["14",2,0],["18",2,0],1,0,20,4,"Mining",1),
+Quartz = new Ingredient(["Quartz"],["17",3,0],["21",2,0],["72",2,0],1,0,20,4,"Mining",1),
+RedCalcite = new Ingredient(["Red Calcite"],["22",2,0],["55",1,0],["31",1,0],1,0,20,4,"Mining",1),
+RedJasper = new Ingredient(["Red Jasper"],["22",2,0],["73",2,0],["74",2,0],1,0,20,4,"Mining",1),
+Ruby = new Ingredient(["Ruby"],["52",2,0],["25",2,0],["44",2,0],2,0,40,2,"Mining",1),
+Salt = new Ingredient(["Salt"],["23",2,0],["72",2,0],["18",2,0],1,0,20,4,"Mining",1),
+Sapphire = new Ingredient(["Sapphire"],["21",2,0],["25",1,0],["34",1,0],2,0,40,2,"Mining",1),
+Sardonyx = new Ingredient(["Sardonyx"],["22",2,0],["31",2,0],["32",2,0],1,0,20,4,"Mining",1),
+SeaSalt = new Ingredient(["Sea Salt"],["21",2,0],["23",2,0],["75",2,0],1,0,20,4,"Mining",1),
+Selenite = new Ingredient(["Selenite"],["21",2,0],["52",1,0],["34",1,0],1,0,20,4,"Mining",1),
+Sodalite = new Ingredient(["Sodalite"],["21",2,0],["53",2,0],["34",2,0],1,0,20,4,"Mining",1),
+SnakeskinAgate = new Ingredient(["Snakeskin Agate"],["31",2,0],["79",2,0],["51",2,0],1,0,20,4,"Mining",1),
+Sunstone = new Ingredient(["Sunstone"],["22",2,0],["44",1,0],["45",1,0],1,0,20,4,"Mining",1),
 
-  // Liquids
-HumanBlood = new Ingredient(["Human Blood"],["17",3,0],["15",3,0],["76",3,0],2,0,40,2,"Others"),
-OliveOil = new Ingredient(["Olive Oil"],["18",2,0],["44",2,0],["51",2,0],1,0,20,4,"Others"),
-Saliva = new Ingredient(["Saliva"],["14",2,0],["43",1,0],["72",1,0],1,0,20,4,"Others"),
-SpringWater = new Ingredient(["Spring Water"],["18",3,0],["21",3,0],["11",3,0],1,0,20,4,"Others"),
-Sweat = new Ingredient(["Sweat"],["43",1,0],["55",1,0],["31",1,0],1,0,20,4,"Others"),
-
-  // Tools
-BlackCandle = new Ingredient(["Black Candle"],["14",2,0],["72",1,0],["46",1,0],1,0,20,4,"Others"),
-GreenCandle = new Ingredient(["Green Candle"],["44",2,0],["41",1,0],["51",1,0],1,0,20,4,"Others"),
-RedCandle = new Ingredient(["Red Candle"],["43",1,0],["55",1,0],["12",1,0],1,0,20,4,"Others"),
+SpringWater = new Ingredient(["Spring Water"],["18",3,0],["21",3,0],["11",3,0],1,0,20,4,"Agriculture",1),
 
   // Titanspawn Origin
   
@@ -716,7 +702,10 @@ var save = {
   totalAgriculture : totalAgriculture,
   
   totalEnemies : totalEnemies,
-  totalEnemyTypes : totalEnemyTypes
+  totalEnemyTypes : totalEnemyTypes,
+  questDifficultyArray : questDifficultyArray,
+  questsDoneTotal : questsDoneTotal
+  
 }
 	localStorage.setItem("save",JSON.stringify(save));
 }
@@ -765,6 +754,8 @@ function loadButton(){
   	 if (typeof savegame.totalEnemies !== "undefined") totalEnemies = savegame.totalEnemies;
 	 if (typeof savegame.totalEnemyTypes !== "undefined") totalEnemyTypes = savegame.totalEnemyTypes;
 	 if (typeof savegame.gameStarted !== "undefined") gameStarted = savegame.gameStarted;
+	 if (typeof savegame.questDifficultyArray !== "undefined") questDifficultyArray = savegame.questDifficultyArray;
+	 if (typeof savegame.questsDoneTotal !== "undefined") questsDoneTotal = savegame.questsDoneTotal;
 
 
 	document.getElementById('ClassDisplay').innerHTML = chosenClass.name
@@ -781,10 +772,15 @@ updateEnchantements();
 updateIngredientSelect()
 
 for(i=0;i<SocialVars.length;i++){
-document.getElementById(SocialVars[i].nextContract).innerHTML = SocialVars[i].rewardModifier
+document.getElementById(SocialVars[i].nextContract).innerHTML = Math.floor(SocialVars[i].rewardModifier)
 document.getElementById(SocialVars[i].remainingPoints).innerHTML = Math.floor(SocialVars[i].cost*10)/10
 document.getElementById(SocialVars[i].researchRate).innerHTML = SocialVars[i].reward
-}}}
+}
+for(i=0;i<questDifficultyArray.length;i++){	document.getElementById(questDifficultyArray[i].relevantTable).innerHTML = questDifficultyArray[i].numberDone
+}
+		document.getElementById("TQuests").innerHTML = questsDoneTotal
+
+}}
 function resetButton(){localStorage.clear()}
 function Cheat(){
 clicker(10000000000)
@@ -838,9 +834,9 @@ document.getElementById("MHealth").innerHTML = Math.round((MentalHealthBalance -
 
 document.getElementById("gold").innerHTML = Math.floor(money)
 
-
 tick()
 tickSocial(activeSocial)
+
 	computeStats()
 if(starterQuest != -1){
 
@@ -859,10 +855,12 @@ if(Math.round(starterQuest) === 1 && discoveredIngredients.length > 1){money += 
 
 
 window.setInterval(function(){
+	what = 2
 updateProgress()
 changeTable()
 if(questResetTime >= 0){questResetTime -=5}
 document.getElementById("QuestResetDisplay").innerHTML = "Time until next Quest Reset: "+ questResetTime
+saveButton()
 },5000)
 
 window.setInterval(function(){
@@ -903,6 +901,7 @@ estateAgricultureLogQuest.push(estateAgriculture[i])
 estateAgricultureLog.push(estateAgriculture[i])
 givenAgriculture[0].quantity+= Math.round(estateAgriculture[i][2])
 xpGain(Math.round(estateAgriculture[i][2]*5))
+logger("Your Estate has produced " + Math.round(estateAgriculture[i][2]) + " " + estateAgriculture[i][0][0])
 //updateIngredientSelect()
 }}
 
@@ -950,14 +949,14 @@ estateTableUpdate(document.getElementById("agricultureTable"),estateAgriculture)
 estateTableUpdate(document.getElementById("miningTable"),estateMining)
 
 
-defineQuest()
-
 for(i=0;i<SocialVars.length;i++){
 if(SocialVars[i]){
 	SocialVars[i].timeLeft -= 1; document.getElementById(SocialVars[i].timeLeftCell).innerHTML = Math.floor(SocialVars[i].timeLeft)}
-	if(SocialVars[i].timeLeft <= 0){spawnSocialChallenges()}
+	if(SocialVars[i].timeLeft <= 0){
+spawnSocialChallenges()}
 
 }
+defineQuest()
 
 for(j=0;j<activeQuests.length;j++){
 if(questDifficultyArray.indexOf(activeQuests[j][1]) === 0){
@@ -999,32 +998,36 @@ needed variable in the right quests.
 // if main quest array.length > number required: quest completed
 }
 function tickSocial(number){
+
 	if(researchPoints >= 1 && SocialVars[number]){
 		var socialPercentDone =  (SocialVars[number].totalCost - SocialVars[number].cost)/SocialVars[number].totalCost*100
 		SocialVars[number].cost -= (baseRate*baseRateBalance+ResearchSpeedBalance)*ReputationBalance
 		var socialPercentDoneTick =  ((SocialVars[number].totalCost - SocialVars[number].cost)/SocialVars[number].totalCost*100)-socialPercentDone
 		researchPoints -=  Math.floor(baseRate*baseRateBalance+ResearchSpeedBalance)
 document.getElementById(SocialVars[number].remainingPoints).innerHTML = Math.floor(SocialVars[number].cost*10)/10
-
-	SocialVars[number].reward += (baseReward+socialStatsBonusBalance*stats[number+24].value)*(baseRate*baseRateBalance+ResearchSpeedBalance)*ReputationBalance/50*SocialVars[number].rewardModifier
+	SocialVars[number].reward += baseReward*(baseRate*baseRateBalance+ResearchSpeedBalance)*ReputationBalance/30*SocialVars[number].rewardModifier*(1+(stats[number+24].value/5))
 document.getElementById(SocialVars[number].researchRate).innerHTML = Math.floor(SocialVars[number].reward*10)/10
+//	console.log(activeSocial)
 
 //SocialVars[number].rewardModifier = Math.random()-0.5 + Math.random()-0.5 + Math.random()-0.5 + Math.random()-0.5 
-document.getElementById(SocialVars[number].nextContract).innerHTML = SocialVars[number].rewardModifier
+document.getElementById(SocialVars[number].nextContract).innerHTML = Math.round(SocialVars[number].rewardModifier*10)/10
 if(SocialVars[number].cost <= 0){ completedContractsLog.push(SocialVars[number]);completedContractsLogQuest.push(SocialVars[number]);
 	if(SocialVars[number].nextContract === Illuminati.nextContract){totalIll += 1;totalContracts++; logger("You have completed an Illuminati Contract !")}
 	if(SocialVars[number].nextContract === JadeFist.nextContract){totalOJF += 1;totalContracts++; logger("You have completed an Order of the Jade Fist Contract !")}
 	if(SocialVars[number].nextContract === Cabal.nextContract){totalCab += 1;totalContracts++; logger("You have completed a Cabal Contract !")}
 	if(SocialVars[number].nextContract === Merlin.nextContract){totalCoM += 1;totalContracts++; logger("You have completed a Circle of Merlin Contract !")}
-xpGain(Math.round(SocialVars[number].reward*10)/50)
+xpGain(Math.round(SocialVars[number].reward*10)/10)
 money += SocialVars[number].reward
 logger("Reward: " + Math.round(SocialVars[number].reward) + " gold !")
 reloadIngredients(SocialVars[number].reward)
-activeSocial = -1
+
 SocialVars[number].completed += 1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             
 spawnSocialChallenges()
-
 }
+console.log(SocialVars[number].timeLeft)
+if(SocialVars[number].timeLeft <= 1){
+activeSocial = -1}
+
 }} 
 
 
@@ -1044,23 +1047,28 @@ if(activePotions[i][0].effect[1] === enchantementStatBonus[j].name){enchantement
 function computeStats(){
 
 for(i=0;i<stats.length;i++){
-//	enchantementStatBonus[i].value += 10
-	stats[i].value = enchantementStatBonus[i].value + baseStatValue[i].value; document.getElementById(stats[i].statBox).title = (Math.floor(stats[i].value*10))/10	}
-		
+	enchantementStatBonus[i].value += 100
+	stats[i].value = enchantementStatBonus[i].value + baseStatValue[i].value; 	
+document.getElementById(stats[i].statBox).innerHTML = (Math.floor(enchantementStatBonus[i].value*10))/10
+}
+
+PotionMakingSkill.value += level
+SpellCastingSkill.value += level
+EnchantingSkill.value	+= level
 
 
 PhysicalPowerBalance = (Math.round(PhysicalPower.value))/5
-document.getElementById("PPower").innerHTML = PhysicalPowerBalance
+document.getElementById("PPower").innerHTML = PhysicalPowerBalance + "/s"
 MagicalPowerBalance = (Math.round(MagicalPower.value))/5
-document.getElementById("MPower").innerHTML = MagicalPowerBalance
+document.getElementById("MPower").innerHTML = MagicalPowerBalance + "/s"
 PhysicalHealthBalance = (PhysicalHealthEnchantementBonus.value+PhysicalHealthBase.value)*10
 document.getElementById("PHealth").innerHTML = Math.round((PhysicalHealthBalance - physicalDamage)*10)/10
 HealingBalance = (Math.round(Healing.value))/100
-document.getElementById("Healing").innerHTML = HealingBalance
+document.getElementById("Healing").innerHTML = HealingBalance + "/s"
 MentalHealthBalance = (MentalHealthEnchantementBonus.value+MentalHealthBase.value)*10
 document.getElementById("MHealth").innerHTML = Math.round((MentalHealthBalance - mentalDamage)*10)/10
 MentalHealingBalance = (Math.round(MentalHealing.value))/100
-document.getElementById("MHealing").innerHTML = MentalHealingBalance
+document.getElementById("MHealing").innerHTML = MentalHealingBalance + "/s"
 ArmorBalance = Math.floor(100-(1/(1+Armor.value/10))*100)
 document.getElementById("Armor").innerHTML = ArmorBalance + " %"
 MagicResistanceBalance = Math.floor(100-(1/(1+MagicResistance.value/10))*100)
@@ -1076,18 +1084,15 @@ ResearchSpeedBalance = (Math.round(ResearchSpeed.value))/5
 document.getElementById("RSpeed").innerHTML = "Bonus: + " + ResearchSpeedBalance
 HelpersSkillBalance = (Math.round(HelpersSkill.value))/20
 document.getElementById("HSkill").innerHTML = HelpersSkillBalance + "/sec"
-PotionMakingSkillBalance = (Math.round(PotionMakingSkill.value*2))
-document.getElementById("PMSkill").innerHTML = PotionMakingSkillBalance + " %"
-SpellCastingSkillBalance = (Math.round(SpellCastingSkill.value*2))
-document.getElementById("SSkill").innerHTML = SpellCastingSkillBalance + " %"
-EnchantingSkillBalance = (Math.round(EnchantingSkill.value*2))
-document.getElementById("ESkill").innerHTML = EnchantingSkillBalance + " %"
+potionPotencyBalancer = (1+(PotionMakingSkill.value/40)+(ResearchSkill.value/60))
+document.getElementById("PMSkill").innerHTML = Math.floor(potionPotencyBalancer*100) + " %"
+spellPotencyBalancer = (1+(SpellCastingSkill.value/40)+(ResearchSkill.value/60))
+document.getElementById("SSkill").innerHTML = Math.floor(spellPotencyBalancer*100) + " %"
+enchantingPotencyBalancer = (1+(EnchantingSkill.value/40)+(ResearchSkill.value/60))
+document.getElementById("ESkill").innerHTML = Math.floor(enchantingPotencyBalancer*100) + " %"
 
-potionPotencyBalancer = (1+(PotionMakingSkill.value/100)+(ResearchSkill.value/300))
-spellPotencyBalancer = (1+(SpellCastingSkill.value/100)+(ResearchSkill.value/300))
-enchantingPotencyBalancer = (1+(EnchantingSkill.value/100)+(ResearchSkill.value/300))
 
-ProphecySkillBalance = (Math.round(ProphecySkill.value))/50
+ProphecySkillBalance = (Math.round(ProphecySkill.value))/40
 document.getElementById("PSkill").innerHTML = "+ " + ProphecySkillBalance + " %"
 MoneyBalance = Math.round(Money.value)/40
 document.getElementById("Money").innerHTML = MoneyBalance
@@ -1122,16 +1127,16 @@ document.getElementById("EParry").innerHTML = "- " + EnemyParryBalance
 EnemyDetectionBalance = Math.round(EnemyDetection.value)
 document.getElementById("EDetection").innerHTML = EnemyDetectionBalance
 
-CharismaBalance = 0.25*Charisma.value
-document.getElementById("Charisma").innerHTML = CharismaBalance
-SeductionBalance = 0.25*Seduction.value
-document.getElementById("Seduction").innerHTML = SeductionBalance
-ManipulationBalance = 0.25*Manipulation.value
-document.getElementById("Manipulation").innerHTML = ManipulationBalance
-PresenceBalance = 0.25*Presence.value
-document.getElementById("Presence").innerHTML = PresenceBalance
-InfluenceBalance = 0.10*Influence.value
-document.getElementById("Influence").innerHTML = Math.floor(InfluenceBalance*10)/10
+CharismaBalance = Charisma.value
+document.getElementById("Charisma").innerHTML = "+" + CharismaBalance*20 + "%"
+SeductionBalance = Seduction.value
+document.getElementById("Seduction").innerHTML = "+" + SeductionBalance*20 + "%"
+ManipulationBalance = Manipulation.value
+document.getElementById("Manipulation").innerHTML = "+" + ManipulationBalance*20 + "%"
+PresenceBalance = Presence.value
+document.getElementById("Presence").innerHTML =  "+" + PresenceBalance*20 + "%"
+InfluenceBalance = Influence.value
+document.getElementById("Influence").innerHTML =  "+" + InfluenceBalance*10 + "%"
 ReputationBalance = 1+Reputation.value/10
 document.getElementById("Reputation").innerHTML = ReputationBalance
 
@@ -1183,7 +1188,7 @@ var questDatabaseArrays = [
    Rituals = [readySpells,ownedPotions,ownedEnchantements],
    StatStudy = [stats,effects],
    QuestEstatetypes = [totalAgriculture,totalMining]
-  ]
+  ];
 var logs = [
  killedEnemies = [],
  completedContractsLog = [],
@@ -1192,10 +1197,10 @@ var logs = [
  craftedEnchantementsLog = [],
  estateMiningLog = [],
  estateAgricultureLog = []
-]
-var activeQuestArray = [[],[],[]]
+];
+var activeQuestArray = [[],[],[]];
  
-var QuestDifficulty = function(activeCheck,difficulty,amount,difficultyIncreaseModifier,difficultyBalancer,challengeVariable,chosenVariable) {
+var QuestDifficulty = function(activeCheck,difficulty,amount,difficultyIncreaseModifier,difficultyBalancer,challengeVariable,chosenVariable,relevantTable,numberDone) {
   this.activeCheck = activeCheck;
   this.difficulty = difficulty;
   this.amount = amount;
@@ -1203,25 +1208,19 @@ var QuestDifficulty = function(activeCheck,difficulty,amount,difficultyIncreaseM
   this.difficultyBalancer = difficultyBalancer; 
   this.challengeVariable = challengeVariable;
   this.chosenVariable = chosenVariable;
+  this.relevantTable = relevantTable;
+  this.numberDone = numberDone;
 };
-
 var questDifficultyArray = [
-questDifficultyCombat = new QuestDifficulty([0],0,1,1.25,combatLevelBalancer,0,"Not Defined"), // Kill Enemies
-questDifficultySocial = new QuestDifficulty([0,0,0,0],0,1,1.05,socialBalancer,0,"Not Defined"), // Complete Social Contracts
-questDifficultyPotions = new QuestDifficulty([0],0,1,1.05,potionBalancer,0,"Not Defined"), // Craft Potions
-questDifficultySpells = new QuestDifficulty([0],0,1,1.05,spellBalancer,0,"Not Defined"), // Craft Spells
-questDifficultyEnchantements = new QuestDifficulty([0],0,1,1.05,enchantmentBalancer,0,"Not Defined"), // Craft Enchantments
-questDifficultyMining = new QuestDifficulty([0],0,1,1.025,miningBalancer,0,"Not Defined"), // Mine Ingredients
-questDifficultyAgriculture = new QuestDifficulty([0],0,1,1.025,agricultureBalancer,0,"Not Defined"), // Mine Ingredients
-]
+questDifficultyCombat = new QuestDifficulty([0],0,1,1.25,combatLevelBalancer,0,"Not Defined","TQuestsCombat",0), // Kill Enemies
+questDifficultySocial = new QuestDifficulty([0,0,0,0],0,1,1.05,socialBalancer,0,"Not Defined","TQuestsContract",0), // Complete Social Contracts
+questDifficultyPotions = new QuestDifficulty([0],0,1,1.05,potionBalancer,0,"Not Defined","TQuestsPotions",0), // Craft Potions
+questDifficultySpells = new QuestDifficulty([0],0,1,1.05,spellBalancer,0,"Not Defined","TQuestsSpell",0), // Craft Spells
+questDifficultyEnchantements = new QuestDifficulty([0],0,1,1.05,enchantmentBalancer,0,"Not Defined","TQuestsEnchantement",0), // Craft Enchantments
+questDifficultyMining = new QuestDifficulty([0],0,1,1.025,miningBalancer,0,"Not Defined","TQuestsMining",0), // Mine Ingredients
+questDifficultyAgriculture = new QuestDifficulty([0],0,1,1.025,agricultureBalancer,0,"Not Defined","TQuestsAgriculture",0), // Mine Ingredients
 
-/*
-
-Estate
- Harvest ?? Ingredients with Effect ?? from ??Agriculture/Mining??
- 
-*/
-
+];
 function chooseQuest(){
 	
 	  logsQuestActive = [
@@ -1233,39 +1232,36 @@ function chooseQuest(){
  estateMiningLogQuest = [],
  estateAgricultureLogQuest = []
  ]
-	
-	amountModifier = 2
-	difficultyModifier = 1
-	logMaker = (Math.random()*10)
-	totalModifier = level*5 + logMaker - 5
-	logTotalModifier = level*5 + logMaker - 5
 
-	function spreader(){
-		choice = Math.random()
-		if(choice <= 0.5){totalModifier -= 10*(1.25*difficultyModifier); difficultyModifier += 1; }
-		if(choice > 0.5){totalModifier -= 10*(1.1*amountModifier) ; amountModifier += 1}
-}
-	while(totalModifier > 0){spreader()}
 
 	function questFinder(){
 	questChosen = Math.floor(Math.random()*7) //looks through the array to find a quest type (combat, social, etc)
-	}
+//console.log(questChosen + " " + questDifficultyArray[questChosen].relevantTable)	
+}
 	questFinder()
-	
-	
-	while(questDifficultyArray[questChosen].chosenVariable != "Not Defined" && questDifficultyArray[questChosen].chosenVariable != undefined){questFinder()}
-	
+ 
+	amountModifier = 1
+	difficultyModifier = 1
+	logMaker = (Math.random()*50)
+	totalModifier = questDifficultyArray[questChosen].numberDone*10 + logMaker - 25
+	logTotalModifier = questDifficultyArray[questChosen].numberDone*10 + logMaker - 25
+
+	function spreader(){ 
+		choice = Math.random()
+		if(choice <= 0.5){totalModifier -= 1*(1.02*difficultyModifier); difficultyModifier += 0.1; }
+		if(choice > 0.5){totalModifier -= 1*(1.04*amountModifier) ; amountModifier += 0.1}
+}
+	while(totalModifier > 0){spreader()}
+
+for(i=0;i<100;i++){
+	if(questDifficultyArray[questChosen].chosenVariable != "Not Defined" && questDifficultyArray[questChosen].chosenVariable != undefined){questFinder()}
+	}
 	questDifficultyArray[questChosen].chosenVariable = Math.floor(Math.random()*questDifficultyArray[questChosen].activeCheck.length) // Finds a specific element in an array of variables.
-	questDifficultyArray[questChosen].activeCheck [questDifficultyArray[questChosen].chosenVariable] = questDifficultyArray[questChosen].amount*amountModifier // Gives it the amount needed value
+	questDifficultyArray[questChosen].activeCheck [questDifficultyArray[questChosen].chosenVariable] = Math.floor(questDifficultyArray[questChosen].amount*amountModifier) // Gives it the amount needed value
 	questDifficultyArray[questChosen].difficulty = Math.floor(questDifficultyArray[questChosen].difficultyBalancer *10*Math.pow(difficultyModifier,questDifficultyArray[questChosen].difficultyIncreaseModifier))
 	questDifficultyArray[questChosen].challengeVariable = totalModifier
 //	console.log(questDifficultyArray[questChosen].difficulty)
-
 	}
-
-
-//console.log(questDifficultyArray)
-
 function defineQuest(){
 // This array contains the quests that can be found. Their first variable is the te displayed. The second is the difficulty modifier. The third is the array checked.
  questTypeArray = [
@@ -1292,6 +1288,8 @@ for(i=0;i<questTypeArray.length;i++){
 	document.getElementById("Quest2").innerHTML = activeQuests[1][0].questText[activeQuests[1][1].chosenVariable][0] + activeQuests[1][1].activeCheck[activeQuests[1][1].chosenVariable] + activeQuests[1][0].questText[activeQuests[1][1].chosenVariable][1] + activeQuests[1][0].questText[activeQuests[1][1].chosenVariable][2] + activeQuests[1][1].difficulty + activeQuests[1][0].questText[activeQuests[1][1].chosenVariable][3] 
 	document.getElementById("Quest3").innerHTML = activeQuests[2][0].questText[activeQuests[2][1].chosenVariable][0] + activeQuests[2][1].activeCheck[activeQuests[2][1].chosenVariable] + activeQuests[2][0].questText[activeQuests[2][1].chosenVariable][1] + activeQuests[2][0].questText[activeQuests[2][1].chosenVariable][2] + activeQuests[2][1].difficulty + activeQuests[2][0].questText[activeQuests[2][1].chosenVariable][3] }
 function questWon(number){
+		questsDoneTotal +=1
+		document.getElementById("TQuests").innerHTML = questsDoneTotal
 		logger("You have completed a quest !");
 	questDifficultyArray[number].activeCheck[questDifficultyArray[number].chosenVariable] = 0 ; questDifficultyArray[number].chosenVariable = 0; chooseQuest()
 	logsQuestActive[number] = []
@@ -1299,16 +1297,15 @@ function questWon(number){
 	var reward = (10 + logTotalModifier - totalModifier)
 	if(choice2<= 0.5) {xpGain(reward)}
 	if(choice2 > 0.5) {money+= reward; logger("Reward: " + reward + " gold !")}
+	questDifficultyArray[number].numberDone += 1
+	document.getElementById(questDifficultyArray[number].relevantTable).innerHTML = questDifficultyArray[number].numberDone
 }
-
 function resetQuest(questNumber){
 	if(questResetTime <= 0){
 	questDifficultyArray[questDifficultyArray.indexOf(questNumber[1])].activeCheck[questDifficultyArray[questDifficultyArray.indexOf(questNumber[1])].chosenVariable] = 0 ; questDifficultyArray[questDifficultyArray.indexOf(questNumber[1])].chosenVariable = "Not Defined"; chooseQuest()
 	questResetTime += 600
 	}
 	}
-
-
 function questGeneration(){
 	var questDifficulty = 1
 	var questTypeRoll = Math.random()*100
@@ -1425,7 +1422,7 @@ document.getElementById("log").value += logText[e]
 	
 function discoverIngredient(){
 
-    var discoverCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length-1));     //works out the cost of this cursor
+    var discoverCost = Math.floor(20 * Math.pow(1.2,discoveredIngredients.length-1));     //works out the cost of this cursor
     if(researchPoints >= discoverCost){                                   //checks that the player can afford the cursor
     	researchPoints = researchPoints - discoverCost;                          //removes the researchPoints spent
         document.getElementById('researchPoints').innerHTML = Math.floor(researchPoints);  //updates the number of researchPoints for the user
@@ -1448,6 +1445,7 @@ changeTable()
 discoverTableUpdate()  
 }
 function updateIngredientSelect(){
+addOption2(document.getElementById("UpgradeIngredientSelect"))
 addOption(document.getElementById("mySelect"))
 addOption(document.getElementById("mySelect2"))
 addOption(document.getElementById("mySelect3"))
@@ -1470,8 +1468,23 @@ for (i = 0; i < discoveredIngredients.length; i++) {
    x.add(option);
 }}
 }
+function addOption2(selectChoice) {
+	var select = selectChoice;
+var length = discoveredIngredients.length;
+for (j = 0; j < length; j++) {
+  select.options[0] = null;
+}	
+for (i = 0; i < discoveredIngredients.length; i++) {
+    var x = selectChoice;
+    var option = document.createElement("option");
+    option.text = discoveredIngredients[i].name;
+    option.value = discoveredIngredients[i].name;
+	document.getElementById(upgradeIngredientCost)
+   x.add(option);
+}
+}
 function discoverPropertyFirst(){
-    var discoverPropertyCost = Math.floor(40 * Math.pow(1.1,discoveredFirstProperties));     //works out the cost of this cursor
+    var discoverPropertyCost = Math.floor(40 * Math.pow(1.2,discoveredFirstProperties));     //works out the cost of this cursor
     if(researchPoints >= discoverPropertyCost && discoveredFirstProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
     	researchPoints = researchPoints - discoverPropertyCost;    
 		discoveredFirstProperties = discoveredFirstProperties+1
@@ -1487,7 +1500,7 @@ if(discoveredIngredients[rand].first[2] != 1){discoveredIngredients[rand].first[
 changeTable()
 }
 function discoverPropertySecond(){
-    var discoverPropertyCost = Math.floor(160 * Math.pow(1.1,discoveredSecondProperties));     //works out the cost of this cursor
+    var discoverPropertyCost = Math.floor(160 * Math.pow(1.2,discoveredSecondProperties));     //works out the cost of this cursor
     if(researchPoints >= discoverPropertyCost && discoveredSecondProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
 		researchPoints = researchPoints - discoverPropertyCost;    
 		discoveredSecondProperties = discoveredSecondProperties+1
@@ -1503,7 +1516,7 @@ if(discoveredIngredients[rand].second[2] != 1){discoveredIngredients[rand].secon
 changeTable()
 }
 function discoverPropertyThird(){
-    var discoverPropertyCost = Math.floor(720 * Math.pow(1.1,discoveredThirdProperties));     //works out the cost of this cursor
+    var discoverPropertyCost = Math.floor(720 * Math.pow(1.2,discoveredThirdProperties));     //works out the cost of this cursor
     if(researchPoints >= discoverPropertyCost && discoveredThirdProperties<=(discoveredIngredients.length-1)*1-1){                                   //checks that the player can afford the cursor
     	researchPoints = researchPoints - discoverPropertyCost;    
 		discoveredThirdProperties = discoveredThirdProperties+1
@@ -1522,20 +1535,20 @@ changeTable()
 function discoverTableUpdate(){
 	
 	
-    var nextCost = Math.floor(20 * Math.pow(1.1,discoveredIngredients.length-1));       //works out the cost of the next cursor
+    var nextCost = Math.floor(20 * Math.pow(1.2,discoveredIngredients.length-1));       //works out the cost of the next cursor
     document.getElementById('discoverCost').innerHTML = nextCost;  //updates the cursor cost for the user
 
-	var nextCostFirst = Math.floor(40 * Math.pow(1.1,discoveredFirstProperties));       //works out the cost of the next cursor
+	var nextCostFirst = Math.floor(40 * Math.pow(1.2,discoveredFirstProperties));       //works out the cost of the next cursor
     document.getElementById('discoverPropertyCostFirst').innerHTML = nextCostFirst;  //updates the first property cost for the user
 
-	var nextCostFirst = Math.floor(160 * Math.pow(1.1,discoveredSecondProperties));       //works out the cost of the next cursor
+	var nextCostFirst = Math.floor(160 * Math.pow(1.2,discoveredSecondProperties));       //works out the cost of the next cursor
     document.getElementById('discoverPropertyCostSecond').innerHTML = nextCostFirst;  //updates the second property cost for the user
 
-	var nextCostFirst = Math.floor(720 * Math.pow(1.1,discoveredThirdProperties));       //works out the cost of the next cursor
+	var nextCostFirst = Math.floor(720 * Math.pow(1.2,discoveredThirdProperties));       //works out the cost of the next cursor
     document.getElementById('discoverPropertyCostThird').innerHTML = nextCostFirst;  //updates the third property cost for the user
 }
 function research(){
-	
+if(	document.getElementById("mySelect").value != document.getElementById("mySelect2").value  && document.getElementById("mySelect").value != document.getElementById("mySelect3").value && document.getElementById("mySelect2").value != document.getElementById("mySelect3").value){
 for(l=0;l<stats.length;l++){
 stats[l].value = 0}
 	
@@ -1544,79 +1557,80 @@ var secondIngredient = discoveredIngredients.filter(function (entry) { return en
 var thirdIngredient = discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById("mySelect3").value});
 var effectPotency = [ //Indexes the overall Effects array, to modify it for the potion.
 
-HealingPotency = new BasicEffect("Healing","11",["Healing","Physical Health","Agriculture Prosperity"],0),
-FertilityPotency  = new BasicEffect("Fertility","12",["Agriculture Prosperity","Agriculture Skill","Physical Health"],0),
-RebirthPotency  = new BasicEffect("Rebirth","13",["Agriculture Skill","Healing","Magical Power"],0),
-TransformationPotency  = new BasicEffect("Transformation","15",["Enchanting Skill","Enemy Armor Reduction","Potion-Making Skill"],0),
-DeathPotency  = new BasicEffect("Death","16",["Enemy Physical Health Damage","Enemy Physical Health Damage","Enemy Parry Reduction"],0),
-PowerPotency  = new BasicEffect("Power","17",["Magical Power","Enchanting Skill","Spell-Casting Skill"],0),
+AngerPotency  = new BasicEffect("Anger","63",["Enemy Armor Reduction","Enemy Mental Health Damage","Enemy Parry Reduction"],0),
+BeautyPotency  = new BasicEffect("Beauty","45",["Charisma","Seduction","Manipulation"],0),
 CleansingPotency = new BasicEffect("Cleansing","18",["Magic Resistance","Enemy Magical Power Reduction","Enemy Magic Resistance Reduction"],0),
-WaterPotency  = new BasicEffect("Water","21",["Mental Healing","Magic Resistance","Prophecy Skill"],0),
-FirePotency  = new BasicEffect("Fire","22",["Enemy Physical Health Damage","Research Speed","Physical Damage"],0),
-EarthPotency  = new BasicEffect("Earth","23",["Mining Prosperity","Armor","Magic Resistance"],0),
-WindPotency  = new BasicEffect("Wind","24",["Dodge","Spell-Casting Skill","Money"],0),
-LightPotency  = new BasicEffect("Light","25",["Enemy Parry Reduction","Enemy Detection","Mental Healing"],0),
+ConfidencePotency   = new BasicEffect("Confidence","52",["Presence","Mental Healing","Charisma"],0),
+ConfusionPotency   = new BasicEffect("Confusion","61",["Manipulation","Enemy Mental Health Damage","Enemy Magical Power Reduction"],0),
+CouragePotency   = new BasicEffect("Courage","54",["Mental Health","Spell-Casting Skill","Presence"],0),
 DarknessPotency = new BasicEffect("Darkness","26",["Magical Power","Enemy Physical Damage Reduction","Enemy Dodge Reduction"],0),
+DeathPotency  = new BasicEffect("Death","16",["Enemy Physical Health Damage","Enemy Physical Health Damage","Enemy Parry Reduction"],0),
+DreamsPotency  = new BasicEffect("Dreams","74",["Resource Detection","Magic Resistance","Seduction"],0),
+EarthPotency  = new BasicEffect("Earth","23",["Mining Prosperity","Armor","Magic Resistance"],0),
+FatePotency  = new BasicEffect("Fate","71",["Prophecy","Helpers Skill","Enchanting Skill"],0),
+FearPotency  = new BasicEffect("Fear","62",["Enemy Mental Health Damage","Enemy Dodge Reduction","Enemy Physical Damage Reduction"],0),
+FertilityPotency  = new BasicEffect("Fertility","12",["Agriculture Prosperity","Agriculture Skill","Physical Health"],0),
+FirePotency  = new BasicEffect("Fire","22",["Enemy Physical Health Damage","Research Speed","Physical Damage"],0),
+HappinessPotency   = new BasicEffect("Happiness","51",["Mental Healing","Charisma","Influence"],0),
+HealingPotency = new BasicEffect("Healing","11",["Healing","Physical Health","Agriculture Prosperity"],0),
+IllusionPotency  = new BasicEffect("Illusion","79",["Enemy Dodge Reduction","Manipulation","Dodge"],0),
+IntellectPotency  = new BasicEffect("Intellect","34",["Research Skill","Enemy Magic Resistance Reduction","Agriculture Skill"],0),
+LightPotency  = new BasicEffect("Light","25",["Enemy Parry Reduction","Enemy Detection","Mental Healing"],0),
+LovePotency  = new BasicEffect("Love","55",["Reputation","Potion-Making Skill","Mining Skill"],0),
+LuckPotency   = new BasicEffect("Luck","41",["Potion-Making Skill","Mining Prosperity","Helpers Skill"],0),
+MadnessPotency   = new BasicEffect("Madness","62",["Enemy Mental Health Damage","Manipulation","Enemy Magic Resistance Reduction"],0),
+MessagesPotency  = new BasicEffect("Messages","77",["Reputation","Prophecy Skill","Research Speed"],0),
+MysteryPotency  = new BasicEffect("Mystery","75",["Prophecy Skill","Spell-Casting Skill","Enchanting Skill"],0),
+PeacePotency   = new BasicEffect("Peace","53",["Enemy Magical Power Reduction","Mental Health","Reputation"],0),
+PerceptionPotency  = new BasicEffect("Perception","72",["Enemy Detection","Research Skill","Mining Prosperity"],0),
+PowerPotency  = new BasicEffect("Power","17",["Magical Power","Enchanting Skill","Spell-Casting Skill"],0),
+ProtectionPotency  = new BasicEffect("Protection","14",["Armor","Dodge","Parry"],0),
+RebirthPotency  = new BasicEffect("Rebirth","13",["Agriculture Skill","Healing","Magical Power"],0),
+RichesPotency   = new BasicEffect("Riches","44",["Money","Mining Prosperity","Agriculture Prosperity"],0),
+SadnessPotency  = new BasicEffect("Sadness","64",["Enemy Magic Resistance Reduction","Manipulation","Enemy Mental Health Damage"],0),
+SeductionPotency   = new BasicEffect("Seduction","43",["Seduction","Reputation","Charisma"],0),
+SocialityPotency   = new BasicEffect("Sociality","42",["Influence","Presence","Money"],0),
+SoulPotency  = new BasicEffect("Soul","76",["Spell-Casting Skill","Magical Power","Enemy Detection"],0),
+SpeedPotency  = new BasicEffect("Speed","33",["Parry","Mining Skill","Research Speed"],0),
 StrengthPotency  = new BasicEffect("Strength","31",["Physical Damage","Parry","Healing"],0),
 ToughnessPotency  = new BasicEffect("Toughness","32",["Physical Health","Physical Damage","Armor"],0),
-SpeedPotency  = new BasicEffect("Speed","33",["Parry","Mining Skill","Research Speed"],0),
-IntellectPotency  = new BasicEffect("Intellect","34",["Research Skill","Enemy Magic Resistance Reduction","Agriculture Skill"],0),
-ProtectionPotency  = new BasicEffect("Protection","14",["Armor","Dodge","Parry"],0),
-WeaknessPotency  = new BasicEffect("Weakness","36",["Enemy Physical Damage Reduction","Enemy Parry Reduction","Enemy Physical Health Damage"],0),
-LuckPotency   = new BasicEffect("Luck","41",["Potion-Making Skill","Mining Prosperity","Helpers Skill"],0),
-SocialityPotency   = new BasicEffect("Sociality","42",["Influence","Presence","Money"],0),
-SeductionPotency   = new BasicEffect("Seduction","43",["Seduction","Reputation","Charisma"],0),
-RichesPotency   = new BasicEffect("Riches","44",["Money","Mining Prosperity","Agriculture Prosperity"],0),
-BeautyPotency  = new BasicEffect("Beauty","45",["Charisma","Seduction","Manipulation"],0),
-WorshipPotency  = new BasicEffect("Worship","46",["Helpers Skill","Influence","Mental Health"],0),
-HappinessPotency   = new BasicEffect("Happiness","51",["Mental Healing","Charisma","Influence"],0),
-ConfidencePotency   = new BasicEffect("Confidence","52",["Presence","Mental Healing","Charisma"],0),
-PeacePotency   = new BasicEffect("Peace","53",["Enemy Magical Power Reduction","Mental Health","Reputation"],0),
-CouragePotency   = new BasicEffect("Courage","54",["Mental Health","Spell-Casting Skill","Presence"],0),
-LovePotency  = new BasicEffect("Love","55",["Reputation","Potion-Making Skill","Mining Skill"],0),
-TruthPotency   = new BasicEffect("Truth","73",["Research Speed","Agriculture Prosperity","Resource Detection"],0),
-ConfusionPotency   = new BasicEffect("Confusion","61",["Manipulation","Enemy Mental Health Damage","Enemy Magical Power Reduction"],0),
-FearPotency  = new BasicEffect("Fear","62",["Enemy Mental Health Damage","Enemy Dodge Reduction","Enemy Physical Damage Reduction"],0),
-MadnessPotency   = new BasicEffect("Madness","62",["Enemy Mental Health Damage","Manipulation","Enemy Magic Resistance Reduction"],0),
-AngerPotency  = new BasicEffect("Anger","63",["Enemy Armor Reduction","Enemy Mental Health Damage","Enemy Parry Reduction"],0),
-SadnessPotency  = new BasicEffect("Sadness","64",["Enemy Magic Resistance Reduction","Manipulation","Enemy Mental Health Damage"],0),
-IllusionPotency  = new BasicEffect("Illusion","79",["Enemy Dodge Reduction","Manipulation","Dodge"],0),
-FatePotency  = new BasicEffect("Fate","71",["Prophecy","Helpers Skill","Enchanting Skill"],0),
-PerceptionPotency  = new BasicEffect("Perception","72",["Enemy Detection","Research Skill","Mining Prosperity"],0),
-DreamsPotency  = new BasicEffect("Dreams","74",["Resource Detection","Magic Resistance","Seduction"],0),
-MysteryPotency  = new BasicEffect("Mystery","75",["Prophecy Skill","Spell-Casting Skill","Enchanting Skill"],0),
-SoulPotency  = new BasicEffect("Soul","76",["Spell-Casting Skill","Magical Power","Enemy Detection"],0),
-MessagesPotency  = new BasicEffect("Messages","77",["Reputation","Prophecy Skill","Research Speed"],0),
+TransformationPotency  = new BasicEffect("Transformation","15",["Enchanting Skill","Enemy Armor Reduction","Potion-Making Skill"],0),
 TravelPotency  = new BasicEffect("Travel","78",["Dodge","Resource Detection","Research Skill"],0),
+TruthPotency   = new BasicEffect("Truth","73",["Research Speed","Agriculture Prosperity","Resource Detection"],0),
+WaterPotency  = new BasicEffect("Water","21",["Mental Healing","Magic Resistance","Prophecy Skill"],0),
+WeaknessPotency  = new BasicEffect("Weakness","36",["Enemy Physical Damage Reduction","Enemy Parry Reduction","Enemy Physical Health Damage"],0),
+WindPotency  = new BasicEffect("Wind","24",["Dodge","Spell-Casting Skill","Money"],0),
+WorshipPotency  = new BasicEffect("Worship","46",["Helpers Skill","Influence","Mental Health"],0),
+
     
     
 ]
 
 function arrayCreate(ingredient){ //For each Effect in the new array, adds potency based on the ingredients chosen.
 for(i=0;i<effectPotency.length;i++){
-if(ingredient[0].first[0] === effectPotency[i].value){effectPotency[i].potency+=(ingredient[0].first[1]+effects[i].potency)}
-if(ingredient[0].second[0] === effectPotency[i].value){effectPotency[i].potency+=(ingredient[0].second[1]+effects[i].potency)}
-if(ingredient[0].third[0] === effectPotency[i].value){effectPotency[i].potency+=(ingredient[0].third[1]+effects[i].potency)}
+if(ingredient[0].first[0] === effectPotency[i].value){effectPotency[i].potency+=(ingredient[0].first[1]+effects[i].potency/4)}
+if(ingredient[0].second[0] === effectPotency[i].value){effectPotency[i].potency+=(ingredient[0].second[1]+effects[i].potency/4)}
+if(ingredient[0].third[0] === effectPotency[i].value){effectPotency[i].potency+=(ingredient[0].third[1]+effects[i].potency/4)}
 }
 }
-arrayCreate(firstIngredient)
-arrayCreate(secondIngredient)
-arrayCreate(thirdIngredient)
+arrayCreate(firstIngredient);
+arrayCreate(secondIngredient);
+arrayCreate(thirdIngredient);
 
 
 var effectPotencySorted =  effectPotency.sort(function(b, a){
     return a["potency"]-b["potency"];
 });
 
-statsArray = []
+statsArray = [];
 	for(j=0;j<effectPotencySorted.length;j++){
 	for(i=0;i<effectPotencySorted[j].potency;i++){
 	
-statsArray.push(effectPotencySorted[j].affectedStats[0])
-statsArray.push(effectPotencySorted[j].affectedStats[0])
-statsArray.push(effectPotencySorted[j].affectedStats[0])
-statsArray.push(effectPotencySorted[j].affectedStats[1])
-statsArray.push(effectPotencySorted[j].affectedStats[1])
+statsArray.push(effectPotencySorted[j].affectedStats[0]);
+statsArray.push(effectPotencySorted[j].affectedStats[0]);
+statsArray.push(effectPotencySorted[j].affectedStats[0]);
+statsArray.push(effectPotencySorted[j].affectedStats[1]);
+statsArray.push(effectPotencySorted[j].affectedStats[1]);
 statsArray.push(effectPotencySorted[j].affectedStats[2])
 	}}
 	
@@ -1666,6 +1680,7 @@ if(typeTextName === "Spell"){stats[index].value*= spellBalancer;stats[index2].va
 if(typeTextName === "Enchantement"){stats[index].value*= enchantmentBalancer;stats[index2].value *= enchantmentBalancer}
 
 // This adds to the list of Created Rituals
+    //console.log(document.getElementById("mySelect").value + " " + document.getElementById("mySelect2").value + " " + document.getElementById("mySelect3").value)
 if(stats[index].value,stats[index2].value > 1.1){
 var newRitual = new CreatedRitual([typeText,stats[index2].ritualNames[0],stats[index].ritualNames[1]],document.getElementById("mySelect").value,document.getElementById("mySelect2").value,document.getElementById("mySelect3").value,[stats[index].name,stats[index2].name],[Math.floor(stats[index].value/2),Math.floor(stats[index2].value/2)]) 
 }
@@ -1677,7 +1692,12 @@ if(newRitual.value[0] === 0){logger("This Ritual lacks potency, and has no effec
 else{inProgressVariable.push(newRitual);inProgressVariable.push(10);inProgressVariable.push(craftedRituals);move()}
 for(i=0;i<stats.length;i++){stats[i].value = 0}
 changeTable()}
+else{logger("You need three different ingredients to proceed with research!")}
+}
 
+function upgradeIngredient(){
+	
+}
 	// Loading Bar Functions
 function checkIfMatch(array){
 	var checkTrue = "False"
@@ -1730,18 +1750,20 @@ function xpGain(experienceGain) {
 	  nextLevel = Math.floor(nextLevel*1.1)
 	  levelUp()
     } 
+	  console.log(currentXp + experienceGain + " " + nextLevel)
+
       currentXp += Math.floor(experienceGain*(1+ProphecySkillBalance)*10)/10
+  console.log(currentXp + experienceGain + " " + nextLevel)
 	  if(Math.floor(experienceGain*(1+ProphecySkillBalance)*10)/10!=0){logger("You gain "+ Math.floor(experienceGain*(1+ProphecySkillBalance)*10)/10 + " XP !")}
       elem.style.width = currentXp/nextLevel*100 + "%"; 
       document.getElementById("label").innerHTML = Math.round(currentXp*10) / 10;
-}
+
+	  }
 function levelUp(){
 	level += 1
 document.getElementById("LevelDisplay").innerHTML = level
 	levelPoints += 1
-PotionMakingSkillBase.value += 1
-SpellCastingSkillBase.value += 1
-EnchantingSkillBase.value	+= 1
+
 	changeTable()
 logger("You have reached Level " + level + " ! You gain 1 Skill Point.")
 }
@@ -1754,6 +1776,7 @@ filteredTitan =	totalEnemyTypes.filter(function (entry) {
 		document.getElementById("TEnemiesTypeNumber").innerHTML = filteredTitan[0][1]
 }
 function updateProgress(){
+	document.getElementById("TIngredients").innerHTML = discoveredIngredients.length + "/" + ingredients.length
 	document.getElementById("TRituals").innerHTML = totalRituals
 	document.getElementById("TPotions").innerHTML = totalPotions
 	document.getElementById("TSpells").innerHTML = totalSpells
@@ -1798,6 +1821,7 @@ if(document.getElementById("SelectType2").options[document.getElementById("Selec
 		// Spawn and Modify the Tables
 function potionTableUpdate(){
 // Clears the table so it can be repopulated
+	document.getElementById("SelectFilter").style.display="block";
 var table = document.getElementById("potionTable");	table.innerHTML = "";
 
 for(i=0;i<craftedRituals.length;i++){
@@ -1858,12 +1882,14 @@ else{
 
 newPotion = new InventoryPotion([craftedRituals[i].name[0],craftedRituals[i].name[1],craftedRituals[i].name[2]],1,[craftedRituals[i].effect[0],craftedRituals[i].effect[1]],[craftedRituals[i].value[0],craftedRituals[i].value[1]])
 
-
+console.log(newPotion.sellPrice[0] + " " + newPotion.sellPrice[1])
 
 if(newPotion.name[0].indexOf("Potion") != -1){
 checkIfMatch(ownedPotions); newPotion.sellPrice[0] = Math.round(newPotion.sellPrice[0]*potionPotencyBalancer) ; newPotion.sellPrice[1] = Math.round(newPotion.sellPrice[1]*potionPotencyBalancer)}
-if(newPotion.name[0].indexOf("Spell") != -1){ checkIfMatch(readySpells) ; newPotion.sellPrice[0] = Math.round(newPotion.sellPrice[0]*spellPotencyBalancer) ; newPotion.sellPrice[1] = Math.round(newPotion.sellPrice[1]*spellPotencyBalancer)}
-if(newPotion.name[0].indexOf("Enchantement") != -1){ checkIfMatch(ownedEnchantements); newPotion.sellPrice[0] = Math.round(newPotion.sellPrice[0]*enchantingPotencyBalancer) ; newPotion.sellPrice[0] = Math.round(newPotion.sellPrice[0]*enchantingPotencyBalancer); 	updateEnchantements() }
+if(newPotion.name[0].indexOf("Spell") != -1){ checkIfMatch(readySpells) ; newPotion.sellPrice[0] = Math.round(newPotion.sellPrice[0]*spellPotencyBalancer) ; newPotion.sellPrice[1] = Math.round(newPotion.sellPrice[1]*spellPotencyBalancer); }
+if(newPotion.name[0].indexOf("Enchantement") != -1){ checkIfMatch(ownedEnchantements); newPotion.sellPrice[0] = Math.round(newPotion.sellPrice[0]*enchantingPotencyBalancer) ; newPotion.sellPrice[1] = Math.round(newPotion.sellPrice[1]*enchantingPotencyBalancer); 	updateEnchantements() }
+console.log(newPotion.sellPrice[0] + " " + newPotion.sellPrice[1])
+
 //ownedPotions.push(newPotion)
 	changeTable();
 	updateIngredientSelect()
@@ -1873,7 +1899,9 @@ if(newPotion.name[0].indexOf("Enchantement") != -1){ checkIfMatch(ownedEnchantem
 cell10.onclick = function() { for(i=1;i<document.getElementById("potionTable").rows.length;i++){
 
 if(this.id === i.toString()){craftedRituals.splice(i,1); changeTable()}
-}};	}
+}}
+row.style.display = "none"
+if(craftedRituals[i].effect[0] === document.getElementById("SelectFilter").value || craftedRituals[i].effect[1] === document.getElementById("SelectFilter").value || document.getElementById("SelectFilter").value === "No Filter"){row.style.display = "table-row"}}
 //This updates the cells with the different results.
 	potionTable.rows[0].cells[0].innerHTML = 'Name';
 	potionTable.rows[0].cells[5].innerHTML = '';
@@ -1881,10 +1909,11 @@ if(this.id === i.toString()){craftedRituals.splice(i,1); changeTable()}
 	potionTable.rows[0].cells[8].innerHTML = '';
 	potionTable.rows[0].cells[9].innerHTML = '';
 
-
+potionTable.rows[0].display = "table-row"
 	}
 
 function ownedPotionsTableUpdate(){
+		document.getElementById("SelectFilter").style.display="block";
 	for(z=0;z<ownedPotions.length;z++){
 	
 	for(y=0;y<ownedPotions.length;y++){
@@ -1953,6 +1982,9 @@ cell7.innerHTML = ownedPotions[i].sellPrice[0]*6 + ownedPotions[i].sellPrice[1]*
 cell8.innerHTML = "Use".bold()
 cell9.innerHTML = "Sell".bold()
 ;
+row.style.display = "none"
+if(ownedPotions[i].effect[0] === document.getElementById("SelectFilter").value || ownedPotions[i].effect[1] === document.getElementById("SelectFilter").value || document.getElementById("SelectFilter").value === "No Filter"){row.style.display = "table-row"}
+
 }
 	potionTable.rows[0].cells[0].innerHTML = 'Name';
 	potionTable.rows[0].cells[1].innerHTML = 'Quantity';
@@ -1966,6 +1998,7 @@ cell9.innerHTML = "Sell".bold()
 	
 }
 function ownedEnchantementsTableUpdate(){
+		document.getElementById("SelectFilter").style.display="block";
 	for(z=0;z<ownedEnchantements.length;z++){
 	
 	for(y=0;y<ownedEnchantements.length;y++){
@@ -2016,6 +2049,9 @@ cell6.innerHTML = ownedEnchantements[i].sellPrice[1];
 cell7.innerHTML = ownedEnchantements[i].sellPrice[0]*75 + ownedEnchantements[i].sellPrice[1]*75;
 cell8.innerHTML = "Sell".bold()
 ;
+row.style.display = "none"
+if(ownedEnchantements[i].effect[0] === document.getElementById("SelectFilter").value || ownedEnchantements[i].effect[1] === document.getElementById("SelectFilter").value || document.getElementById("SelectFilter").value === "No Filter"){row.style.display = "table-row"}
+
 }
 	potionTable.rows[0].cells[0].innerHTML = 'Name';
 	potionTable.rows[0].cells[1].innerHTML = 'Quantity';
@@ -2027,6 +2063,7 @@ cell8.innerHTML = "Sell".bold()
 	potionTable.rows[0].cells[7].innerHTML = '';
 }
 function readySpellsTableUpdate(){
+		document.getElementById("SelectFilter").style.display="block";
 	for(z=0;z<readySpells.length;z++){
 	
 	for(y=0;y<readySpells.length;y++){
@@ -2079,6 +2116,9 @@ cell5.innerHTML = readySpells[i].effect[1]
 cell6.innerHTML = readySpells[i].sellPrice[1];
 cell7.innerHTML = "Cast".bold()
 ;
+row.style.display = "none"
+if(readySpells[i].effect[0] === document.getElementById("SelectFilter").value || readySpells[i].effect[1] === document.getElementById("SelectFilter").value || document.getElementById("SelectFilter").value === "No Filter"){row.style.display = "table-row"}
+
 }
 	potionTable.rows[0].cells[0].innerHTML = 'Name';
 	potionTable.rows[0].cells[1].innerHTML = 'Quantity';
@@ -2090,7 +2130,6 @@ cell7.innerHTML = "Cast".bold()
 	
 }
 function activePotionsTableUpdate(){
-
 var table = document.getElementById("potionTable");
 	table.innerHTML = "";
 
@@ -2158,11 +2197,13 @@ cell6.onclick = function() {
 if(this.id === i.toString()){
 	//logger(filteredEffects[i].name)
 	effects[i].potency+=1
+	effectTest = chosenClass.effects.filter(function (entry) {  
+	if(entry.name === effects[i].name){return true}})
+	if(effectTest.length > 0){console.log("working");effects[i].potency+=1}
 }}
 
 levelPoints -= 1; changeTable()}
-}row.style.display = "none"
-if(effects[i].affectedStats.indexOf(document.getElementById("SelectFilter").value)!=-1){row.style.display = "table-row"}
+}
 }}
 
 function tableUpdate(){
@@ -2170,14 +2211,15 @@ var table = document.getElementById("potionTable");
 	table.innerHTML  = "";
 	document.getElementById("SelectFilter2").style.display="block";
 	document.getElementById("SelectFilter").style.display="block";
-filteredDiscoveredIngredients = discoveredIngredients
+filteredDiscoveredIngredients = discoveredIngredients;
 	if(document.getElementById("SelectFilter2").value != "No Filter"){
 	filteredDiscoveredIngredients = discoveredIngredients.filter(function (entry) {  
 	if(
 	(entry.first[0] === document.getElementById("SelectFilter2").value && entry.first[2] === 1)  || 
 	(entry.second[0] === document.getElementById("SelectFilter2").value && entry.second[2] === 1) || 
 	(entry.third[0] === document.getElementById("SelectFilter2").value && entry.third[2] === 1) || 
-	entry.first[0] === "Property 1"){return true}
+	entry.first[0] === "Property 1" )
+	{return true}
 
 	})}
 
@@ -2192,8 +2234,10 @@ if(document.getElementById("SelectFilter").value != "No Filter"){
 
 	filteredDiscoveredIngredients = filteredDiscoveredIngredients.filter(function (entry) { 
 	for(i=0;i<filteredEffects.length;i++){if(
-	entry.first[0] === filteredEffects[i].value || entry.second[0] === filteredEffects[i].value || entry.third[0] === filteredEffects[i].value || entry.first[0] === "Property 1"
-	)
+	(entry.first[0] === filteredEffects[i].value && entry.first[2] === 1)  || 
+	(entry.second[0] === filteredEffects[i].value && entry.second[2] === 1) || 
+	(entry.third[0] === filteredEffects[i].value && entry.third[2] === 1) || 
+	entry.first[0] === "Property 1" 	)
 	{return true}}
 	})}
 	
@@ -2251,8 +2295,17 @@ if(this.innerHTML === document.getElementById("potionTable").rows[i].innerHTML){
 }
 	potionTable.rows[0].cells[5].innerHTML = 'Price'
 }
-
-
+		
+		// Show Advice that can be customized for the many tables.
+function showAdviceBigTable(){
+if(document.getElementById("SelectType2").options[document.getElementById("SelectType2").selectedIndex].value === "OwnedPotions"){showAdvice(['This lists your existing Potions, their Effects, as well as their Potency. Use the filter to search through your different potions.'])}
+if(document.getElementById("SelectType2").options[document.getElementById("SelectType2").selectedIndex].value === "ReadySpells"){showAdvice(['This lists your existing Spells, their Effects, as well as their Potency. Use the filter to search through your different potions.'])}
+if(document.getElementById("SelectType2").options[document.getElementById("SelectType2").selectedIndex].value === "DiscoveredIngredients"){showAdvice(['This lists your Discovered Ingredients. Each Ingredient has three Effects to discover, each affecting three Stats. Click anywhere on an ingredient\'s row to buy it and use it in your creations!'])}
+if(document.getElementById("SelectType2").options[document.getElementById("SelectType2").selectedIndex].value === "DiscoveredRecipes"){showAdvice(['This lists the Recipes you discovered. They can have up to two Effects, each with a certain Potency. That Potency will increase the Power of that Stat. The Stats Panel lists both the Potency and Power for each Stat.'])}
+if(document.getElementById("SelectType2").options[document.getElementById("SelectType2").selectedIndex].value === "OwnedEnchantements"){showAdvice(['This lists your existing Enchantements, their Effects, as well as their Potency. Use the filter to search through your different potions.'])}
+if(document.getElementById("SelectType2").options[document.getElementById("SelectType2").selectedIndex].value === "ActivePotions"){showAdvice(['This lists all active Potions and Spells as well as the time remaining on them.'])}
+if(document.getElementById("SelectType2").options[document.getElementById("SelectType2").selectedIndex].value === "EffectsTable"){showAdvice(['This lists every Effect and the Stats it affects(with the first Stat being the most powerfully affected). You can sort through different Stats to find how to improve certain Stats. It also is where, when you level up, you can allocate points to increase the power of all creations using that Effect. Your Class\' Preferred Effects gain power more quickly.'])}
+}
 //
 //----- South East DIV -----
 //
@@ -2445,7 +2498,7 @@ function spawnSocialChallenges(){
 if( SocialVars[i].timeLeft <=0 || SocialVars[i].cost<=0 || SocialVars[i].cost === "Not Defined"){
 SocialVars[i].rewardModifier = 1+((Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1)/5)
 document.getElementById(SocialVars[i].nextContract).innerHTML = Math.floor(SocialVars[i].rewardModifier*10)/10
-SocialVars[i].cost = Math.floor((1+((Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1)/5))*50)
+SocialVars[i].cost = Math.floor((1+((Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1)/5))*50*(1+questDifficultySocial.numberDone/5))
 document.getElementById(SocialVars[i].remainingPoints).innerHTML = Math.floor(SocialVars[i].cost*10)/10
 SocialVars[i].totalCost = Math.floor(((1+((Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1 + Math.floor(Math.random()*3)-1))/5))*50)
 SocialVars[i].reward = 0
