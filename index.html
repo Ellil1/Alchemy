@@ -2,7 +2,7 @@
 <head>
 <link rel="stylesheet" type="text/css" href="interface.css" />
 </head>
-<body onload="spawnSocialChallenges(); chooseQuest(); chooseQuest(); chooseQuest(); changeStatsTable(); computeStats(); loadButton(); instructions()">
+<body onload="loadButton(); spawnSocialChallenges(); changeStatsTable(); computeStats(); instructions()">
 
 <script type="text/javascript" src="main.js">
 </script>
@@ -81,27 +81,27 @@ span.onclick = function() {
 	}}
 </script>
 
-<br><button onClick="chooseClass('Thaumaturgist')">Choose Class</button><span>  <b>Thaumaturgist</b> <br> Experts in the primal forces of Life and Death, Thaumaturgists are well-versed in the cycle of life. They are patient, let their garden bloom, starting weak as a sapling but growing strong as the oak.<br>
+<br><button onClick="chooseClass('Thaumaturgist');this.disabled = true">Choose Class</button><span>  <b>Thaumaturgist</b> <br> Experts in the primal forces of Life and Death, Thaumaturgists are well-versed in the cycle of life. They are patient, let their garden bloom, starting weak as a sapling but growing strong as the oak.<br>
  <b>Preferred Effects</b>: Healing, Fertility, Rebirth, Transformation, Death, Power</span>
 <br>
-<br><button onClick="chooseClass('Elementalist')">Choose Class</button><span>  <b>Elementalist</b> <br> Manipulating the primal Titanic forces of the elements, Elementalists are versatile and impulsive. They can display an incredible array of different powers, with monstrous bursts of energies pulverizing any obstacle.<br>
+<br><button onClick="chooseClass('Elementalist');this.disabled = true">Choose Class</button><span>  <b>Elementalist</b> <br> Manipulating the primal Titanic forces of the elements, Elementalists are versatile and impulsive. They can display an incredible array of different powers, with monstrous bursts of energies pulverizing any obstacle.<br>
  <b>Preferred Effects</b>: Water, Fire, Earth, Wind, Light, Darkness</span>
 <br>
-<br><button onClick="chooseClass('Biomancer')">Choose Class</button><span>  <b>Biomancer</b> <br> Believing that doing a job right means doing it yourself, Biomancers are an aggressive, focused type. Using any means available to improve their abilities, they then use their perfected body to crush their foes.<br>
+<br><button onClick="chooseClass('Biomancer');this.disabled = true">Choose Class</button><span>  <b>Biomancer</b> <br> Believing that doing a job right means doing it yourself, Biomancers are an aggressive, focused type. Using any means available to improve their abilities, they then use their perfected body to crush their foes.<br>
  <b>Preferred Effects</b>: Strength, Toughness, Speed, Intellect, Protection, Weakness</span>
 <br>
-<br><button onClick="chooseClass('Guru')">Choose Class</button><span>  <b>Guru</b> <br> Reveling in the attention others can't help but give them, Gurus get along with anyone and everyone, carefully planning each social encounter like a general plans for a battle.<br>
+<br><button onClick="chooseClass('Guru');this.disabled = true">Choose Class</button><span>  <b>Guru</b> <br> Reveling in the attention others can't help but give them, Gurus get along with anyone and everyone, carefully planning each social encounter like a general plans for a battle.<br>
  <b>Preferred Effects</b>: Luck, Sociality, Seduction, Riches, Beauty, Worship</span>
 <br></div>
      <div id="object2" style="float:right; width:50%">
 
-<br><br><br><br><button onClick="chooseClass('Yogi')">Choose Class</button><span>  <b>Yogi</b> <br> Living true to the adage of "Wellness is Goodness", Yogis bless others - and themselves - with positivity. They always have to be doing something - even if that thing is peaceful meditation.<br>
+<br><br><br><br><button onClick="chooseClass('Yogi');this.disabled = true">Choose Class</button><span>  <b>Yogi</b> <br> Living true to the adage of "Wellness is Goodness", Yogis bless others - and themselves - with positivity. They always have to be doing something - even if that thing is peaceful meditation.<br>
  <b>Preferred Effects</b>: Happiness, Confidence, Peace, Courage, Love, Truth</span>
 <br>
-<br><button onClick="chooseClass('Hexer')">Choose Class</button><span>  <b>Hexer</b> <br> Using the darkest of magics, Hexers eschew the dangers of self-experimentation...by experimenting on others. Voodoo dolls, curses, bad luck and bad omens are their trade.<br>
+<br><button onClick="chooseClass('Hexer');this.disabled = true">Choose Class</button><span>  <b>Hexer</b> <br> Using the darkest of magics, Hexers eschew the dangers of self-experimentation...by experimenting on others. Voodoo dolls, curses, bad luck and bad omens are their trade.<br>
  <b>Preferred Effects</b>: Confusion, Fear, Madness, Anger, Sadness, Illusion</span>
 <br>
-<br><button onClick="chooseClass('Wyrdseer')">Choose Class</button><span>  <b>Wyrdseer</b> <br> Peering into the very Web of Fate, wyrdseers possess the most complex of abilities. Quite often, their strange manneurisms and patterns only reveal their sense much later - to world-shattering effect.<br>
+<br><button onClick="chooseClass('Wyrdseer');this.disabled = true">Choose Class</button><span>  <b>Wyrdseer</b> <br> Peering into the very Web of Fate, wyrdseers possess the most complex of abilities. Quite often, their strange manneurisms and patterns only reveal their sense much later - to world-shattering effect.<br>
  <b>Preferred Effects</b>: Fate, Perception, Dreams, Mystery, Soul, Messages, Travel</span>
 <br></div>
 </div>
@@ -151,8 +151,8 @@ span.onclick = function() {
 	 <tr><th>Enemy Debuffs</th><th>Power</th><th>Potency</th></tr>
 	 <tr><td title="Decreases Enemy Physical Damage">Physical Damage</td><td><span id="EPPower">0</span></td><td><span id="EPPowerMod">0</span></tr>
 	 <tr><td title="Decreases Enemy Magical Power">Magical Power</td><td><span id="EMPower">0</span></td><td><span id="EMPowerMod">0</span></tr>
-     <tr><td title="Decreases Enemy Physical Health">Physical Health</td><td><span id="EPHealth">0</span></td><td><span id="EPHealthMod">0</span></tr>
-     <tr><td title="Decreases Enemy Mental Health">Mental Health</td><td><span id="EMeHealth">0</span></td><td><span id="EMeHealthMod">0</span></tr>
+     <tr><td title="Decreases Enemy Physical Health">Physical Vulnerability</td><td><span id="EPHealth">0</span></td><td><span id="EPHealthMod">0</span></tr>
+     <tr><td title="Decreases Enemy Mental Health">Mental Vulnerability</td><td><span id="EMeHealth">0</span></td><td><span id="EMeHealthMod">0</span></tr>
      <tr><td title="Decreases Enemy Armor">Armor</td><td><span id="EArmor">0</span></td><td><span id="EArmorMod">0</span></tr>
      <tr><td title="Decreases Enemy Magic Resistance">Magic Resistance</td><td><span id="EMResistance">0</span></td><td><span id="EMResistanceMod">0</span></tr>
      <tr><td title="Decreases Enemy Dodge Chance">Dodge</td><td><span id="EDodge">0</span></td><td><span id="EDodgeMod">0</span></tr>
@@ -178,14 +178,21 @@ span.onclick = function() {
   <li><a id="MainDisplayTab" href="#" class="tablinks" onclick="openNW(event, 'mainDisplay')">Main</a></li>
   <li><a id="QuestDisplayTab" href="#" class="tablinks" onclick="openNW(event, 'classQuestDisplay')">Class and Quests</a></li>
   <li><a id="GlobalInfoDisplayTab" href="#" class="tablinks" onclick="openNW(event, 'globalInfoDisplay')">Progress</a></li>
+  <li><a id="UpgradesDisplayTab" href="#" class="tablinks" onclick="openNW(event, 'upgradesInfoDisplay')">Upgrades</a></li>
 </ul>
 <div id="mainDisplay" class="tabcontent" style="display:block">
 <div style="float:right">
- <textarea id="log"  rows="8" cols="35" placeholder="Log Text" readonly style="resize: none; font-size: 14px;"></textarea>
+ <textarea id="log"  rows="7" cols="35" placeholder="Log Text" readonly style="resize: none; font-size: 14px;"></textarea>
 <br><br><span>Research Bar</span><br>
  <div id="myProgress"  >
-  <div id="myBar"></div></div>
-  <br><br>
+  <div id="myBar"></div></div><br>
+<table>
+    <tr><td><button onClick="research(discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById('mySelect').value}),discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById('mySelect2').value}),discoveredIngredients.filter(function (entry) { return entry.name[0] === document.getElementById('mySelect3').value}),1)">Research a new Ritual</button>
+</td><td> <select class="mousetrap" id="SelectType"  >
+    <option value = "Potion">Potion</option>
+    <option value = "Spell">Spell</option>
+    <option value = "Enchantement">Enchantement</option>
+	</select> <br></td></tr></table>
   	<label class="ingredients" for="mySelect" id = mySelectLabel style="float:left">First Ingredient</label>	
   <select class="mousetrap" id="mySelect"  >
     <option value=""  disabled selected>Owned Ingredient</option>
@@ -199,11 +206,11 @@ span.onclick = function() {
   <select class="mousetrap" id="mySelect3" >
     <option value=""  disabled selected>Owned Ingredient</option>
   </select>
-  <br><br>  <img class="HelpModals" src="http://i.imgur.com/PJxKoE1.png" style="float:right" onclick="showAdvice(['This is the Main Tab. The top left table allows you to do Research, hire Helpers to do Research for you, and to keep track of your Gold and Research Points.','The bottom left table allows you to dicover ingredients and their different properties, as well as start Research on a new Ritual.','On the right is a log of recent events, the Research Bar which loads your next creation, and the selector for the ingredients you want to use for your next Ritual attempt.'])"></img>
+   <img class="HelpModals" src="http://i.imgur.com/PJxKoE1.png" style="float:right" onclick="showAdvice(['This is the Main Tab. The top left table allows you to do Research, hire Helpers to do Research for you, and to keep track of your Gold and Research Points.','The bottom left table allows you to dicover ingredients and their different properties. You can also upgrade ingredients, which costs Gold instead of Research Points. An upgraded ingredient will be 10 times more powerful, but will cost accordingly! Upon upgrade, you lose all of the previous ingredient - so be careful.','On the right is a log of recent events, the Research Bar which loads your next creation, and the selector for the ingredients you want to use for your next Ritual attempt.'])"></img>
   </div>
  <table >
 
-    <tr><td><button onClick="clicker(1)">Do Research</button></td><td><button onClick="buyHelper(1)">Hire a Helper</button></td></tr>
+    <tr><td><button id="clickedButton" onClick="clickerButton(1)">Do Research</button></td><td><button onClick="buyHelper(1)">Hire a Helper</button></td></tr>
    <tr><td>Number of Helpers</td><td><span id="helpers">0</span></td></tr>
     <tr><td>Cost of Helpers</td><td><span id="helpersCost">10</span></td></tr>
     <tr><td><a> Gold </a></td><td><span id="gold">0</span></td></tr>
@@ -214,12 +221,6 @@ span.onclick = function() {
 
 <table >
 
-    <tr><td><button onClick="research()">Research a new Ritual</button>
-</td><td> <select class="mousetrap" id="SelectType"  >
-    <option value = "Potion">Potion</option>
-    <option value = "Spell">Spell</option>
-    <option value = "Enchantement">Enchantement</option>
-	</select> <br></td></tr>
     <tr><td><button onClick="discoverIngredient()">Discover an Ingredient</button>
 </td><td><span id="discoverCost">20</span><br></td></tr>
     <tr><td><button onClick="discoverPropertyFirst()">Discover a First Property</button>
@@ -228,12 +229,6 @@ span.onclick = function() {
 </td><td><span id="discoverPropertyCostSecond">160</span></td></tr>
     <tr><td><button onClick="discoverPropertyThird()">Discover a Third Property</button>
 </td><td><span id="discoverPropertyCostThird">720</span></td></tr>
-    <tr><td><button onClick="upgradeIngredient()">Lvl+ Ingredient</button>
-	 <select class="mousetrap" id="UpgradeIngredientSelect"  style="max-width:80px;">
-    <option value=""  disabled selected>Ingredients</option>
-  </select>
-</td><td><span id="upgradeIngredientCost">10000</span>	
- </td></tr>
 </table>
 
 
@@ -246,22 +241,23 @@ span.onclick = function() {
 <span>Class: <b id="ClassDisplay">None</b></span><br><span>Level: <b id="LevelDisplay">0</b></span><br>
  <div id="myLevelProgress"  >
   <div id="myLevelBar" ><div id="label">0</div></div></div>
- <br>
- <button onClick="xpGain(50)">Click !</button></div>
- <br> <br><br><br><br><br><br>
+ </div><br>
+ <br><br> <a id="preferredEffects"></a><br><br><br>
 
 <div id="questList" style="width:700px;border:1px solid black">
-<a id="Quest1">   </a><button id="QuestButton1" onclick="resetQuest(activeQuests[0])" style="float:right">Reset Quest</button><br><br>
-<a id="Quest2">   </a><button id="QuestButton2" onclick="resetQuest(activeQuests[1])" style="float:right">Reset Quest</button><br><br>
-<a id="Quest3">   </a><button id="QuestButton3" onclick="resetQuest(activeQuests[2])" style="float:right">Reset Quest</button><br><br>
+<a id="Quest1">   </a><a id="Quest1Progress">   </a><button id="QuestButton1" onclick="resetQuest(activeQuests[0])" style="float:right">Reset Quest</button><br><br>
+<a id="Quest2">   </a><a id="Quest2Progress">   </a><button id="QuestButton2" onclick="resetQuest(activeQuests[1])" style="float:right">Reset Quest</button><br><br>
+<a id="Quest3">   </a><a id="Quest3Progress">   </a><button id="QuestButton3" onclick="resetQuest(activeQuests[2])" style="float:right">Reset Quest</button><br><br>
 </div>
 <a id="QuestResetDisplay"></a>
   <br><br>  <img class="HelpModals" src="http://i.imgur.com/PJxKoE1.png" style="float:right" onclick="showAdvice(['Here you can see your Class, Level, and Experience, as well as your Quests','You can have 3 Quests at a time. Every 10 minutes, you can reset one. Which quests you get will be influenced by your Class.'])"></img>
  <button onClick="saveButton()">Save !</button>
 <button onClick="loadButton()">Load !</button>
 <button onClick="resetButton()">Reset Save</button>
+<button onClick="exportSave(JSON.stringify(save))">Export Save</button>
+<button onClick="importSave()">Import Save</button>
 <button onClick="Cheat()">TestingCheat</button>
-
+<button onClick="xpGain(10999990000000)">Gain XP</button>
  </div>
 <div id="globalInfoDisplay" class="tabcontent">
 
@@ -309,11 +305,15 @@ span.onclick = function() {
      <tr><td>Enchantement Quests</td><td><span id="TQuestsEnchantement">0</span></td></tr>
 	 <tr><td>Mining Quests</td><td><span id="TQuestsMining">0</span></td></tr>
      <tr><td>Agriculture Quests</td><td><span id="TQuestsAgriculture">0</span></td></tr>
+     <tr><td id="TimeCounter"></td><td><span >seconds</span></td></tr>
   </table>
 </div>
 
-  </div></div>
- 
+  </div>
+  <div id="upgradesInfoDisplay" class="tabcontent" style="overflow:auto; height:365px;">
+  <table class="beta" style="width:100%" id="upgradesTable" ></table>
+</div></div>
+
 <div class="delta" id="sw" >
 
  <select class="mousetrap" id="SelectType2" onchange="changeTable()" >
@@ -325,8 +325,12 @@ span.onclick = function() {
     <option value = "ActivePotions">Toxicology Report (Active Effects)</option>
     <option value = "EffectsTable">Effects Table</option>
 </select>
+
+<button id = "updateRitualsButton" onClick="updateRituals()">Update Rituals</button>
+
+
 <img class="HelpModals" src="http://i.imgur.com/PJxKoE1.png" style="float:right; " onclick="showAdviceBigTable()"></img>
- <select class="mousetrap" id="SelectFilter" style="display:none; float:right" onchange = "changeTable()">
+ <select class="mousetrap" id="SelectFilter" style="display:none; float:right; max-width:140px;" " onchange = "changeTable()">
  	<option selected value = "No Filter">No Stat Filter</option>   
 	<option value = "Physical Damage">Physical Damage</option>
     <option value = "Magical Power">Magical Power</option>
@@ -338,13 +342,10 @@ span.onclick = function() {
     <option value = "Research Speed">Research Speed</option>
     <option value = "Research Skill">Research Skill</option>
     <option value = "Prophecy Skill">Prophecy Skill</option>
-    <option value = "Potion-Making Skill">Potion-Making Skill</option>
-    <option value = "Spell-Casting Skill">Spell-Casting Skill</option>
-    <option value = "Enchanting Skill">Enchanting Skill</option>
     <option value = "Helpers Skill">Helpers Skill</option>
     <option value = "Enemy Detection">Enemy Detection</option>
     <option value = "Resource Detection">Resource Detection</option>
-   <option value = "Agriculture Skill">Agriculture Skill</option>
+    <option value = "Agriculture Skill">Agriculture Skill</option>
     <option value = "Agriculture Prosperity">Agriculture Prosperity</option>
     <option value = "Mining Skill">Mining Skill</option>
     <option value = "Mining Prosperity">Mining Prosperity</option>
@@ -359,9 +360,9 @@ span.onclick = function() {
     <option value = "Money">Money</option>
     <option value = "Reputation">Reputation</option>
     <option value = "Enemy Physical Damage Reduction">Enemy Damage Reduction</option>
-    <option value = "Enemy Physical Health Damage">Enemy Health</option>
-    <option value = "Enemy Magical Power Reduction">Enemy Magical Power</option>
-    <option value = "Enemy Mental Health Damage">Enemy Magical Damage</option>
+    <option value = "Enemy Physical Vulnerability">Enemy Physical Vulnerability</option>
+    <option value = "Enemy Magical Power Reduction">Enemy Magical Power Reduction</option>
+    <option value = "Enemy Mental Vulnerability">Enemy Mental Vulnerability</option>
     <option value = "Enemy Magic Resistance Reduction">Enemy Magic Resist</option>
     <option value = "Enemy Dodge Reduction">Enemy Dodge</option>
     <option value = "Enemy Parry Reduction">Enemy Parry</option>
@@ -371,50 +372,50 @@ span.onclick = function() {
 
  <select class="mousetrap" id="SelectFilter2" style="display:none; float:right" onchange = "changeTable()">
  <option value = "No Filter">No Effect Filter</option>
- <option value = "64">Anger</option>
- <option value = "45">Beauty</option>
- <option value = "18">Cleansing</option>
- <option value = "52">Confidence</option>
- <option value = "61">Confusion</option>
- <option value = "54">Courage</option>
- <option value = "26">Darkness</option>
- <option value = "16">Death</option>
- <option value = "74">Dreams</option>
- <option value = "23">Earth</option>
- <option value = "71">Fate</option>
- <option value = "62">Fear</option>
- <option value = "12">Fertility</option>
- <option value = "22">Fire</option>
- <option value = "51">Happiness</option>
- <option value = "11">Healing</option>
- <option value = "79">Illusion</option>
- <option value = "34">Intellect</option>
- <option value = "25">Light</option>
- <option value = "55">Love</option>
- <option value = "41">Luck</option>
- <option value = "63">Madness</option>
- <option value = "77">Messages</option>
- <option value = "75">Mystery</option>
- <option value = "53">Peace</option>
- <option value = "72">Perception</option>
- <option value = "17">Power</option>
- <option value = "14">Protection</option>
- <option value = "13">Rebirth</option>
- <option value = "44">Riches</option>
- <option value = "65">Sadness</option>
- <option value = "43">Seduction</option>
- <option value = "42">Sociality</option>
- <option value = "76">Soul</option>
- <option value = "33">Speed</option>
- <option value = "31">Strength</option>
- <option value = "32">Toughness</option>
- <option value = "15">Transformation</option>
- <option value = "78">Travel</option>
- <option value = "73">Truth</option>
- <option value = "21">Water</option>
- <option value = "36">Weakness</option>
- <option value = "24">Wind</option>
- <option value = "46">Worship</option>
+ <option value = "Anger">Anger</option>
+ <option value = "Beauty">Beauty</option>
+ <option value = "Cleansing">Cleansing</option>
+ <option value = "Confidence">Confidence</option>
+ <option value = "Confusion">Confusion</option>
+ <option value = "Courage">Courage</option>
+ <option value = "Darkness">Darkness</option>
+ <option value = "Death">Death</option>
+ <option value = "Dreams">Dreams</option>
+ <option value = "Earth">Earth</option>
+ <option value = "Fate">Fate</option>
+ <option value = "Fear">Fear</option>
+ <option value = "Fertility">Fertility</option>
+ <option value = "Fire">Fire</option>
+ <option value = "Happiness">Happiness</option>
+ <option value = "Healing">Healing</option>
+ <option value = "Illusion">Illusion</option>
+ <option value = "Intellect">Intellect</option>
+ <option value = "Light">Light</option>
+ <option value = "Love">Love</option>
+ <option value = "Luck">Luck</option>
+ <option value = "Madness">Madness</option>
+ <option value = "Messages">Messages</option>
+ <option value = "Mystery">Mystery</option>
+ <option value = "Peace">Peace</option>
+ <option value = "Perception">Perception</option>
+ <option value = "Power">Power</option>
+ <option value = "Protection">Protection</option>
+ <option value = "Rebirth">Rebirth</option>
+ <option value = "Riches">Riches</option>
+ <option value = "Sadness">Sadness</option>
+ <option value = "Seduction">Seduction</option>
+ <option value = "Sociality">Sociality</option>
+ <option value = "Soul">Soul</option>
+ <option value = "Speed">Speed</option>
+ <option value = "Strength">Strength</option>
+ <option value = "Toughness">Toughness</option>
+ <option value = "Transformation">Transformation</option>
+ <option value = "Travel">Travel</option>
+ <option value = "Truth">Truth</option>
+ <option value = "Water">Water</option>
+ <option value = "Weakness">Weakness</option>
+ <option value = "Wind">Wind</option>
+ <option value = "Worship">Worship</option>
  
  </select>
 
@@ -424,6 +425,11 @@ span.onclick = function() {
 </div></div>
 
 <div class="delta" id="se" >
+  <img class="HelpModals" src="http://i.imgur.com/PJxKoE1.png" style="float:right" onclick="showAdvice([
+  'This is the Activities Tab. For Monster Hunting, each type of Monster has strengths and weaknesses, which only become more pronounced the tougher they are. Each type is also immune to one Stat, so be ready to adapt your strategy! Difficulty is at a minimum of 5, but you can go as high as you dare!'
+  ,'Contracts cost Research Points, and have a limited time to complete. Make sure you have time to complete whichever one you attempt. If not, just wait for new ones!'
+  ,'In your estate, you may add Ingredients for both Mining and Agriculture simultaneously. It takes a while, but it is well worth it! As you level up your Ingredients, they will take more time before they are ready to harvest.'])"></img>
+
 <ul class="tab">
   <li><a id="CombatTab" href="#" class="tablinks" onclick="openCity(event, 'CombatDisplay')">Monster Hunting</a></li>
   <li><a id="SocialTab"  href="#" class="tablinks" onclick="openCity(event, 'SocialDisplay')">Contracts</a></li>
@@ -433,10 +439,10 @@ span.onclick = function() {
 <div id = "SocialDisplay" style="display:none" class="tabcontent">
      <table id="SocialContracts" align="right"  style="display: block">
 	 <tr><th>Contract</th><th>Contract Quality</th><th>Reward</th><th>Remaining Points</th><th>Time Left</th></tr>
-	 <tr><td>Illuminati</td><td><span id="IllContract">5</span></td><td><span id="IllRate">0</span></td><td><span id="IllRemaining">50</span></td><td id="IllTime"></td><td><button id="IllButton" onClick="socialButtonChanger(2,this.id)">Research</button></td></tr>
-	 <tr><td>Order of the Jade Fist</td><td><span id="OJFContract">5</span></td><td><span id="OJFRate">0</span></td><td><span id="OJFRemaining">50</span></td><td id="OJFTime"></td><td><button id="OJFButton" onClick="socialButtonChanger(3,this.id)">Research</button></td></tr>
-     <tr><td>Cabal</td><td><span id="CabContract">5</span></td><td><span id="CabRate">0</span></td><td><span id="CabRemaining">50</span></td><td id="CabTime"></td><td><button id="CabButton" onClick="socialButtonChanger(1,this.id)">Research</button></td></tr>
-     <tr><td>Circle of Merlin</td><td><span id="CoMContract">5</span></td><td><span id="CoMRate">0</span></td><td><span id="CoMRemaining">50</span></td><td id="CoMTime"></td><td><button id="CoMButton" onClick="socialButtonChanger(0,this.id)">Research</button></td></tr>
+	 <tr><td>Illuminati</td><td><span id="IllContract">5</span></td><td><span id="IllRate">0</span></td><td><span id="IllRemaining">50</span></td><td id="IllTime"></td><td><button id="IllButton" onClick="socialButtonChanger(0,this.id)">Research</button></td></tr>
+	 <tr><td>Order of the Jade Fist</td><td><span id="OJFContract">5</span></td><td><span id="OJFRate">0</span></td><td><span id="OJFRemaining">50</span></td><td id="OJFTime"></td><td><button id="OJFButton" onClick="socialButtonChanger(1,this.id)">Research</button></td></tr>
+     <tr><td>Cabal</td><td><span id="CabContract">5</span></td><td><span id="CabRate">0</span></td><td><span id="CabRemaining">50</span></td><td id="CabTime"></td><td><button id="CabButton" onClick="socialButtonChanger(2,this.id)">Research</button></td></tr>
+     <tr><td>Circle of Merlin</td><td><span id="CoMContract">5</span></td><td><span id="CoMRate">0</span></td><td><span id="CoMRemaining">50</span></td><td id="CoMTime"></td><td><button id="CoMButton" onClick="socialButtonChanger(3,this.id)">Research</button></td></tr>
   </table>
 </div>
 
@@ -445,12 +451,12 @@ span.onclick = function() {
 
 	<select class="mousetrap" id="mySelectPlant" style="width:120px" >
     <option value="Agriculture"  disabled selected>Owned Ingredient</option>
-	</select>  <button onclick = "addEstate('mySelectPlant',estateAgriculture,AgricultureProsperityBalance)">Add to Estate</button>  <br>
+	</select>  <button id="addEstateAgriculture" onclick = "addEstate('mySelectPlant',estateAgriculture,AgricultureProsperityBalance,'addEstateAgriculture')">Add to Estate</button>  <br>
 	<label class="estate" for="mySelectMineral" id = mySelectMineralLabel style="float:left width:50px">Mining</label>	
 
   <select class="mousetrap" id="mySelectMineral" style="width:120px" >
     <option value="Mining"  disabled selected>Owned Ingredient</option>
-	</select> <button onclick = "addEstate('mySelectMineral',estateMining,MiningProsperityBalance)">Add to Estate</button>  <br>
+	</select> <button  id="addEstateMining" onclick = "addEstate('mySelectMineral',estateMining,MiningProsperityBalance,'addEstateMining')">Add to Estate</button>  <br>
 
 <div style="overflow:auto; height:280px; border: 1px solid black">
 <table class="beta"  style="width: 50%;; float:left" id="agricultureTable" ></table>
@@ -477,7 +483,7 @@ span.onclick = function() {
 <span>Enemy Difficulty</span>
 <br>
 <button id="reduceDifficulty" onClick="reduceDifficulty()">-</button>
-<span id="enemyDifficulty">0</span>
+<span id="enemyDifficulty">5</span>
 <button id="increaseDifficulty" onClick="increaseDifficulty()">+</button>
 <br><br>
 <button id="EnemySpawn" onClick="enemyChoose()">Discover an Enemy !</button>
