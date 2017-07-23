@@ -1533,7 +1533,7 @@ function resetQuest(questNumber){
 
 	chooseQuest()
 		
-	questResetTime += 0
+	questResetTime += 300
 	}
 	}
 
